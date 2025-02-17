@@ -1,5 +1,5 @@
-// app.vue
 <script setup lang="ts">
+// app.vue
 
 
 const { featuredMovie, popularMovies } = useMovieData()
@@ -8,6 +8,8 @@ const imagePath = useImagePath()
 // Calculate aspect ratios
 const backdropAspectRatio = 'aspect-[16/9]'
 const posterAspectRatio = 'aspect-[2/3]'
+
+const payUrl = "https://buy.stripe.com/test_5kA6sgdCf3xk2DSaEG"
 </script>
 
 <template>
@@ -40,11 +42,11 @@ const posterAspectRatio = 'aspect-[2/3]'
               label="Play Now"
               icon="i-heroicons-play"
               class="bg-red-600 hover:bg-red-700"
-              :to="`/movie/${featuredMovie.id}`"
+              :to="payUrl"
             />
             <UButton
               size="xl"
-              color="gray"
+              color="black"
               variant="ghost"
               label="More Info"
               icon="i-heroicons-information-circle"

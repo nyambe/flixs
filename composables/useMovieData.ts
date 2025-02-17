@@ -13,14 +13,19 @@ export const useMovieData = () => {
       const randomIndex = Math.floor(Math.random() * moviesWithBackdrops.length)
       return moviesWithBackdrops[randomIndex]
     }
-    
+
     const getMovieById = (id: number): TMDBMovie | undefined => {
         return africanFilms.items.find(movie => movie.id === id)
+    }
+
+    const getAllMovies = (): TMDBMovie[] => {
+        return africanFilms.items
     }
     
     return {
         featuredMovie: getFeaturedMovie(),
         popularMovies: africanFilms.items.slice(0, 8),
-        getMovieById
+        getMovieById,
+        getAllMovies
     }
   }

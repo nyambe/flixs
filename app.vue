@@ -2,10 +2,10 @@
 // app.vue
 const navigationItems = [
   { label: 'Home', path: '/' },
-  { label: 'TV Shows', path: '/shows' },
+  // { label: 'TV Shows', path: '/shows' },
   { label: 'Movies', path: '/movies' },
-  { label: 'New & Popular', path: '/new' },
-  { label: 'My List', path: '/my-list' },
+  // { label: 'New & Popular', path: '/new' },
+  // { label: 'My List', path: '/my-list' },
 ]
 
 </script>
@@ -31,7 +31,7 @@ const navigationItems = [
 
         <div class="flex items-center space-x-4">
           <UButton 
-            color="white" 
+            color="black"
             variant="ghost"
             icon="i-heroicons-magnifying-glass"
           />

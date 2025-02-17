@@ -11,7 +11,8 @@ const isPlaying = ref(false)
 const movie = getMovieById(Number(movieId))
 
 const togglePlay = () => {
-  isPlaying.value = !isPlaying.value
+  // isPlaying.value = !isPlaying.value
+  window.location.href = 'https://buy.stripe.com/test_5kA6sgdCf3xk2DSaEG'
 }
 </script>
 
@@ -23,15 +24,15 @@ const togglePlay = () => {
         <!-- Video Simulation -->
         <div class="absolute inset-0 flex items-center justify-center bg-black">
           <img 
-            :src="imagePath.backdrop(movie?.backdrop_path)"
+            :src="imagePath.backdrop(movie?.backdrop_path ?? imagePath.backdrop(''))"
             :alt="movie?.title"
             class="w-full h-full object-contain"
           >
           <!-- Player Controls -->
           <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
             <UButton
-              size="2xl"
-              color="white"
+              size="xl"
+              color="black"
               variant="ghost"
               icon="i-heroicons-pause"
               class="text-4xl"
@@ -48,7 +49,7 @@ const togglePlay = () => {
       <div class="relative">
         <div class="w-full aspect-[16/9]">
           <img 
-            :src="imagePath.backdrop(movie?.backdrop_path)"
+            :src="imagePath.backdrop(movie?.backdrop_path ?? imagePath.backdrop(''))"
             :alt="movie?.title"
             class="w-full h-full object-cover"
           >
@@ -62,7 +63,7 @@ const togglePlay = () => {
           <!-- Poster -->
           <div class="w-64 flex-shrink-0">
             <img 
-              :src="imagePath.poster(movie?.poster_path)"
+              :src="imagePath.poster(movie?.poster_path ?? imagePath.poster(''))"
               :alt="movie?.title"
               class="w-full rounded-lg shadow-xl"
             >
@@ -78,7 +79,7 @@ const togglePlay = () => {
                 <span class="text-yellow-400 mr-1">★</span>
                 {{ movie?.vote_average.toFixed(1) }}
               </span>
-              <span>{{ new Date(movie?.release_date).getFullYear() }}</span>
+              <span v-if="movie?.release_date">{{ new Date(movie?.release_date).getFullYear() }}</span>
             </div>
             <p class="text-lg text-gray-300 mb-8">
               {{ movie?.overview }}
@@ -94,7 +95,7 @@ const togglePlay = () => {
               />
               <UButton
                 size="xl"
-                color="white"
+                color="black"
                 variant="ghost"
                 icon="i-heroicons-arrow-left"
                 @click="() => navigateTo('/')"
