@@ -1,3 +1,4 @@
+// app.vue
 <script setup lang="ts">
 const navigationItems = [
   { label: 'Home', path: '/' },
@@ -56,18 +57,18 @@ const posterAspectRatio = 'aspect-[2/3]'
           <img 
             :src="imagePath.backdrop(featuredMovie.backdrop_path)"
             :alt="featuredMovie.title"
-            class="w-full h-full object-cover"
+            class="w-full aspect-[16/9]  object-cover"
           >
         </div>
         <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
       </div>
 
-      <div class="container mx-auto px-4 relative pt-48">
+      <div class="flex container mx-auto px-4 relative pt-48 h-full">
         <div class="max-w-2xl">
           <h1 class="text-5xl md:text-7xl font-bold mb-4">
             {{ featuredMovie.title }}
           </h1>
-          <p class="text-xl text-gray-300 mb-8">
+          <p class="text-xl text-gray-300 mb-8 h-32 line-clamp-3">
             {{ featuredMovie.overview }}
           </p>
           <div class="flex space-x-4">
