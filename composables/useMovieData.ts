@@ -21,10 +21,15 @@ export const useMovieData = () => {
     const getAllMovies = (): TMDBMovie[] => {
         return africanFilms.items
     }
+
+    const getPopularMovies = (): TMDBMovie[] => {
+      const shuffled = [...africanFilms.items].sort(() => Math.random() - 0.5)
+      return shuffled.slice(0, 8)
+    }
     
     return {
         featuredMovie: getFeaturedMovie(),
-        popularMovies: africanFilms.items.slice(0, 8),
+        popularMovies: getPopularMovies(),
         getMovieById,
         getAllMovies
     }

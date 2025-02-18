@@ -45,6 +45,7 @@ const navigationItems = [
     </header>
 
    <NuxtPage />
+   <LazyPageFooter />
 
   </div>
 </template>
