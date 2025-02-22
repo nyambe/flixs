@@ -16,7 +16,7 @@ const navigationItems = [
     <header class="fixed w-full z-50 bg-gradient-to-b from-black/80 to-transparent">
       <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
         <NuxtLink to="/" class="text-2xl font-bold text-red-600">
-          StreamFlix
+          MoabaTV
         </NuxtLink>
 
         <div class="hidden md:flex items-center space-x-6">

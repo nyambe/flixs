@@ -12,7 +12,7 @@ interface FooterSection {
 
 const footerSections: FooterSection[] = [
   {
-    title: 'StreamFlix',
+    title: 'MoabaTV',
     links: [
       { label: 'About Us', path: '/about' },
       { label: 'Careers', path: '/careers' },
@@ -81,7 +81,7 @@ const currentYear = new Date().getFullYear()
 
       <!-- Copyright -->
       <div class="mt-12 text-sm">
-        <p>&copy; {{ currentYear }} StreamFlix. All rights reserved.</p>
+        <p>&copy; {{ currentYear }} MoabaTV. All rights reserved.</p>
       </div>
     </div>
   </footer>
