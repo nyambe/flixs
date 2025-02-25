@@ -12,6 +12,10 @@ const navigationItems = [
 
 <template>
   <div class="min-h-screen bg-black text-white">
+    <SiteNotification>
+      Limited time offer: Stream premium African movies for just $4.99/month!
+    </SiteNotification>
+    
     <!-- Navigation -->
     <header class="fixed w-full z-50 bg-gradient-to-b from-black/80 to-transparent">
       <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -43,9 +47,9 @@ const navigationItems = [
         </div>
       </nav>
     </header>
-    <div class="container mx-auto px-4 py-4 w-full bg-brand text-brand-content text-6xl text-center"> ds</div>
-   <NuxtPage />
-   <LazyPageFooter />
+    
+    <NuxtPage />
+    <LazyPageFooter />
 
   </div>
 </template>
