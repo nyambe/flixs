@@ -19,4 +19,7 @@
 .backdrop-blur {
   backdrop-filter: blur(8px);
 }
+div {
+  font-family: 'Montserrat', sans-serif;
+}
 </style>
