@@ -5,9 +5,9 @@
 @layer base {
   :root {
     /* Primary (Amber/Golden Yellow #fbbf24) */
-    --p: 58deg;
-    --ps: 100%;
-    --pl: 48%;
+    --p: 53deg;
+    --ps: 96%;
+    --pl: 56%;
     
     /* Secondary (Orange-Yellow #f59e0b) */
     --s: 33deg;
