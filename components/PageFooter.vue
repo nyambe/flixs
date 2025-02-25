@@ -44,7 +44,7 @@ const currentYear = new Date().getFullYear()
 </script>
 
 <template>
-  <footer class="bg-black/95 text-gray-400 py-14 mt-auto w-full">
+  <footer class="bg-black/95 text-brand py-14 mt-auto w-full">
     <div class="container mx-auto px-4">
       <!-- Social Media Links -->
       <div class="flex space-x-6 mb-8">

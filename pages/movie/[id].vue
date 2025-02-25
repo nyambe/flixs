@@ -87,10 +87,10 @@ const togglePlay = () => {
             <div class="flex gap-4">
               <UButton
                 size="xl"
-                color="amber"
+                color="brand"
                 label="Play"
                 icon="i-heroicons-play"
-                class="bg-amber-400 hover:bg-amber-500"
+                class="bg-brand hover:bg-amber-500"
                 @click="togglePlay"
               />
               <UButton
