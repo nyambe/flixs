@@ -43,7 +43,7 @@ const navigationItems = [
         </div>
       </nav>
     </header>
-
+    <div class="container mx-auto px-4 py-4 w-full bg-brand text-brand-content text-6xl text-center"> ds</div>
    <NuxtPage />
    <LazyPageFooter />
 

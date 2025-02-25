@@ -1,15 +1,14 @@
-/** @type {import('tailwindcss').Config} */
 export default {
     darkMode: 'class',
     theme: {
       extend: {
         colors: {
-          primary: {
+          brand: {
             DEFAULT: 'hsl(var(--p) var(--ps) var(--pl))',
             focus: 'hsl(var(--p) var(--ps) calc(var(--pl) - 10%))',
             content: 'hsl(var(--p) var(--ps) 10%)' // Darker for contrast
           },
-          secondary: {
+          complementary: {
             DEFAULT: 'hsl(var(--s) var(--ss) var(--sl))',
             focus: 'hsl(var(--s) var(--ss) calc(var(--sl) - 10%))',
             content: 'hsl(var(--s) var(--ss) 10%)' // Darker for contrast
@@ -24,7 +23,7 @@ export default {
             focus: 'hsl(var(--n) var(--ns) calc(var(--nl) - 10%))',
             content: 'hsl(var(--n) var(--ns) 95%)' // Lighter for contrast
           },
-          complementary: {
+          support: {
             DEFAULT: 'hsl(var(--c) var(--cs) var(--cl))',
             focus: 'hsl(var(--c) var(--cs) calc(var(--cl) - 10%))',
             content: 'hsl(var(--c) var(--cs) 95%)' // Lighter for contrast

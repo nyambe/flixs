@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Primary (Amber/Golden Yellow #fbbf24) */
+    --p: 58deg;
+    --ps: 100%;
+    --pl: 48%;
+    
+    /* Secondary (Orange-Yellow #f59e0b) */
+    --s: 33deg;
+    --ss: 93%;
+    --sl: 50%;
+    
+    /* Accent (Yellow-Green #84cc16) */
+    --a: 84deg;
+    --as: 81%;
+    --al: 44%;
+    
+    /* Neutral (Dark Gray) */
+    --n: 220deg;
+    --ns: 13%;
+    --nl: 18%;
+    
+    /* Complementary (Deep Purple-Blue) */
+    --c: 248deg;
+    --cs: 70%;
+    --cl: 40%;
+  }
+  
+  .dark {
+    /* Dark mode adjustments */
+    --pl: 60%;
+    --sl: 55%;
+    --al: 50%;
+    --nl: 90%; /* Much lighter for good contrast in dark mode */
+    --cl: 65%;
+  }
+}
