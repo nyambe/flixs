@@ -15,8 +15,8 @@ const navigationItems = [
     <!-- Navigation -->
     <header class="fixed w-full z-50 bg-gradient-to-b from-black/80 to-transparent">
       <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
-        <NuxtLink to="/" class="text-2xl font-bold text-red-600">
-          MoabaTV
+        <NuxtLink to="/" class="text-2xl font-bold text-amber-400">
+          Moaba Cinema TV
         </NuxtLink>
 
         <div class="hidden md:flex items-center space-x-6">
@@ -38,7 +38,7 @@ const navigationItems = [
           <UButton 
             color="red" 
             label="Sign In"
-            class="bg-red-600 hover:bg-red-700"
+            class="bg-amber-400 hover:bg-amber-500"
           />
         </div>
       </nav>

@@ -38,11 +38,11 @@ const payUrl = "https://buy.stripe.com/test_5kA6sgdCf3xk2DSaEG"
           <div class="flex space-x-4">
             <UButton
               size="xl"
-              color="red"
-              label="Play Now"
+              color="amber"
+              label="Play"
               icon="i-heroicons-play"
-              class="bg-red-600 hover:bg-red-700"
-              :to="payUrl"
+              class="bg-amber-400 hover:bg-amber-500"
+              @click="() => navigateTo(`/movie/${featuredMovie.id}`)"
             />
             <UButton
               size="xl"
