@@ -60,7 +60,7 @@ const payUrl = "https://buy.stripe.com/test_5kA6sgdCf3xk2DSaEG"
     <!-- Featured Categories Section -->
     <section class="py-16 bg-black">
       <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold mb-8">Popular African Films</h2>
+        <h2 class="text-3xl font-bold mb-8">Las Joyas de MOABA</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <NuxtLink 
             v-for="movie in popularMovies" 
