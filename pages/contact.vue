@@ -1,4 +1,4 @@
-<!-- pages/contacto.vue -->
+<!-- pages/contact.vue -->
 <script setup lang="ts">
 const firstName = ref('')
 const lastName = ref('')
@@ -100,13 +100,13 @@ async function handleSubmit() {
             />
           </div>
           
-          <div>
+          <div class="mt-10">
             <UButton
               type="submit"
               block
               size="lg"
               color="black"
-              class="bg-brand text-brand-content hover:bg-brand-hover py-3"
+              class="bg-brand text-brand-content hover:bg-brand-hover"
               :loading="loading"
             >
               Submit

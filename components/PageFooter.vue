@@ -51,7 +51,7 @@ const footerSections: FooterSection[] = [
     title: 'MOABA CINEMA',
     links: [
       { label: 'Contacto', path: '/contact' },
-      { label: 'Conócenos', path: '/about-us' }
+      { label: 'Conócenos', path: '/about' }
     ]
   },
   {
@@ -108,30 +108,9 @@ const currentYear = new Date().getFullYear()
         </div>
       </div>
 
-      <!-- Additional Info for Conocenos Section -->
-      <div class="mt-12 border-t border-neutral-focus pt-6 text-sm">
-        <h4 class="font-semibold mb-2">Conoce Moaba Cinema TV</h4>
-        <p class="max-w-2xl">
-          Plataforma audiovisual de cine y televisión africano.
-          Es el laboratorio de producción, distribución y comercialización audiovisual, Cine y
-          Televisión; con experiencia en la creación de eventos y gestión cultural.
-        </p>
-        
-        <!-- Contact info with icons -->
-        <div class="mt-4 flex items-center space-x-4">
-          <div class="flex items-center">
-            <UIcon name="i-heroicons-envelope" class="w-5 h-5 mr-2" />
-            <a href="mailto:info@moabacinema.tv" class="hover:text-brand transition">info@moabacinema.tv</a>
-          </div>
-          <div class="flex items-center">
-            <UIcon name="i-heroicons-phone" class="w-5 h-5 mr-2" />
-            <a href="tel:+34000000000" class="hover:text-brand transition">+34 000 000 000</a>
-          </div>
-        </div>
-      </div>
       
       <!-- Copyright -->
-      <div class="mt-6 text-sm text-complementary">
+      <div class="mt-6 text-sm text-brand-focus">
         <p>&copy; {{ currentYear }} MoabaTV. All rights reserved.</p>
       </div>
     </div>
