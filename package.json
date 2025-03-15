@@ -27,9 +27,6 @@
     "@vimeo/player": "^2.26.0",
     "typescript": "^5.8.2"
   },
-  "overrides": {
-  "nitropack": "^2.11.6"
-},
   "pnpm": {
     "onlyBuiltDependencies": [
       "@firebase/util",

@@ -8,9 +8,6 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxthub/core'
   ],
-  nitro: {
-    preset: 'cloudflare_pages',
-  },
   runtimeConfig: {
     // Server-side environment variables
     firebase: {
