@@ -3,6 +3,10 @@ const { getAllMovies } = useMovieData()
 const imagePath = useImagePath()
 
 const posterAspectRatio = 'aspect-[2/3]'
+
+definePageMeta({
+  middleware: 'subscription'
+})
 </script>
 
 <template>

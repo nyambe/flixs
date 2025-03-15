@@ -14,6 +14,11 @@ const togglePlay = () => {
   // isPlaying.value = !isPlaying.value
   window.location.href = 'https://buy.stripe.com/test_5kA6sgdCf3xk2DSaEG'
 }
+
+// Apply subscription middleware
+definePageMeta({
+  middleware: 'subscription'
+})
 </script>
 
 <template>

@@ -36,11 +36,13 @@ const navigationItems = [
           color="brand" 
           label="Subscribe"
           class="bg-brand text-brand-content hover:bg-brand-hover"
+          to="/subscription/plans"
         />
         <UButton 
           color="white" 
           variant="outline"
           label="Sign In"
+          to="/auth/login"
         />
       </div>
     </nav>

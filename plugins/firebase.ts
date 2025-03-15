@@ -1,37 +1,31 @@
+// plugins/firebase.ts
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
-import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
-import type { FirebaseApp } from 'firebase/app'
-import type { Auth } from 'firebase/auth'
-import type { Firestore } from 'firebase/firestore'
 
-interface FirebaseInjection {
-  app: FirebaseApp
-  auth: Auth
-  firestore: Firestore
-}
-
-export default defineNuxtPlugin((_nuxtApp) => {
+export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
-
+  
   const firebaseConfig = {
-    apiKey: config.public.firebaseApiKey,
-    authDomain: config.public.firebaseAuthDomain,
-    projectId: config.public.firebaseProjectId,
-    storageBucket: config.public.firebaseStorageBucket,
-    messagingSenderId: config.public.firebaseMessagingSenderId,
-    appId: config.public.firebaseAppId,
+    apiKey: config.public.firebase.apiKey,
+    authDomain: config.public.firebase.authDomain,
+    projectId: config.public.firebase.projectId,
+    storageBucket: config.public.firebase.storageBucket,
+    messagingSenderId: config.public.firebase.messagingSenderId,
+    appId: config.public.firebase.appId,
   }
-
-  // Initialize Firebase
+  
   const app = initializeApp(firebaseConfig)
   const auth = getAuth(app)
   const firestore = getFirestore(app)
-
+  
   return {
     provide: {
-      firebase: { app, auth, firestore } as FirebaseInjection
+      firebase: {
+        app,
+        auth,
+        firestore
+      }
     }
   }
-}) 
+})
