@@ -8,33 +8,68 @@ if (currentUser.value) {
   navigateTo('/movies')
 }
 
-const plans = [
+interface Plan {
+  id: string
+  name: string
+  price: number
+  interval: 'month' | 'year'
+  features: string[]
+  recommended: boolean
+  description: string
+  savings?: string
+}
+
+const plans: Plan[] = [
   {
     id: config.public.stripe.basicPriceId,
     name: 'Basic',
-    price: 9.99,
+    price: 4.99,
+    interval: 'month',
+    description: 'Perfect for individual movie lovers',
     features: [
       'Access to all standard movies',
       'Watch on one device at a time',
       'HD quality streaming',
+      'Cancel anytime'
     ],
     recommended: false
   },
   {
     id: config.public.stripe.premiumPriceId,
     name: 'Premium',
-    price: 14.99,
+    price: 49,
+    interval: 'year',
+    description: 'Best value for movie enthusiasts',
     features: [
       'Access to all movies including exclusives',
       'Watch on up to 4 devices at once',
       '4K Ultra HD streaming',
-      'Offline downloads'
+      'Offline downloads',
+      '2 months free included'
     ],
-    recommended: true
+    recommended: true,
+    savings: 'Save 2 months'
+  },
+  {
+    id: config.public.stripe.educationPriceId,
+    name: 'Education',
+    price: 449, // 49 * 12 * 0.8 (20% discount) for 20 licenses
+    interval: 'year',
+    description: 'Perfect for schools and educational institutions',
+    features: [
+      '20 user licenses included',
+      'Access to all educational content',
+      'Classroom viewing mode',
+      'Educational resources',
+      'Dedicated support',
+      '20% yearly discount'
+    ],
+    recommended: false,
+    savings: 'Save 20%'
   }
 ]
 
-const selectPlan = async (priceId) => {
+const selectPlan = async (priceId: string) => {
   // We'll implement this later with Stripe
   // For now, let's just redirect to a placeholder
   navigateTo('/subscription/checkout?plan=' + priceId)
@@ -42,43 +77,64 @@ const selectPlan = async (priceId) => {
 </script>
 
 <template>
-  <div>
-    <h1 class="text-3xl font-bold text-center mb-8">Choose Your Plan</h1>
-    
-    <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-      <div 
-        v-for="plan in plans" 
-        :key="plan.id"
-        :class="[
-          'border rounded-xl p-6 flex flex-col',
-          plan.recommended ? 'border-primary-500 shadow-lg' : 'border-gray-200'
-        ]"
-      >
+  <div class="bg-black min-h-screen py-16 px-4">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-4xl font-bold text-center text-white mb-4">Choose Your Plan</h1>
+      <p class="text-lg text-center text-gray-300 mb-12 max-w-2xl mx-auto">
+        Get unlimited access to African cinema and support local filmmakers.
+        Switch or cancel anytime.
+      </p>
+      
+      <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         <div 
-          v-if="plan.recommended" 
-          class="bg-primary-500 text-white font-medium py-1 px-4 rounded-full self-start mb-4"
+          v-for="plan in plans" 
+          :key="plan.id"
+          :class="[
+            'rounded-2xl p-6 flex flex-col',
+            plan.recommended 
+              ? 'bg-brand bg-opacity-10 border-2 border-brand' 
+              : 'bg-gray-900 border border-gray-800'
+          ]"
         >
-          Recommended
+          <div 
+            v-if="plan.recommended" 
+            class="bg-brand text-brand-content font-medium py-1 px-4 rounded-full self-start mb-4"
+          >
+            Most Popular
+          </div>
+          
+          <h2 class="text-2xl font-bold mb-2 text-white">{{ plan.name }}</h2>
+          <p class="text-gray-400 mb-4">{{ plan.description }}</p>
+          
+          <div class="mb-4">
+            <span class="text-4xl font-bold text-white">€{{ plan.price }}</span>
+            <span class="text-gray-400">/{{ plan.interval }}</span>
+            <div v-if="plan.savings" class="text-brand-hover mt-1 font-medium">
+              {{ plan.savings }}
+            </div>
+          </div>
+          
+          <ul class="mb-8 flex-grow">
+            <li 
+              v-for="feature in plan.features" 
+              :key="feature" 
+              class="flex items-start mb-3 text-gray-300"
+            >
+              <span class="text-brand mr-2">✓</span>
+              <span>{{ feature }}</span>
+            </li>
+          </ul>
+          
+          <UButton
+            :class="!plan.recommended ? 'bg-brand text-brand-content hover:bg-brand-hover' : 'bg-gray-900 text-gray-300 hover:bg-gray-800'"
+            :variant="plan.recommended ? 'solid' : 'outline'"
+            class="w-full"
+            size="lg"
+            @click="selectPlan(plan.id)"
+          >
+            Get {{ plan.name }}
+          </UButton>
         </div>
-        
-        <h2 class="text-2xl font-bold mb-2">{{ plan.name }}</h2>
-        <div class="text-3xl font-bold mb-4">${{ plan.price }}<span class="text-lg font-normal">/month</span></div>
-        
-        <ul class="mb-6 flex-grow">
-          <li v-for="feature in plan.features" :key="feature" class="flex items-start mb-2">
-            <span class="text-green-500 mr-2">✓</span>
-            <span>{{ feature }}</span>
-          </li>
-        </ul>
-        
-        <UButton
-          color="primary"
-          block
-          :variant="plan.recommended ? 'solid' : 'soft'"
-          @click="selectPlan(plan.id)"
-        >
-          Select {{ plan.name }}
-        </UButton>
       </div>
     </div>
   </div>

@@ -22,7 +22,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto">
+  <div class="max-w-md mx-auto mt-16 mb-20">
     <h1 class="text-3xl font-bold mb-6">Sign In</h1>
     
     <UAlert v-if="error" color="red" class="mb-4">{{ error }}</UAlert>
@@ -50,13 +50,14 @@ const handleSubmit = async () => {
         <UButton
           type="submit"
           color="primary"
+          class="bg-brand text-brand-content hover:bg-brand-hover"
           :loading="loading"
           :disabled="loading"
         >
           Sign In
         </UButton>
         
-        <NuxtLink to="/auth/register" class="text-primary-500 hover:underline">
+        <NuxtLink to="/auth/register" class="text-brand hover:underline">
           Need an account?
         </NuxtLink>
       </div>

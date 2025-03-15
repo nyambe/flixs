@@ -5,7 +5,7 @@
 <template>
   <div class="min-h-screen bg-black text-white">
     <SiteNotification>
-      Limited time offer: Stream premium African movies for just $4.99/month!
+      Limited time offer: Stream premium African movies for just 4.99€/month!
     </SiteNotification>
     
     <SiteNavigation />
