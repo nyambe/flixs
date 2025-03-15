@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-11-01',
+  compatibilityDate: '2025-03-15',
   devtools: { enabled: true },
   modules: [
     '@nuxt/ui',
@@ -8,6 +8,9 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxthub/core'
   ],
+  nitro: {
+    preset: 'cloudflare_pages',
+  },
   runtimeConfig: {
     // Server-side environment variables
     firebase: {

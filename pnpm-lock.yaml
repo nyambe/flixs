@@ -21,13 +21,13 @@ importers:
         specifier: 0.8.17
         version: 0.8.17(db0@0.3.1)(ioredis@5.6.0)(magicast@0.3.5)(vite@6.2.2(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0))
       eslint:
-        specifier: ^9.0.0
+        specifier: ^9.22.0
         version: 9.22.0(jiti@2.4.2)
       firebase:
         specifier: ^11.4.0
         version: 11.4.0
       nuxt:
-        specifier: ^3.15.4
+        specifier: ^3.16.0
         version: 3.16.0(@parcel/watcher@2.5.1)(@types/node@22.13.10)(db0@0.3.1)(eslint@9.22.0(jiti@2.4.2))(ioredis@5.6.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.35.0)(terser@5.39.0)(typescript@5.8.2)(vite@6.2.2(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0))(yaml@2.7.0)
       stripe:
         specifier: ^17.7.0
@@ -46,7 +46,7 @@ importers:
         specifier: ^2.26.0
         version: 2.26.0
       typescript:
-        specifier: ^5.7.3
+        specifier: ^5.8.2
         version: 5.8.2
 
 packages:
