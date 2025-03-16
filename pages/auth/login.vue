@@ -1,5 +1,5 @@
-// pages/auth/login.vue
 <script setup lang="ts">
+// pages/auth/login.vue
 const { signIn } = useAuth()
 
 const email = ref('')
@@ -25,7 +25,7 @@ const handleSubmit = async () => {
   <div class="max-w-md mx-auto mt-16 mb-20">
     <h1 class="text-3xl font-bold mb-6">Sign In</h1>
     
-    <UAlert v-if="error" color="red" class="mb-4">{{ error }}</UAlert>
+    <UAlert v-if="error" color="red" class="mb-4" :title="error" />
     
     <form @submit.prevent="handleSubmit">
       <UFormGroup label="Email" name="email" class="mb-4">

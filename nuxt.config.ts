@@ -18,11 +18,13 @@ export default defineNuxtConfig({
     stripe: {
       secretKey: process.env.STRIPE_SECRET_KEY,
       webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+      productId: process.env.STRIPE_PRODUCT_ID,
     },
     vimeo: {
       accessToken: process.env.VIMEO_ACCESS_TOKEN,
     },
     public: {
+      baseUrl: process.env.BASE_URL || 'http://localhost:3000',
       firebase: {
         apiKey: process.env.FIREBASE_API_KEY,
         authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -35,6 +37,7 @@ export default defineNuxtConfig({
         publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
         basicPriceId: process.env.STRIPE_BASIC_PRICE_ID,
         premiumPriceId: process.env.STRIPE_PREMIUM_PRICE_ID,
+        educationPriceId: process.env.STRIPE_EDUCATION_PRICE_ID,
       },
     },
   },
