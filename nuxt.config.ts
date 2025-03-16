@@ -2,12 +2,28 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-03-15',
   devtools: { enabled: true },
+  alias: {
+    'string_decoder': 'string_decoder/',
+  },
   modules: [
     '@nuxt/ui',
     '@nuxt/fonts',
     '@nuxt/eslint',
     '@nuxthub/core'
   ],
+  debug: {
+    // Enable specific debugging features
+    templates: true,
+    modules: true,
+    watchers: true,
+    hooks: {
+      client: true,
+      server: true,
+    },
+    nitro: true,
+    router: true,
+    hydration: true,
+  },
   runtimeConfig: {
     // Server-side environment variables
     firebase: {
