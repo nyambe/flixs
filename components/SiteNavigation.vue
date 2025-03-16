@@ -15,7 +15,7 @@ const navigationItems = [
 const { currentUser, userSubscription, signOut } = useAuth();
 
 
-console.log(currentUser.value)
+console.log('currentUser', currentUser.value)
 
 // Computed properties for dynamic display
 const userDisplayName = computed(() =>

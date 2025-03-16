@@ -8,6 +8,19 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxthub/core'
   ],
+  debug: {
+    // Enable specific debugging features
+    templates: true,
+    modules: true,
+    watchers: true,
+    hooks: {
+      client: true,
+      server: true,
+    },
+    nitro: true,
+    router: true,
+    hydration: true,
+  },
   runtimeConfig: {
     // Server-side environment variables
     firebase: {
