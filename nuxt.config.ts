@@ -2,6 +2,9 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
+  alias: {
+    'string_decoder': 'string_decoder/',
+  },
   modules: [
     '@nuxt/ui',
     '@nuxt/fonts',
