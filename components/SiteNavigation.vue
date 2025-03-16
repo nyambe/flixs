@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useAuth } from '~/composables/useAuth';
+
+// Navigation items
 const navigationItems = [
   { label: 'Home', path: '/' },
   { label: 'Movies', path: '/movies' },
@@ -6,7 +9,20 @@ const navigationItems = [
   // { label: 'TV Shows', path: '/shows' },
   // { label: 'New & Popular', path: '/new' },
   // { label: 'My List', path: '/my-list' },
-]
+];
+
+// Auth state
+const { currentUser, userSubscription, signOut } = useAuth();
+
+
+console.log(currentUser.value)
+
+// Computed properties for dynamic display
+const userDisplayName = computed(() =>
+  currentUser.value ? currentUser.value.displayName || currentUser.value.email || 'User' : ''
+);
+
+const isSubscribed = computed(() => userSubscription.value?.active === true);
 </script>
 
 <template>
@@ -17,29 +33,41 @@ const navigationItems = [
       </NuxtLink>
 
       <div class="hidden md:flex items-center space-x-6">
-        <NuxtLink 
-          v-for="item in navigationItems" 
-          :key="item.path" 
+        <NuxtLink
+          v-for="item in navigationItems"
+          :key="item.path"
           :to="item.path"
-          class="text-gray-300 hover:text-white transition">
+          class="text-gray-300 hover:text-white transition"
+        >
           {{ item.label }}
         </NuxtLink>
       </div>
 
       <div class="flex items-center space-x-4">
-        <UButton 
+        <UButton
           color="black"
           variant="ghost"
           icon="i-heroicons-magnifying-glass"
         />
-        <UButton 
-          color="brand" 
+        <UButton
+          v-if="!isSubscribed"
+          color="brand"
           label="Subscribe"
-          class="bg-brand text-brand-content hover:bg-brand-hover"
+          class="bg-brand text-brand-content hover:bg-brand-focus"
           to="/subscription/plans"
         />
-        <UButton 
-          color="white" 
+        <div v-if="currentUser" class="flex items-center space-x-4">
+          <span class="text-white">{{ userDisplayName }}</span>
+          <UButton
+            color="white"
+            variant="outline"
+            label="Sign Out"
+            @click="signOut"
+          />
+        </div>
+        <UButton
+          v-else
+          color="white"
           variant="outline"
           label="Sign In"
           to="/auth/login"
@@ -47,4 +75,4 @@ const navigationItems = [
       </div>
     </nav>
   </header>
-</template> 
+</template>
