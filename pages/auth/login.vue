@@ -1,5 +1,5 @@
-// pages/auth/login.vue
 <script setup lang="ts">
+// pages/auth/login.vue
 const { signIn } = useAuth()
 
 const email = ref('')
