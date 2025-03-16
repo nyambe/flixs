@@ -73,7 +73,7 @@ const currentYear = new Date().getFullYear()
       <div class="flex flex-col md:flex-row justify-between">
         <!-- Brand and Social Media -->
         <div class="mb-8 md:mb-0">
-          <div class="text-brand font-bold text-xl md:text-2xl mb-6">MOABA CINEMA TV</div>
+          <div class="text-brand font-bold text-lg md:text-xl mb-6">MOABA CINEMA TV</div>
           <!-- Social Media Links -->
           <div class="flex space-x-6">
             <a 
