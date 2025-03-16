@@ -3,7 +3,6 @@
 const config = useRuntimeConfig()
 const { currentUser } = useAuth()
 
-// Redirect if not logged in
 if (currentUser.value) {
   navigateTo('/movies')
 }
@@ -19,11 +18,11 @@ interface Plan {
   savings?: string
 }
 
-const plans: Plan[] = [
+const plans = ref<Plan[]>([
   {
     id: config.public.stripe.basicPriceId,
     name: 'Basic',
-    price: 4.99,
+    price: 0, // placeholder
     interval: 'month',
     description: 'Perfect for individual movie lovers',
     features: [
@@ -37,7 +36,7 @@ const plans: Plan[] = [
   {
     id: config.public.stripe.premiumPriceId,
     name: 'Premium',
-    price: 49,
+    price: 0, // placeholder
     interval: 'year',
     description: 'Best value for movie enthusiasts',
     features: [
@@ -53,7 +52,7 @@ const plans: Plan[] = [
   {
     id: config.public.stripe.educationPriceId,
     name: 'Education',
-    price: 449, // 49 * 12 * 0.8 (20% discount) for 20 licenses
+    price: 0, // placeholder
     interval: 'year',
     description: 'Perfect for schools and educational institutions',
     features: [
@@ -67,12 +66,39 @@ const plans: Plan[] = [
     recommended: false,
     savings: 'Save 20%'
   }
-]
+])
+
+// Fetch the real Stripe prices and map them dynamically
+async function fetchPrices() {
+  const { data: prices } = await useFetch('/api/stripe/prices')
+
+  if (!prices.value) {
+    console.error('Failed to load prices')
+    return
+  }
+
+  // Update each plan's price and interval dynamically
+  plans.value = plans.value.map(plan => {
+    const matchedPrice = prices.value?.find(p => p.id === plan.id)
+
+    if (!matchedPrice) {
+      console.warn(`Price ID ${plan.id} not found!`)
+      return plan
+    }
+
+    return {
+      ...plan,
+      price: matchedPrice.unit_amount / 100, // convert cents to euros
+      interval: matchedPrice.recurring.interval,
+    }
+  })
+}
+
+// Call the function on component load
+await fetchPrices()
 
 const selectPlan = async (priceId: string) => {
-  // We'll implement this later with Stripe
-  // For now, let's just redirect to a placeholder
-  navigateTo('/subscription/checkout?plan=' + priceId)
+  navigateTo(`/subscription/checkout?plan=${priceId}`)
 }
 </script>
 
