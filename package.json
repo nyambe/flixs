@@ -14,6 +14,7 @@
     "@nuxt/fonts": "0.10.3",
     "@nuxt/ui": "2.21.0",
     "@nuxthub/core": "0.8.17",
+    "@stripe/stripe-js": "^6.0.0",
     "eslint": "^9.0.0",
     "firebase": "^11.4.0",
     "firebase-admin": "^13.2.0",
