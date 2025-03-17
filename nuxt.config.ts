@@ -5,6 +5,11 @@ export default defineNuxtConfig({
   alias: {
     'string_decoder': 'string_decoder/',
   },
+  nitro: {
+    prerender: {
+      autoSubfolderIndex: false
+    }
+  },
   modules: [
     '@nuxt/ui',
     '@nuxt/fonts',
