@@ -15,7 +15,7 @@ const navigationItems = [
 const { currentUser, userSubscription, signOut } = useAuth();
 
 
-console.log(currentUser.value)
+console.log('currentUser', currentUser.value)
 
 // Computed properties for dynamic display
 const userDisplayName = computed(() =>
@@ -44,11 +44,11 @@ const isSubscribed = computed(() => userSubscription.value?.active === true);
       </div>
 
       <div class="flex items-center space-x-4">
-        <UButton
+        <!-- <UButton
           color="black"
           variant="ghost"
           icon="i-heroicons-magnifying-glass"
-        />
+        /> -->
         <UButton
           v-if="!isSubscribed"
           color="brand"
@@ -60,7 +60,15 @@ const isSubscribed = computed(() => userSubscription.value?.active === true);
           <span class="text-white">{{ userDisplayName }}</span>
           <UButton
             color="white"
+            variant="ghost"
+            icon="i-heroicons-user-circle"
+            to="/auth/profile"
+            class="hover:bg-gray-800"
+          />
+          <UButton
+            color="white"
             variant="outline"
+            icon="i-heroicons-arrow-right-on-rectangle"
             label="Sign Out"
             @click="signOut"
           />

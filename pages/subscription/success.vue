@@ -19,7 +19,7 @@ onMounted(async () => {
     return;
   }
 
-  if (!currentUser.value) {
+  if (!currentUser.value && !sessionId) {
     error.value = 'You must be signed in to view this page.';
     loading.value = false;
     return;
@@ -53,7 +53,7 @@ const goToMovies = () => {
 
 <template>
   <div class="max-w-md mx-auto mt-16 mb-20">
-    <h1 class="text-3xl font-bold text-brand-content mb-6">Payment Successful</h1>
+    <h1 v-if="!error" class="text-3xl font-bold text-brand-focus mb-6">Payment Successful</h1>
 
     <UAlert v-if="error" color="red" class="mb-4" :title="error" />
 
@@ -63,7 +63,7 @@ const goToMovies = () => {
         <p class="text-neutral-content mt-2">Verifying your payment...</p>
       </div>
       <div v-else-if="!error" class="space-y-4">
-        <p class="text-complementary-content">
+        <p class="text-brand-focus">
           Thank you for your subscription! Your plan is now active.
         </p>
       </div>

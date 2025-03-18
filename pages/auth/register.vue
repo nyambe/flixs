@@ -22,7 +22,7 @@ const handleSubmit = async () => {
   const result = await register(email.value, password.value, name.value)
   
   if (!result.success) {
-    error.value = result.error
+    error.value = result.error || 'An unknown error occurred'
   }
   
   loading.value = false

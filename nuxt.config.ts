@@ -2,12 +2,33 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-03-15',
   devtools: { enabled: true },
+  alias: {
+    'string_decoder': 'string_decoder/',
+  },
+  nitro: {
+    prerender: {
+      autoSubfolderIndex: false
+    }
+  },
   modules: [
     '@nuxt/ui',
     '@nuxt/fonts',
     '@nuxt/eslint',
     '@nuxthub/core'
   ],
+  debug: {
+    // Enable specific debugging features
+    templates: false,
+    modules: false,
+    watchers: false,
+    hooks: {
+      client: false,
+      server: false,
+    },
+    nitro: true,
+    router: false,
+    hydration: false,
+  },
   runtimeConfig: {
     // Server-side environment variables
     firebase: {

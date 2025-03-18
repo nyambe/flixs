@@ -99,7 +99,7 @@
         <p class="text-neutral-content">
           Plan: {{ price.metadata?.name || 'Selected Plan' }}
         </p>
-        <p class="text-brand-focus">
+        <p v-if="price.unit_amount" class="text-brand-focus">
           Price: ${{ (price.unit_amount / 100).toFixed(2) }} {{ price.currency.toUpperCase() }}
           {{ price.recurring?.interval ? `/ ${price.recurring.interval}` : '' }}
         </p>
@@ -122,7 +122,7 @@
         </UButton>
         <UButton
           v-else
-          color="neutral"
+          color="white"
           variant="outline"
           class="w-full"
           to="/subscription/plans"
