@@ -8,7 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "no-build": "npx nuxthub deploy --no-build"
+    "no-build": "npx nuxthub deploy --no-build",
+    "wrangler:dev": "wrangler pages deploy dist/"
   },
   "dependencies": {
     "@nuxt/eslint": "1.0.1",
@@ -27,14 +28,17 @@
   "devDependencies": {
     "@types/vimeo__player": "^2.18.3",
     "@vimeo/player": "^2.26.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "wrangler": "^4.1.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
       "@firebase/util",
       "@parcel/watcher",
       "esbuild",
-      "protobufjs"
+      "protobufjs",
+      "sharp",
+      "workerd"
     ]
   },
   "packageManager": "pnpm@10.6.3+sha256.bc1efe92ee4d40b1a7a644e5ca9e1855c5c5eafc6b1512f9017b31b9245419db"
