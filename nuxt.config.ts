@@ -43,6 +43,7 @@ export default defineNuxtConfig({
     },
     vimeo: {
       accessToken: process.env.VIMEO_ACCESS_TOKEN,
+      clientId: process.env.VIMEO_CLIENT_ID,
     },
     public: {
       baseUrl: process.env.BASE_URL || 'http://localhost:3000',
