@@ -1,6 +1,8 @@
 // server/api/stripe-verify.ts
 import Stripe from 'stripe';
 import { doc, setDoc } from 'firebase/firestore';
+import { useNuxtApp } from 'nuxt/app';
+const { $firebase } = useNuxtApp();
 
 interface VerifyRequestBody {
   sessionId: string;
@@ -12,11 +14,11 @@ interface VerifyResponse {
 
 export default defineEventHandler(async (event): Promise<VerifyResponse> => {
   const runtimeConfig = useRuntimeConfig();
-  const stripe = new Stripe(runtimeConfig.stripeSecretKey as string, {
+  const stripe = new Stripe(runtimeConfig.stripe.secretKey as string, {
     apiVersion: '2024-04-10', // Match your checkout API version
     typescript: true,
   });
-  const { $firebase } = useNuxtApp();
+ 
 
   const body = await readBody<VerifyRequestBody>(event);
   const { sessionId } = body;
