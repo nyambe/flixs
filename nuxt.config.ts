@@ -5,6 +5,11 @@ export default defineNuxtConfig({
   alias: {
     'string_decoder': 'string_decoder/',
   },
+  nitro: {
+    prerender: {
+      autoSubfolderIndex: false
+    }
+  },
   modules: [
     '@nuxt/ui',
     '@nuxt/fonts',
@@ -13,16 +18,16 @@ export default defineNuxtConfig({
   ],
   debug: {
     // Enable specific debugging features
-    templates: true,
-    modules: true,
-    watchers: true,
+    templates: false,
+    modules: false,
+    watchers: false,
     hooks: {
-      client: true,
-      server: true,
+      client: false,
+      server: false,
     },
     nitro: true,
-    router: true,
-    hydration: true,
+    router: false,
+    hydration: false,
   },
   runtimeConfig: {
     // Server-side environment variables
@@ -38,6 +43,9 @@ export default defineNuxtConfig({
     },
     vimeo: {
       accessToken: process.env.VIMEO_ACCESS_TOKEN,
+      clientId: process.env.VIMEO_CLIENT_ID,
+      userId: process.env.VIMEO_USER_ID,
+      clientSecret: process.env.VIMEO_CLIENT_SECRET,
     },
     public: {
       baseUrl: process.env.BASE_URL || 'http://localhost:3000',

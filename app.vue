@@ -1,14 +1,16 @@
 <script setup lang="ts">
 // app.vue
+const { userSubscription } = useAuth();
+
+const shouldShowNotification = computed(() => {
+  return !userSubscription.value?.active;
+});
 </script>
 
 <template>
   <div class="min-h-screen bg-black text-white">
-    <SiteNotification>
-      Limited time offer: Stream premium African movies for just 4.99€/month!
-    </SiteNotification>
-    
     <SiteNavigation />
+    <SiteNotification v-if="shouldShowNotification" />
     
     <NuxtPage />
     <LazyPageFooter />
