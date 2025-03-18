@@ -18,16 +18,16 @@ export default defineNuxtConfig({
   ],
   debug: {
     // Enable specific debugging features
-    templates: true,
-    modules: true,
-    watchers: true,
+    templates: false,
+    modules: false,
+    watchers: false,
     hooks: {
-      client: true,
-      server: true,
+      client: false,
+      server: false,
     },
     nitro: true,
-    router: true,
-    hydration: true,
+    router: false,
+    hydration: false,
   },
   runtimeConfig: {
     // Server-side environment variables
