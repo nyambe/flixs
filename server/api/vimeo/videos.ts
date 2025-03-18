@@ -1,4 +1,4 @@
-// server/api/vimeo-videos.ts
+// server/api/vimeo/videos.ts
 
 interface VimeoVideo {
   uri: string;
@@ -9,6 +9,8 @@ interface VimeoVideo {
     sizes: { width: number; height: number; link: string }[];
   };
   created_time: string;
+  link: string;
+  player_embed_url: string;
 }
 
 interface VimeoResponse {
@@ -20,27 +22,55 @@ interface VimeoResponse {
 
 export default defineEventHandler(async (): Promise<VimeoVideo[]> => {
   const runtimeConfig = useRuntimeConfig();
-  const clientId = runtimeConfig.vimeo.clientId as string;
   const accessToken = runtimeConfig.vimeo.accessToken as string;
+  const userId = runtimeConfig.vimeo.userId as string;
 
-  if (!clientId || !accessToken) {
+  if (!accessToken) {
     throw createError({
       statusCode: 500,
-      message: 'Vimeo credentials are missing in the configuration',
+      message: 'Vimeo access token is missing in the configuration',
+    });
+  }
+
+  if (!userId) {
+    throw createError({
+      statusCode: 500,
+      message: 'Vimeo user ID is missing in the configuration',
     });
   }
 
   try {
-    const response = await $fetch<VimeoResponse>('https://api.vimeo.com/me/videos', {
+    // Use the user ID to fetch videos from a specific account
+    const endpoint = `https://api.vimeo.com/users/${userId}/videos`;
+    
+    const response = await $fetch<VimeoResponse>(endpoint, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
         Accept: 'application/vnd.vimeo.*+json;version=3.4',
       },
+      params: {
+        per_page: 20,
+        sort: 'date',
+      },
     });
 
-    return response.data; // Return the array of videos
+    // Process the videos to include additional useful properties
+    return response.data.map(video => {
+      // Extract the video ID from the URI
+      const videoId = video.uri.split('/').pop() || '';
+      
+      // Find the best thumbnail (prefer medium size)
+      const thumbnail = video.pictures.sizes.find(size => size.width === 640)?.link || 
+                        video.pictures.sizes[video.pictures.sizes.length - 1]?.link;
+      
+      return {
+        ...video,
+        id: videoId,
+        thumbnail,
+      };
+    });
   } catch (error) {
     console.error('Vimeo API error:', error);
     throw createError({
