@@ -2,16 +2,19 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-03-15',
   devtools: { enabled: true },
-  // alias: {
-  //   'string_decoder': 'string_decoder/',
-  // },
+  alias: {
+    'string_decoder': 'string_decoder/',
+  },
   // nitro: {
   //   prerender: {
   //     autoSubfolderIndex: false
   //   }
   // },
   nitro: {
-    preset: 'vercel-edge',
+    preset: 'cloudflare-pages',
+    prerender: {
+      autoSubfolderIndex: false
+    }
   },
   modules: [
     '@nuxt/ui',
