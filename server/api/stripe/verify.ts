@@ -1,8 +1,6 @@
 // server/api/stripe-verify.ts
 import Stripe from 'stripe';
-import { doc, setDoc } from 'firebase/firestore';
-import { useNuxtApp } from 'nuxt/app';
-const { $firebase } = useNuxtApp();
+import { adminDb } from '~/server/utils/firebase-admin';
 
 interface VerifyRequestBody {
   sessionId: string;
@@ -15,7 +13,7 @@ interface VerifyResponse {
 export default defineEventHandler(async (event): Promise<VerifyResponse> => {
   const runtimeConfig = useRuntimeConfig();
   const stripe = new Stripe(runtimeConfig.stripe.secretKey as string, {
-    apiVersion: '2024-04-10', // Match your checkout API version
+    apiVersion: '2025-02-24.acacia', // Updated to latest version
     typescript: true,
   });
  
@@ -49,18 +47,14 @@ export default defineEventHandler(async (event): Promise<VerifyResponse> => {
       });
     }
 
-    // Update Firestore with subscription status
-    await setDoc(
-      doc($firebase.firestore, 'users', firebaseUid),
-      {
-        subscription: {
-          active: true,
-          stripeSubscriptionId: session.subscription,
-          updatedAt: new Date(),
-        },
+    // Update Firestore with subscription status using admin SDK
+    await adminDb.doc(`users/${firebaseUid}`).set({
+      subscription: {
+        active: true,
+        stripeSubscriptionId: session.subscription,
+        updatedAt: new Date(),
       },
-      { merge: true }
-    );
+    }, { merge: true });
 
     return { success: true };
   } catch (error) {

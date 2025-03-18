@@ -63,7 +63,7 @@ const goToMovies = () => {
         <p class="text-neutral-content mt-2">Verifying your payment...</p>
       </div>
       <div v-else-if="!error" class="space-y-4">
-        <p class="text-complementary-content">
+        <p class="text-brand-focus">
           Thank you for your subscription! Your plan is now active.
         </p>
       </div>
