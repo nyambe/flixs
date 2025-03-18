@@ -10,6 +10,9 @@ export default defineNuxtConfig({
   //     autoSubfolderIndex: false
   //   }
   // },
+  nitro: {
+    preset: 'vercel-edge',
+  },
   modules: [
     '@nuxt/ui',
     '@nuxt/fonts',
