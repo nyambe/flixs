@@ -2,14 +2,14 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-03-15',
   devtools: { enabled: true },
-  alias: {
-    'string_decoder': 'string_decoder/',
-  },
-  nitro: {
-    prerender: {
-      autoSubfolderIndex: false
-    }
-  },
+  // alias: {
+  //   'string_decoder': 'string_decoder/',
+  // },
+  // nitro: {
+  //   prerender: {
+  //     autoSubfolderIndex: false
+  //   }
+  // },
   modules: [
     '@nuxt/ui',
     '@nuxt/fonts',
