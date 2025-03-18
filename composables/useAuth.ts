@@ -45,10 +45,10 @@ export const useAuth = () => {
       await signInWithEmailAndPassword($firebase.auth, email, password)
       router.push('/movies')
       return { success: true }
-    } catch (error: any) {
+    } catch (error: unknown) {
       return { 
         success: false, 
-        error: error.message 
+        error: error instanceof Error ? error.message : 'An unknown error occurred'
       }
     }
   }
@@ -70,10 +70,10 @@ export const useAuth = () => {
       
       router.push('/subscription/plans')
       return { success: true }
-    } catch (error: any) {
+    } catch (error: unknown) {
       return { 
         success: false, 
-        error: error.message 
+        error: error instanceof Error ? error.message : 'An unknown error occurred'
       }
     }
   }
@@ -84,10 +84,10 @@ export const useAuth = () => {
       await firebaseSignOut($firebase.auth)
       router.push('/')
       return { success: true }
-    } catch (error: any) {
+    } catch (error: unknown) {
       return { 
         success: false, 
-        error: error.message 
+        error: error instanceof Error ? error.message : 'An unknown error occurred'
       }
     }
   }
