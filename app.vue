@@ -8,13 +8,15 @@ const shouldShowNotification = computed(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-black text-white">
-    <SiteNavigation />
-    <SiteNotification v-if="shouldShowNotification" />
-    
-    <NuxtPage />
-    <LazyPageFooter />
-  </div>
+  <UApp>
+    <div class="min-h-screen bg-black text-white">
+      <SiteNavigation />
+      <SiteNotification v-if="shouldShowNotification" />
+        
+      <NuxtPage />
+      <LazyPageFooter />
+    </div>
+  </UApp>
 </template>
 
 <style>
