@@ -86,7 +86,7 @@ definePageMeta({
               </span>
               <span v-if="movie?.release_date">{{ new Date(movie?.release_date).getFullYear() }}</span>
             </div>
-            <p class="text-lg text-gray-300 mb-8">
+            <p class="text-lg text-neutral-300 mb-8">
               {{ movie?.overview }}
             </p>
             <div class="flex gap-4">

@@ -37,7 +37,7 @@ const isSubscribed = computed(() => userSubscription.value?.active === true);
           v-for="item in navigationItems"
           :key="item.path"
           :to="item.path"
-          class="text-gray-300 hover:text-white transition"
+          class="text-neutral-300 hover:text-white transition"
         >
           {{ item.label }}
         </NuxtLink>
@@ -63,7 +63,7 @@ const isSubscribed = computed(() => userSubscription.value?.active === true);
             variant="ghost"
             icon="i-heroicons-user-circle"
             to="/auth/profile"
-            class="hover:bg-gray-800"
+            class="hover:bg-neutral-800"
           />
           <UButton
             color="white"

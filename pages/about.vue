@@ -59,7 +59,7 @@ const features = [
         <div 
           v-for="(feature, index) in features" 
           :key="index"
-          class="p-6 border border-gray-200 rounded-lg hover:border-brand transition"
+          class="p-6 border border-neutral-200 rounded-lg hover:border-brand transition"
         >
           <div class="flex items-start gap-4">
             <UIcon 
