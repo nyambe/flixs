@@ -1,7 +1,47 @@
-@import "tailwindcss" theme(static);
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss' layer(base) theme(static);
+@import "@nuxt/ui";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-brand: hsl(var(--p) var(--ps) var(--pl));
+  --color-brand-focus: hsl(var(--p) var(--ps) calc(var(--pl) - 10%));
+  --color-brand-content: hsl(var(--p) var(--ps) 10%);
+
+  --color-complementary: hsl(var(--s) var(--ss) var(--sl));
+  --color-complementary-focus: hsl(var(--s) var(--ss) calc(var(--sl) - 10%));
+  --color-complementary-content: hsl(var(--s) var(--ss) 10%);
+
+  --color-accent: hsl(var(--a) var(--as) var(--al));
+  --color-accent-focus: hsl(var(--a) var(--as) calc(var(--al) - 10%));
+  --color-accent-content: hsl(var(--a) var(--as) 10%);
+
+  --color-neutral: hsl(var(--n) var(--ns) var(--nl));
+  --color-neutral-focus: hsl(var(--n) var(--ns) calc(var(--nl) - 10%));
+  --color-neutral-content: hsl(var(--n) var(--ns) 95%);
+
+  --color-support: hsl(var(--c) var(--cs) var(--cl));
+  --color-support-focus: hsl(var(--c) var(--cs) calc(var(--cl) - 10%));
+  --color-support-content: hsl(var(--c) var(--cs) 95%);
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 @layer base {
   :root {

@@ -38,6 +38,9 @@ importers:
       stripe:
         specifier: ^17.7.0
         version: 17.7.0
+      tailwindcss:
+        specifier: ^4.0.14
+        version: 4.0.14
       vue:
         specifier: latest
         version: 3.5.13(typescript@5.8.2)
