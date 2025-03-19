@@ -3,9 +3,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-03-15',
   devtools: { enabled: true },
   css: ['~/assets/css/tailwind.css'],
-  // alias: {
-  //   'string_decoder': 'string_decoder/',
-  // },
+  alias: {
+    'string_decoder': 'string_decoder/',
+  },
   // nitro: {
   //   prerender: {
   //     autoSubfolderIndex: false
