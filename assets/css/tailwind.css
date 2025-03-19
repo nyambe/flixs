@@ -1,3 +1,4 @@
+@import "tailwindcss" theme(static);
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
