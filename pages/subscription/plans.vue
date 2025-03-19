@@ -106,7 +106,7 @@ const selectPlan = async (priceId: string) => {
   <div class="bg-black min-h-screen py-16 px-4">
     <div class="max-w-7xl mx-auto">
       <h1 class="text-4xl font-bold text-center text-white mb-4">Choose Your Plan</h1>
-      <p class="text-lg text-center text-gray-300 mb-12 max-w-2xl mx-auto">
+      <p class="text-lg text-center text-neutral-300 mb-12 max-w-2xl mx-auto">
         Get unlimited access to African cinema and support local filmmakers.
         Switch or cancel anytime.
       </p>
@@ -119,7 +119,7 @@ const selectPlan = async (priceId: string) => {
             'rounded-2xl p-6 flex flex-col',
             plan.recommended 
               ? 'bg-brand bg-opacity-10 border-2 border-brand' 
-              : 'bg-gray-900 border border-gray-800'
+              : 'bg-neutral-900 border border-neutral-800'
           ]"
         >
           <div 
@@ -130,11 +130,11 @@ const selectPlan = async (priceId: string) => {
           </div>
           
           <h2 class="text-2xl font-bold mb-2 text-white">{{ plan.name }}</h2>
-          <p class="text-gray-400 mb-4">{{ plan.description }}</p>
+          <p class="text-neutral-400 mb-4">{{ plan.description }}</p>
           
           <div class="mb-4">
             <span class="text-4xl font-bold text-white">€{{ plan.price }}</span>
-            <span class="text-gray-400">/{{ plan.interval }}</span>
+            <span class="text-neutral-400">/{{ plan.interval }}</span>
             <div v-if="plan.savings" class="text-brand-hover mt-1 font-medium">
               {{ plan.savings }}
             </div>
@@ -144,7 +144,7 @@ const selectPlan = async (priceId: string) => {
             <li 
               v-for="feature in plan.features" 
               :key="feature" 
-              class="flex items-start mb-3 text-gray-300"
+              class="flex items-start mb-3 text-neutral-300"
             >
               <span class="text-brand mr-2">✓</span>
               <span>{{ feature }}</span>
@@ -152,7 +152,7 @@ const selectPlan = async (priceId: string) => {
           </ul>
           
           <UButton
-            :class="!plan.recommended ? 'bg-brand text-brand-content hover:bg-brand-hover' : 'bg-gray-900 text-gray-300 hover:bg-gray-800'"
+            :class="!plan.recommended ? 'bg-brand text-brand-content hover:bg-brand-hover' : 'bg-neutral-900 text-neutral-300 hover:bg-neutral-800'"
             :variant="plan.recommended ? 'solid' : 'outline'"
             class="w-full"
             size="lg"

@@ -32,7 +32,7 @@ const payUrl = "https://buy.stripe.com/test_5kA6sgdCf3xk2DSaEG"
           <h1 class="text-5xl md:text-7xl font-bold mb-4">
             {{ featuredMovie.title }}
           </h1>
-          <p class="text-xl text-gray-300 mb-8 h-32 line-clamp-3">
+          <p class="text-xl text-neutral-300 mb-8 h-32 line-clamp-3">
             {{ featuredMovie.overview }}
           </p>
           <div class="flex space-x-4">

@@ -110,7 +110,7 @@ const currentYear = new Date().getFullYear()
         <p>Si tiene dudas sobre esta Política de Privacidad, puede contactarnos en <a href="mailto:moabacinematv@gmail.com" class="text-brand hover:underline">moabacinematv@gmail.com</a>.</p>
       </section>
       
-      <div class="mt-6 text-right text-sm text-gray-500">
+      <div class="mt-6 text-right text-sm text-neutral-500">
         <p>Fecha de última actualización: 15/03/2025</p>
       </div>
     </div>
