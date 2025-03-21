@@ -9,14 +9,12 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "no-build": "npx nuxthub deploy --no-build",
-    "wrangler:dev": "wrangler pages deploy dist/",
     "build:mem": "node --max-old-space-size=4096 ./node_modules/.bin/nuxt build"
   },
   "dependencies": {
     "@nuxt/eslint": "1.2.0",
     "@nuxt/fonts": "0.11.0",
     "@nuxt/ui": "3.0.0",
-    "@nuxthub/core": "0.8.18",
     "@stripe/stripe-js": "^6.0.0",
     "eslint": "^9.22.0",
     "firebase": "^11.4.0",
@@ -31,8 +29,7 @@
   "devDependencies": {
     "@types/vimeo__player": "^2.18.3",
     "@vimeo/player": "^2.26.0",
-    "typescript": "^5.8.2",
-    "wrangler": "^4.2.0"
+    "typescript": "^5.8.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
