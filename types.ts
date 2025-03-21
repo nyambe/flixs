@@ -26,6 +26,7 @@ export interface TMDBMovie {
     popularity: number
     genre_ids: number[]
     media_type: string
+    video_id?: string
   }
   
 export interface TMDBList {
