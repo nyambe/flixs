@@ -37,13 +37,23 @@ const payUrl = "https://buy.stripe.com/test_5kA6sgdCf3xk2DSaEG"
           </p>
           <div class="flex space-x-4">
             <UButton
+              v-if="featuredMovie.video_id"
+              size="xl"
+              color="brand"
+              label="Play"
+              icon="i-heroicons-play"
+              class="bg-brand hover:bg-amber-500"
+              @click="() => navigateTo(`/watch/${featuredMovie.video_id}`)"
+            />
+            <!-- <UButton
+              v-else
               size="xl"
               color="brand"
               label="Play"
               icon="i-heroicons-play"
               class="bg-brand hover:bg-amber-500"
               @click="() => navigateTo(`/movie/${featuredMovie.id}`)"
-            />
+            /> -->
             <UButton
               size="xl"
               color="black"

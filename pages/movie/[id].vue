@@ -12,7 +12,11 @@ const movie = getMovieById(Number(movieId))
 
 const togglePlay = () => {
   // isPlaying.value = !isPlaying.value
-  window.location.href = 'https://buy.stripe.com/test_5kA6sgdCf3xk2DSaEG'
+  // If movie has a video_id, use it; otherwise use a default
+  const video_id = movie?.video_id || '933381480'
+  
+  // Instead of toggling play state, navigate to watch page
+  navigateTo(`/watch/${video_id}`)
 }
 
 // Apply subscription middleware
