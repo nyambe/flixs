@@ -50,6 +50,11 @@ useHead({
     class: 'bg-black'
   }
 });
+// Apply subscription middleware to ensure only subscribers can watch videos
+definePageMeta({
+  middleware: 'subscription'
+})
+
 </script>
 
 <template>
