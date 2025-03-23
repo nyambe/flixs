@@ -12,6 +12,17 @@ interface VimeoVideo {
   player_embed_url: string;
   id: string;
   thumbnail: string;
+  privacy: {
+    view: string;
+    embed: string;
+    download: boolean;
+    add: boolean;
+    comments: string;
+  };
+  embed?: {
+    html: string;
+  };
+  status: string;
 }
 
 const route = useRoute();
@@ -21,15 +32,15 @@ const { getVideo, loading, error } = useVimeo();
 const video = ref<VimeoVideo | null>(null);
 const isFullscreen = ref(true);
 
-// Add autoplay parameter to player URL
-const getPlayerUrl = (url: string) => {
-  if (!url) return '';
-  // Add autoplay=1 parameter to the URL
-  return url.includes('?') ? `${url}&autoplay=1` : `${url}?autoplay=1`;
-};
-
 onMounted(async () => {
-  video.value = await getVideo(videoId);
+  try {
+    const response = await getVideo(videoId);
+    if (response && 'uri' in response) {
+      video.value = response as VimeoVideo;
+    }
+  } catch (err) {
+    console.error('Error fetching video:', err);
+  }
   
   // Listen for escape key to exit fullscreen
   window.addEventListener('keydown', (e) => {
@@ -38,6 +49,22 @@ onMounted(async () => {
     }
   });
 });
+
+// Add autoplay parameter to player URL
+const getPlayerUrl = (video: VimeoVideo) => {
+  if (!video.player_embed_url) return '';
+  
+  // Base URL is already configured for private videos from the API
+  const baseUrl = video.player_embed_url;
+  
+  // Add autoplay parameter if not already present
+  if (!baseUrl.includes('autoplay=')) {
+    const autoplayParam = baseUrl.includes('?') ? '&autoplay=1' : '?autoplay=1';
+    return `${baseUrl}${autoplayParam}`;
+  }
+  
+  return baseUrl;
+};
 
 // Function to toggle fullscreen
 const toggleFullscreen = () => {
@@ -77,7 +104,7 @@ definePageMeta({
     
     <div class="w-full h-full">
       <iframe
-        :src="getPlayerUrl(video.player_embed_url)"
+        :src="getPlayerUrl(video)"
         class="w-full h-full"
         frameborder="0"
         allow="autoplay; fullscreen; picture-in-picture"
@@ -101,7 +128,7 @@ definePageMeta({
       
       <div class="relative aspect-video bg-black mb-4 cursor-pointer" @click="toggleFullscreen">
         <iframe
-          :src="video.player_embed_url"
+          :src="getPlayerUrl(video)"
           class="w-full h-full"
           frameborder="0"
           allow="autoplay; fullscreen; picture-in-picture"
