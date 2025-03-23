@@ -1,60 +1,33 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { ref, onMounted } from 'vue';
 
-// Access Firebase auth
-const { $firebase } = useNuxtApp();
-const auth = $firebase.auth;
+// Use the admin user composable
+const { signIn, loading, error: authError, user } = useAdminUser();
 
 // Form data
 const email = ref('');
 const password = ref('');
-const errorMessage = ref('');
-const loading = ref(false);
 
 // Handle form submission
 const handleLogin = async () => {
   if (!email.value || !password.value) {
-    errorMessage.value = 'Please enter both email and password';
     return;
   }
   
-  loading.value = true;
-  errorMessage.value = '';
+  const success = await signIn(email.value, password.value);
   
-  try {
-    // Attempt to sign in with Firebase
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email.value,
-      password.value
-    );
-    
-    // Check if user has admin privileges (email contains 'developer')
-    if (!userCredential.user.email?.includes('developer')) {
-      // Sign out if not an admin
-      await auth.signOut();
-      errorMessage.value = 'You do not have administrator privileges';
-      loading.value = false;
-      return;
-    }
-    
+  if (success) {
     // Redirect to admin dashboard on success
     navigateTo('/admin');
-  } catch (error: any) {
-    // Handle specific error cases
-    if (error.code === 'auth/invalid-credential') {
-      errorMessage.value = 'Invalid email or password';
-    } else if (error.code === 'auth/too-many-requests') {
-      errorMessage.value = 'Too many failed login attempts. Please try again later';
-    } else {
-      errorMessage.value = 'Failed to sign in. Please try again.';
-      console.error('Admin login error:', error);
-    }
-  } finally {
-    loading.value = false;
   }
 };
+
+// If already logged in as admin, redirect to admin page
+onMounted(() => {
+  if (user.value) {
+    navigateTo('/admin');
+  }
+});
 </script>
 
 <template>
@@ -99,8 +72,8 @@ const handleLogin = async () => {
           </div>
           
           <!-- Error Message -->
-          <div v-if="errorMessage" class="mb-6">
-            <p class="text-red-500 text-sm">{{ errorMessage }}</p>
+          <div v-if="authError" class="mb-6">
+            <p class="text-red-500 text-sm">{{ authError }}</p>
           </div>
           
           <!-- Submit Button -->

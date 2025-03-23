@@ -1,7 +1,6 @@
 // middleware/admin.global.ts
-
 export default defineNuxtRouteMiddleware((_to, _from) => {
-  const user = useCurrentUser();
+  const { user, isAdmin } = useAdminUser();
 
   // Only apply this middleware to admin routes
   if (!_to.path.startsWith('/admin')) {
@@ -19,10 +18,8 @@ export default defineNuxtRouteMiddleware((_to, _from) => {
   }
 
   // Check if user has admin role
-  const isAdmin = user.value.email?.includes('developer');
-  
-  if (!isAdmin) {
+  if (!isAdmin.value) {
     console.log('User is not an admin, redirecting to home');
     return navigateTo('/');
   }
-}); 
+});
