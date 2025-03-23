@@ -11,6 +11,23 @@ interface VimeoVideo {
   created_time: string;
   link: string;
   player_embed_url: string;
+  privacy: {
+    view: string;
+    embed: string;
+    download: boolean;
+    add: boolean;
+    comments: string;
+  };
+  embed: {
+    html: string;
+    badges: {
+      live: { streaming: boolean; archived: boolean };
+      staff_pick: { normal: boolean; best_of_the_month: boolean };
+      vod: boolean;
+      weekend_challenge: boolean;
+    };
+  };
+  status: string;
   id?: string;
   thumbnail?: string;
 }
@@ -37,7 +54,7 @@ export default defineEventHandler(async (event): Promise<VimeoVideo | null> => {
   }
   
   try {
-    // Fetch a single video by its ID
+    // Fetch a single video by its ID with all necessary fields
     const endpoint = `https://api.vimeo.com/videos/${videoId}`;
     
     const video = await $fetch<VimeoVideo>(endpoint, {
@@ -50,12 +67,23 @@ export default defineEventHandler(async (event): Promise<VimeoVideo | null> => {
     });
     
     // Process the video to include additional useful properties
-    // Extract the video ID from the URI (though we already have it from the parameters)
     const extractedVideoId = video.uri.split('/').pop() || '';
     
     // Find the best thumbnail (prefer medium size)
     const thumbnail = video.pictures.sizes.find(size => size.width === 640)?.link || 
                       video.pictures.sizes[video.pictures.sizes.length - 1]?.link;
+    
+    // For private videos, we'll use the embed.html which contains the necessary tokens
+    if (video.privacy.view === 'nobody') {
+      const embedHtml = video.embed?.html;
+      if (embedHtml) {
+        // Extract the player URL from the embed HTML
+        const srcMatch = embedHtml.match(/src="([^"]+)"/);
+        if (srcMatch && srcMatch[1]) {
+          video.player_embed_url = srcMatch[1];
+        }
+      }
+    }
     
     return {
       ...video,
