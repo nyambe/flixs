@@ -116,7 +116,7 @@ definePageMeta({
               <UButton
                 v-if="movie?.trailer_id"
                 size="xl"
-                color="neutral"
+                color="warning"
                 variant="outline"
                 label="Trailer"
                 icon="i-heroicons-film"
@@ -124,7 +124,7 @@ definePageMeta({
               />
               <UButton
                 size="xl"
-                color="primary"
+                color="warning"
                 variant="ghost"
                 icon="i-heroicons-arrow-left"
                 @click="goBack"

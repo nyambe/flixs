@@ -1,19 +1,24 @@
 <script setup lang="ts">
 // app.vue
 
-
 const { featuredMovie, popularMovies } = useMovieData()
 const imagePath = useImagePath()
+const showTrailer = ref(false)
 
 // Calculate aspect ratios
 const backdropAspectRatio = 'aspect-[16/9]'
 const posterAspectRatio = 'aspect-[2/3]'
 
-const payUrl = "https://buy.stripe.com/test_5kA6sgdCf3xk2DSaEG"
 </script>
 
 <template>
   <div class=" bg-black text-white">
+    <!-- Trailer Modal -->
+    <TrailerModal 
+      v-model:open="showTrailer" 
+      :trailer-id="featuredMovie.trailer_id || null"
+    />
+    
     <!-- Hero Section -->
     <section class="relative min-h-[60vh] overflow-hidden">
       <div class="absolute inset-0">
@@ -32,31 +37,41 @@ const payUrl = "https://buy.stripe.com/test_5kA6sgdCf3xk2DSaEG"
           <h1 class="text-5xl md:text-7xl font-bold mb-4">
             {{ featuredMovie.title }}
           </h1>
-          <p class="text-xl text-neutral-300 mb-8 h-32 line-clamp-3">
+          <p class="text-md text-neutral-300 mb-8 max-h-48 overflow-hidden relative">
             {{ featuredMovie.overview }}
+            <span class="absolute bottom-0 right-0 bg-gradient-to-l from-black to-transparent px-4">&hellip;</span>
           </p>
           <div class="flex space-x-4">
             <UButton
               v-if="featuredMovie.video_id"
               size="xl"
-              color="brand"
+              color="primary"
               label="Play"
               icon="i-heroicons-play"
-              class="bg-brand hover:bg-amber-500"
-              @click="() => navigateTo(`/watch/${featuredMovie.video_id}`)"
+              class="bg-amber-400 hover:bg-amber-500"
+              @click="navigateTo(`/watch/${featuredMovie.video_id}`)"
             />
             <!-- <UButton
               v-else
               size="xl"
-              color="brand"
+              color="primary"
               label="Play"
               icon="i-heroicons-play"
-              class="bg-brand hover:bg-amber-500"
-              @click="() => navigateTo(`/movie/${featuredMovie.id}`)"
+              class="bg-amber-400 hover:bg-amber-500"
+              @click="navigateTo(`/movie/${featuredMovie.id}`)"
             /> -->
             <UButton
+              v-if="featuredMovie.trailer_id"
               size="xl"
-              color="black"
+              color="warning"
+              variant="outline"
+              label="Trailer"
+              icon="i-heroicons-film"
+              @click="showTrailer = true"
+            />
+            <UButton
+              size="xl"
+              color="white"
               variant="ghost"
               label="More Info"
               icon="i-heroicons-information-circle"
