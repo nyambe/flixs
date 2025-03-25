@@ -33,44 +33,44 @@ const handleSubmit = async () => {
   <div class="max-w-md mx-auto mt-16 mb-20">
     <h1 class="text-3xl font-bold mb-6">Create Account</h1>
     
-    <UAlert v-if="error" color="red" class="mb-4" :title="error" />
+    <UAlert v-if="error" color="error" class="mb-4" :title="error" />
     
     <form @submit.prevent="handleSubmit">
-      <UFormGroup label="Name" name="name" class="mb-4">
+      <UFormField label="Name" name="name" class="mb-4">
         <UInput
           v-model="name"
           type="text"
           placeholder="John Doe"
           required
         />
-      </UFormGroup>
+      </UFormField>
       
-      <UFormGroup label="Email" name="email" class="mb-4">
+      <UFormField label="Email" name="email" class="mb-4">
         <UInput
           v-model="email"
           type="email"
           placeholder="your@email.com"
           required
         />
-      </UFormGroup>
+      </UFormField>
       
-      <UFormGroup label="Password" name="password" class="mb-4">
+      <UFormField label="Password" name="password" class="mb-4">
         <UInput
           v-model="password"
           type="password"
           placeholder="********"
           required
         />
-      </UFormGroup>
+      </UFormField>
       
-      <UFormGroup label="Confirm Password" name="confirmPassword" class="mb-6">
+      <UFormField label="Confirm Password" name="confirmPassword" class="mb-6">
         <UInput
           v-model="confirmPassword"
           type="password"
           placeholder="********"
           required
         />
-      </UFormGroup>
+      </UFormField>
       
       <div class="flex justify-between items-center">
         <UButton

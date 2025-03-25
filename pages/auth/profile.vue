@@ -58,12 +58,12 @@ const handleSubmit = async () => {
   <div class="max-w-md mx-auto mt-16 mb-20">
     <h1 class="text-3xl font-bold text-brand-content mb-6">Edit Profile</h1>
 
-    <UAlert v-if="error" color="red" class="mb-4" :title="error" />
-    <UAlert v-if="success" color="green" class="mb-4" :title="success" />
+    <UAlert v-if="error" color="error" class="mb-4" :title="error" />
+    <UAlert v-if="success" color="success" class="mb-4" :title="success" />
 
     <UCard v-if="currentUser" class="bg-neutral" >
       <form @submit.prevent="handleSubmit">
-        <UFormGroup label="Name" name="name" class="mb-4">
+        <UFormField label="Name" name="name" class="mb-4">
           <UInput
             v-model="name"
             type="text"
@@ -71,12 +71,12 @@ const handleSubmit = async () => {
             required
             :disabled="loading"
           />
-        </UFormGroup>
+        </UFormField>
 
         <div class="flex justify-between items-center">
           <UButton
             type="submit"
-            color="brand"
+            color="primary"
             class="bg-brand text-brand-content hover:bg-brand-focus"
             :loading="loading"
             :disabled="loading"

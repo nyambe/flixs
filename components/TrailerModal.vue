@@ -34,7 +34,7 @@ const getPlayerUrl = (trailerId: string) => {
         </div>
         <div class="p-4 flex justify-end">
           <UButton
-            color="neutral"
+            color="white"
             variant="ghost"
             icon="i-heroicons-x-mark"
             @click="isOpen = false"
