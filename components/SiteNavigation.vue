@@ -30,17 +30,28 @@ const isSubscribed = computed(() => userSubscription.value?.active === true);
 // Computed property for current locale display with fallback
 const currentLocale = computed(() => locale.value || 'en');
 
-// Function to toggle between available languages
-const toggleLanguage = () => {
-  // Handle case where locale is not set or availableLocales is empty
-  console.log('availableLocales', availableLocales)
-  if (!availableLocales.length) return;
-  
-  const currentLoc = locale.value || 'en';
-  const currentIndex = availableLocales.indexOf(currentLoc);
-  const nextIndex = (currentIndex < 0 || currentIndex >= availableLocales.length - 1) ? 0 : currentIndex + 1;
-  locale.value = availableLocales[nextIndex];
-};
+// Language options with display names
+const languageOptions = computed(() => {
+  return availableLocales.map(code => ({
+    value: code,
+    label: getLanguageName(code)
+  }));
+});
+
+// Get full language name from language code
+function getLanguageName(code: string): string {
+  const names: Record<string, string> = {
+    en: 'English',
+    fr: 'Français',
+    es: 'Español'
+  };
+  return names[code] || code.toUpperCase();
+}
+
+// Change language handler
+function changeLanguage(newLocale: string) {
+  locale.value = newLocale;
+}
 </script>
 
 <template>
@@ -62,14 +73,26 @@ const toggleLanguage = () => {
       </div>
 
       <div class="flex items-center space-x-4">
-        <!-- Language Switcher -->
-        <UButton
-          color="white"
-          variant="ghost"
-          :label="currentLocale.toUpperCase()"
-          @click="toggleLanguage"
-          class="hover:bg-neutral-800"
-        />
+        <!-- Elegant Language Switcher -->
+        <UDropdownMenu :items="languageOptions">
+          <UButton
+            color="white"
+            variant="ghost"
+            class="hover:bg-neutral-800"
+            trailing-icon="i-heroicons-language"
+          >
+            {{ getLanguageName(currentLocale) }}
+          </UButton>
+          
+          <template #item="{ item }">
+            <UDropdownMenuItem
+              :active="item.value === currentLocale"
+              @click="changeLanguage(item.value)"
+            >
+              {{ item.label }}
+            </UDropdownMenuItem>
+          </template>
+        </UDropdownMenu>
         
         <UButton
           v-if="!isSubscribed"
