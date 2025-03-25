@@ -6,16 +6,20 @@ export default defineI18nConfig(() => ({
       welcome: 'Welcome',
       Home: 'Home',
       Movies: 'Movies',
-      Title: 'TV Shows',
+      'TV Shows': 'TV Shows',
       'New & Popular': 'New & Popular',
       'My List': 'My List',
       Subscribe: 'Subscribe',
       'Sign In': 'Sign In',
       'Sign Out': 'Sign Out',
+      
+      // Navigation & Common
       Play: 'Play',
       Trailer: 'Trailer',
       'More Info': 'More Info',
       'Las Joyas de MOABA': 'MOABA Jewels',
+      
+      // Footer
       'WHAT TO WATCH': 'WHAT TO WATCH',
       Series: 'Series',
       'MOABA CINEMA': 'MOABA CINEMA',
@@ -25,7 +29,52 @@ export default defineI18nConfig(() => ({
       'Legal Notice': 'Legal Notice',
       'Cookie Policy': 'Cookie Policy',
       'Privacy Policy': 'Privacy Policy',
-      'All rights reserved': 'All rights reserved'
+      'All rights reserved': 'All rights reserved',
+      
+      // Auth pages
+      'Create Account': 'Create Account',
+      'Sign Up': 'Sign Up',
+      'Need an account?': 'Need an account?',
+      'Already have an account?': 'Already have an account?',
+      'Email': 'Email',
+      'Password': 'Password',
+      'Confirm Password': 'Confirm Password',
+      'Name': 'Name',
+      'Please fill in all fields': 'Please fill in all fields',
+      'Passwords do not match': 'Passwords do not match',
+      'Authentication failed': 'Authentication failed',
+      
+      // Subscription pages
+      'Checkout': 'Checkout',
+      'Choose Your Plan': 'Choose Your Plan',
+      'Get unlimited access to African cinema and support local filmmakers.': 'Get unlimited access to African cinema and support local filmmakers.',
+      'Switch or cancel anytime.': 'Switch or cancel anytime.',
+      'Subscription Plan': 'Subscription Plan',
+      'Plan': 'Plan',
+      'Price': 'Price',
+      'Selected Plan': 'Selected Plan',
+      'Most Popular': 'Most Popular',
+      'Get': 'Get',
+      'Proceed to Payment': 'Proceed to Payment',
+      'Choose a Plan': 'Choose a Plan',
+      'Loading plan details...': 'Loading plan details...',
+      'No plan specified in the URL.': 'No plan specified in the URL.',
+      'Invalid or unavailable plan.': 'Invalid or unavailable plan.',
+      'Failed to load plan details.': 'Failed to load plan details.',
+      'You must be signed in to proceed.': 'You must be signed in to proceed.',
+      'Failed to initiate checkout. Please try again.': 'Failed to initiate checkout. Please try again.',
+      'No plan selected or invalid plan ID.': 'No plan selected or invalid plan ID.',
+      'Don\'t have an account?': 'Don\'t have an account?',
+      
+      // Subscription success page
+      'Payment Successful': 'Payment Successful',
+      'Missing session ID.': 'Missing session ID.',
+      'You must be signed in to view this page.': 'You must be signed in to view this page.',
+      'Failed to verify payment.': 'Failed to verify payment.',
+      'An error occurred while verifying your payment.': 'An error occurred while verifying your payment.',
+      'Verifying your payment...': 'Verifying your payment...',
+      'Thank you for your subscription! Your plan is now active.': 'Thank you for your subscription! Your plan is now active.',
+      'Go to Movies': 'Go to Movies'
     },
     fr: {
       welcome: 'Bienvenue',
@@ -37,10 +86,14 @@ export default defineI18nConfig(() => ({
       Subscribe: 'S\'abonner',
       'Sign In': 'Se connecter',
       'Sign Out': 'Se déconnecter',
+      
+      // Navigation & Common
       Play: 'Lecture',
       Trailer: 'Bande-annonce',
       'More Info': 'Plus d\'infos',
       'Las Joyas de MOABA': 'Les Joyaux de MOABA',
+      
+      // Footer
       'WHAT TO WATCH': 'QUE REGARDER',
       Series: 'Séries',
       'MOABA CINEMA': 'CINÉMA MOABA',
@@ -50,7 +103,52 @@ export default defineI18nConfig(() => ({
       'Legal Notice': 'Mentions Légales',
       'Cookie Policy': 'Politique des Cookies',
       'Privacy Policy': 'Politique de Confidentialité',
-      'All rights reserved': 'Tous droits réservés'
+      'All rights reserved': 'Tous droits réservés',
+      
+      // Auth pages
+      'Create Account': 'Créer un compte',
+      'Sign Up': 'S\'inscrire',
+      'Need an account?': 'Besoin d\'un compte?',
+      'Already have an account?': 'Vous avez déjà un compte?',
+      'Email': 'Email',
+      'Password': 'Mot de passe',
+      'Confirm Password': 'Confirmer le mot de passe',
+      'Name': 'Nom',
+      'Please fill in all fields': 'Veuillez remplir tous les champs',
+      'Passwords do not match': 'Les mots de passe ne correspondent pas',
+      'Authentication failed': 'Échec de l\'authentification',
+      
+      // Subscription pages
+      'Checkout': 'Paiement',
+      'Choose Your Plan': 'Choisissez votre forfait',
+      'Get unlimited access to African cinema and support local filmmakers.': 'Accédez sans limites au cinéma africain et soutenez les cinéastes locaux.',
+      'Switch or cancel anytime.': 'Changez ou annulez à tout moment.',
+      'Subscription Plan': 'Forfait d\'abonnement',
+      'Plan': 'Forfait',
+      'Price': 'Prix',
+      'Selected Plan': 'Forfait sélectionné',
+      'Most Popular': 'Le plus populaire',
+      'Get': 'Obtenir',
+      'Proceed to Payment': 'Procéder au paiement',
+      'Choose a Plan': 'Choisir un forfait',
+      'Loading plan details...': 'Chargement des détails du forfait...',
+      'No plan specified in the URL.': 'Aucun forfait spécifié dans l\'URL.',
+      'Invalid or unavailable plan.': 'Forfait invalide ou indisponible.',
+      'Failed to load plan details.': 'Échec du chargement des détails du forfait.',
+      'You must be signed in to proceed.': 'Vous devez être connecté pour continuer.',
+      'Failed to initiate checkout. Please try again.': 'Échec de l\'initialisation du paiement. Veuillez réessayer.',
+      'No plan selected or invalid plan ID.': 'Aucun forfait sélectionné ou ID de forfait invalide.',
+      'Don\'t have an account?': 'Vous n\'avez pas de compte?',
+      
+      // Subscription success page
+      'Payment Successful': 'Paiement réussi',
+      'Missing session ID.': 'ID de session manquant.',
+      'You must be signed in to view this page.': 'Vous devez être connecté pour voir cette page.',
+      'Failed to verify payment.': 'Échec de la vérification du paiement.',
+      'An error occurred while verifying your payment.': 'Une erreur s\'est produite lors de la vérification de votre paiement.',
+      'Verifying your payment...': 'Vérification de votre paiement...',
+      'Thank you for your subscription! Your plan is now active.': 'Merci pour votre abonnement! Votre forfait est maintenant actif.',
+      'Go to Movies': 'Aller aux films'
     },
     es: {
       welcome: 'Bienvenido',
@@ -62,10 +160,14 @@ export default defineI18nConfig(() => ({
       Subscribe: 'Suscribirse',
       'Sign In': 'Iniciar Sesión',
       'Sign Out': 'Cerrar Sesión',
+      
+      // Navigation & Common
       Play: 'Reproducir',
       Trailer: 'Tráiler',
       'More Info': 'Más Información',
       'Las Joyas de MOABA': 'Las Joyas de MOABA',
+      
+      // Footer
       'WHAT TO WATCH': '¿QUÉ VER?',
       Series: 'Series',
       'MOABA CINEMA': 'MOABA CINEMA',
@@ -75,7 +177,52 @@ export default defineI18nConfig(() => ({
       'Legal Notice': 'Aviso legal',
       'Cookie Policy': 'Política de cookies',
       'Privacy Policy': 'Política de privacidad',
-      'All rights reserved': 'Todos los derechos reservados'
+      'All rights reserved': 'Todos los derechos reservados',
+      
+      // Auth pages
+      'Create Account': 'Crear cuenta',
+      'Sign Up': 'Registrarse',
+      'Need an account?': '¿Necesitas una cuenta?',
+      'Already have an account?': '¿Ya tienes una cuenta?',
+      'Email': 'Correo electrónico',
+      'Password': 'Contraseña',
+      'Confirm Password': 'Confirmar contraseña',
+      'Name': 'Nombre',
+      'Please fill in all fields': 'Por favor, rellena todos los campos',
+      'Passwords do not match': 'Las contraseñas no coinciden',
+      'Authentication failed': 'Error de autenticación',
+      
+      // Subscription pages
+      'Checkout': 'Pago',
+      'Choose Your Plan': 'Elige tu plan',
+      'Get unlimited access to African cinema and support local filmmakers.': 'Obtén acceso ilimitado al cine africano y apoya a los cineastas locales.',
+      'Switch or cancel anytime.': 'Cambia o cancela cuando quieras.',
+      'Subscription Plan': 'Plan de suscripción',
+      'Plan': 'Plan',
+      'Price': 'Precio',
+      'Selected Plan': 'Plan seleccionado',
+      'Most Popular': 'Más popular',
+      'Get': 'Obtener',
+      'Proceed to Payment': 'Proceder al pago',
+      'Choose a Plan': 'Elegir un plan',
+      'Loading plan details...': 'Cargando detalles del plan...',
+      'No plan specified in the URL.': 'No se ha especificado ningún plan en la URL.',
+      'Invalid or unavailable plan.': 'Plan inválido o no disponible.',
+      'Failed to load plan details.': 'Error al cargar los detalles del plan.',
+      'You must be signed in to proceed.': 'Debes iniciar sesión para continuar.',
+      'Failed to initiate checkout. Please try again.': 'Error al iniciar el pago. Por favor, inténtalo de nuevo.',
+      'No plan selected or invalid plan ID.': 'Ningún plan seleccionado o ID de plan inválido.',
+      'Don\'t have an account?': '¿No tienes una cuenta?',
+      
+      // Subscription success page
+      'Payment Successful': 'Pago exitoso',
+      'Missing session ID.': 'Falta el ID de sesión.',
+      'You must be signed in to view this page.': 'Debes iniciar sesión para ver esta página.',
+      'Failed to verify payment.': 'Error al verificar el pago.',
+      'An error occurred while verifying your payment.': 'Se produjo un error al verificar tu pago.',
+      'Verifying your payment...': 'Verificando tu pago...',
+      'Thank you for your subscription! Your plan is now active.': '¡Gracias por tu suscripción! Tu plan ya está activo.',
+      'Go to Movies': 'Ir a películas'
     }
   }
 })) 

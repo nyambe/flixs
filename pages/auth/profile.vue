@@ -4,7 +4,9 @@ import { ref } from 'vue';
 import { useAuth } from '~/composables/useAuth';
 import { updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const { currentUser } = useAuth();
 
 const { $firebase } = useNuxtApp();
@@ -19,14 +21,14 @@ onMounted(() => {
   if (currentUser.value) {
     name.value = currentUser.value.displayName || '';
   } else {
-    error.value = 'You must be signed in to edit your profile.';
+    error.value = t('You must be signed in to edit your profile.');
   }
 });
 
 // Handle form submission
 const handleSubmit = async () => {
   if (!currentUser.value) {
-    error.value = 'You must be signed in to update your profile.';
+    error.value = t('You must be signed in to update your profile.');
     return;
   }
 
@@ -45,9 +47,9 @@ const handleSubmit = async () => {
       { merge: true }
     );
 
-    success.value = 'Profile updated successfully!';
+    success.value = t('Profile updated successfully!');
   } catch (err: unknown) {
-    error.value = err instanceof Error ? err.message : 'An unknown error occurred';
+    error.value = err instanceof Error ? err.message : t('An unknown error occurred');
   } finally {
     loading.value = false;
   }
@@ -56,14 +58,14 @@ const handleSubmit = async () => {
 
 <template>
   <div class="max-w-md mx-auto mt-16 mb-20">
-    <h1 class="text-3xl font-bold text-brand-content mb-6">Edit Profile</h1>
+    <h1 class="text-3xl font-bold text-brand-content mb-6">{{ t('Edit Profile') }}</h1>
 
     <UAlert v-if="error" color="error" class="mb-4" :title="error" />
     <UAlert v-if="success" color="success" class="mb-4" :title="success" />
 
     <UCard v-if="currentUser" class="bg-neutral" >
-      <form @submit.prevent="handleSubmit">
-        <UFormField label="Name" name="name" class="mb-4">
+      <UForm @submit="handleSubmit">
+        <UFormItem :label="t('Name')" name="name" class="mb-4">
           <UInput
             v-model="name"
             type="text"
@@ -71,7 +73,7 @@ const handleSubmit = async () => {
             required
             :disabled="loading"
           />
-        </UFormField>
+        </UFormItem>
 
         <div class="flex justify-between items-center">
           <UButton
@@ -81,24 +83,24 @@ const handleSubmit = async () => {
             :loading="loading"
             :disabled="loading"
           >
-            Save Changes
+            {{ t('Save Changes') }}
           </UButton>
 
           <NuxtLink to="/movies" class="text-brand hover:underline">
-            Back to Movies
+            {{ t('Back to Movies') }}
           </NuxtLink>
         </div>
-      </form>
+      </UForm>
     </UCard>
 
     <div v-else class="text-center">
-      <p class="text-support-content mb-4">Please sign in to edit your profile.</p>
+      <p class="text-support-content mb-4">{{ t('Please sign in to edit your profile.') }}</p>
       <UButton
         color="white"
         variant="outline"
         to="/auth/login"
       >
-        Sign In
+        {{ t('Sign In') }}
       </UButton>
     </div>
   </div>
