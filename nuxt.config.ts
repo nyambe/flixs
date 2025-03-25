@@ -6,6 +6,9 @@ export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@nuxt/fonts', '@nuxt/eslint', '@nuxtjs/i18n'],
   i18n: {
     vueI18n: './i18n.config.ts',
+    bundle: {
+      optimizeTranslationDirective: false,
+    }
   },
   debug: {
     // Enable specific debugging features

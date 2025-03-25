@@ -1,5 +1,10 @@
 <!-- components/Footer.vue -->
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+import { computed } from 'vue';
+
+const { t } = useI18n();
+
 interface FooterLink {
   label: string;
   path: string;
@@ -39,32 +44,34 @@ const socialLinks: SocialLink[] = [
   }
 ]
 
-const footerSections: FooterSection[] = [
+// Convert to a computed property that will re-evaluate when i18n is ready
+const footerSections = computed<FooterSection[]>(() => [
   {
-    title: '¿QUÉ VER?',
+    title: t('WHAT TO WATCH'),
     links: [
-      { label: 'Películas', path: '/movies' },
-      { label: 'Series', path: '/movies' }
+      { label: t('Movies'), path: '/movies' },
+      { label: t('Series'), path: '/movies' }
     ]
   },
   {
-    title: 'MOABA CINEMA',
+    title: t('MOABA CINEMA'),
     links: [
-      { label: 'Contacto', path: '/contact' },
-      { label: 'Conócenos', path: '/about' }
+      { label: t('Contact'), path: '/contact' },
+      { label: t('About Us'), path: '/about' }
     ]
   },
   {
-    title: 'AYUDA',
+    title: t('HELP'),
     links: [
-      { label: 'Aviso legal', path: '/legal' },
-      { label: 'Política de cookies', path: '/cookies' },
-      { label: 'Política de privacidad', path: '/privacy' }
+      { label: t('Legal Notice'), path: '/legal' },
+      { label: t('Cookie Policy'), path: '/cookies' },
+      { label: t('Privacy Policy'), path: '/privacy' }
     ]
   }
-]
+]);
 
-const currentYear = new Date().getFullYear()
+const currentYear = new Date().getFullYear();
+const copyright = computed(() => `© ${currentYear} MoabaTV. ${t('All rights reserved')}.`);
 </script>
 
 <template>
@@ -111,7 +118,7 @@ const currentYear = new Date().getFullYear()
       
       <!-- Copyright -->
       <div class="mt-6 text-sm text-brand-focus">
-        <p>&copy; {{ currentYear }} MoabaTV. All rights reserved.</p>
+        <p>{{ copyright }}</p>
       </div>
     </div>
   </footer>
