@@ -152,21 +152,23 @@
       <div class="space-y-4">
         <UAlert v-if="authError" color="red" class="mb-4" :title="authError" />
 
-        <UFormGroup :label="t('Email')" required>
-          <UInput v-model="email" type="email" placeholder="email@example.com" />
-        </UFormGroup>
+        <UForm>
+          <UFormItem :label="t('Email')" required>
+            <UInput v-model="email" type="email" placeholder="email@example.com" />
+          </UFormItem>
 
-        <UFormGroup v-if="authMode === 'signup'" :label="t('Name')">
-          <UInput v-model="name" type="text" placeholder="Your name (optional)" />
-        </UFormGroup>
+          <UFormItem v-if="authMode === 'signup'" :label="t('Name')">
+            <UInput v-model="name" type="text" placeholder="Your name (optional)" />
+          </UFormItem>
 
-        <UFormGroup :label="t('Password')" required>
-          <UInput v-model="password" type="password" />
-        </UFormGroup>
+          <UFormItem :label="t('Password')" required>
+            <UInput v-model="password" type="password" />
+          </UFormItem>
 
-        <UFormGroup v-if="authMode === 'signup'" :label="t('Confirm Password')" required>
-          <UInput v-model="confirmPassword" type="password" />
-        </UFormGroup>
+          <UFormItem v-if="authMode === 'signup'" :label="t('Confirm Password')" required>
+            <UInput v-model="confirmPassword" type="password" />
+          </UFormItem>
+        </UForm>
       </div>
 
       <template #footer>

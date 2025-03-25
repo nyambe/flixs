@@ -1,50 +1,53 @@
 <script setup lang="ts">
 // pages/auth/login.vue
-const { signIn } = useAuth()
+import { useI18n } from 'vue-i18n';
 
-const email = ref('')
-const password = ref('')
-const error = ref('')
-const loading = ref(false)
+const { t } = useI18n();
+const { signIn } = useAuth();
+
+const email = ref('');
+const password = ref('');
+const error = ref('');
+const loading = ref(false);
 
 const handleSubmit = async () => {
-  loading.value = true
-  error.value = ''
+  loading.value = true;
+  error.value = '';
   
-  const result = await signIn(email.value, password.value)
+  const result = await signIn(email.value, password.value);
   
   if (!result.success) {
-    error.value = result.error || ''
+    error.value = result.error || '';
   }
   
-  loading.value = false
+  loading.value = false;
 }
 </script>
 
 <template>
   <div class="max-w-md mx-auto mt-16 mb-20">
-    <h1 class="text-3xl font-bold mb-6">Sign In</h1>
+    <h1 class="text-3xl font-bold mb-6">{{ t('Sign In') }}</h1>
     
     <UAlert v-if="error" color="error" class="mb-4" :title="error" />
     
-    <form @submit.prevent="handleSubmit">
-      <UFormField label="Email" name="email" class="mb-4">
+    <UForm @submit="handleSubmit">
+      <UFormItem :label="t('Email')" name="email" class="mb-4">
         <UInput
           v-model="email"
           type="email"
           placeholder="your@email.com"
           required
         />
-      </UFormField>
+      </UFormItem>
       
-      <UFormField label="Password" name="password" class="mb-6">
+      <UFormItem :label="t('Password')" name="password" class="mb-6">
         <UInput
           v-model="password"
           type="password"
           placeholder="********"
           required
         />
-      </UFormField>
+      </UFormItem>
       
       <div class="flex justify-between items-center">
         <UButton
@@ -54,13 +57,13 @@ const handleSubmit = async () => {
           :loading="loading"
           :disabled="loading"
         >
-          Sign In
+          {{ t('Sign In') }}
         </UButton>
         
         <NuxtLink to="/auth/register" class="text-brand hover:underline">
-          Need an account?
+          {{ t('Need an account?') }}
         </NuxtLink>
       </div>
-    </form>
+    </UForm>
   </div>
 </template>
