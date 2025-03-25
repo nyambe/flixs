@@ -27,6 +27,7 @@ export interface TMDBMovie {
     genre_ids: number[]
     media_type: string
     video_id?: string
+    trailer_id?: string
   }
   
 export interface TMDBList {
