@@ -22,7 +22,8 @@
       "video": true,
       "vote_average": 0.0,
       "vote_count": 0,
-      "video_id": "1042418255"
+      "video_id": "1042418255",
+      "trailer_id": "938791617"
     },
     {
       "backdrop_path": "/k5bXIunrEpra3DkDLthPePxXDX4.jpg",
@@ -39,7 +40,8 @@
       "first_air_date": "2025-03-25",
       "vote_average": 0.0,
       "vote_count": 0,
-      "video_id": "1043137980"
+      "video_id": "1043137980",
+      "trailer_id": "938791617"
     },
     {
       "backdrop_path": "/qQuvPoV9FtUKb56UbZo3qM3UJzA.jpg",
@@ -57,7 +59,8 @@
       "video": false,
       "vote_average": 0.0,
       "vote_count": 0,
-      "video_id": "1038293755"
+      "video_id": "1038293755",
+      "trailer_id": "941317602"
     },
     {
       "backdrop_path": "/qZIitOmPDAZiparZKukB0PUHMCh.jpg",
@@ -75,7 +78,8 @@
       "video": false,
       "vote_average": 0.0,
       "vote_count": 0,
-      "video_id": "1044731417"
+      "video_id": "1044731417",
+      "trailer_id": "87012207"
     }
   ],
   "name": "Plataforma",

@@ -7,6 +7,7 @@ const movieId = route.params.id
 const { getMovieById } = useMovieData()
 const imagePath = useImagePath()
 const isPlaying = ref(false)
+const showTrailer = ref(false)
 
 const movie = getMovieById(Number(movieId))
 
@@ -19,6 +20,10 @@ const togglePlay = () => {
   navigateTo(`/watch/${video_id}`)
 }
 
+const goBack = () => {
+  navigateTo('/')
+}
+
 // Apply subscription middleware
 definePageMeta({
   middleware: 'subscription'
@@ -27,6 +32,12 @@ definePageMeta({
 
 <template>
   <div class="bg-black text-white">
+    <!-- Trailer Modal -->
+    <TrailerModal 
+      v-model:open="showTrailer" 
+      :trailer-id="movie?.trailer_id || null"
+    />
+
     <!-- Movie Player Section -->
     <div v-if="isPlaying" class="fixed inset-0 z-50 bg-black">
       <div class="relative h-screen">
@@ -41,7 +52,7 @@ definePageMeta({
           <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
             <UButton
               size="xl"
-              color="black"
+              color="primary"
               variant="ghost"
               icon="i-heroicons-pause"
               class="text-4xl"
@@ -96,18 +107,27 @@ definePageMeta({
             <div class="flex gap-4">
               <UButton
                 size="xl"
-                color="brand"
+                color="primary"
                 label="Play"
                 icon="i-heroicons-play"
-                class="bg-brand hover:bg-amber-500"
+                class="bg-amber-400 hover:bg-amber-500"
                 @click="togglePlay"
               />
               <UButton
+                v-if="movie?.trailer_id"
                 size="xl"
-                color="black"
+                color="neutral"
+                variant="outline"
+                label="Trailer"
+                icon="i-heroicons-film"
+                @click="showTrailer = true"
+              />
+              <UButton
+                size="xl"
+                color="primary"
                 variant="ghost"
                 icon="i-heroicons-arrow-left"
-                @click="() => navigateTo('/')"
+                @click="goBack"
               />
             </div>
           </div>
