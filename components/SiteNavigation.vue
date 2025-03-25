@@ -1,19 +1,22 @@
 <script setup lang="ts">
 import { useAuth } from '~/composables/useAuth';
+import { useI18n } from 'vue-i18n';
 
-// Navigation items
+// Initialize i18n
+const { t, locale, availableLocales } = useI18n();
+
+// Navigation items with i18n
 const navigationItems = [
-  { label: 'Home', path: '/' },
-  { label: 'Movies', path: '/movies' },
+  { label: () => t('Home'), path: '/' },
+  { label: () => t('Movies'), path: '/movies' },
   // Uncomment these as needed
-  // { label: 'TV Shows', path: '/shows' },
-  // { label: 'New & Popular', path: '/new' },
-  // { label: 'My List', path: '/my-list' },
+  // { label: () => t('TV Shows'), path: '/shows' },
+  // { label: () => t('New & Popular'), path: '/new' },
+  // { label: () => t('My List'), path: '/my-list' },
 ];
 
 // Auth state
 const { currentUser, userSubscription, signOut } = useAuth();
-
 
 console.log('currentUser', currentUser.value)
 
@@ -23,6 +26,21 @@ const userDisplayName = computed(() =>
 );
 
 const isSubscribed = computed(() => userSubscription.value?.active === true);
+
+// Computed property for current locale display with fallback
+const currentLocale = computed(() => locale.value || 'en');
+
+// Function to toggle between available languages
+const toggleLanguage = () => {
+  // Handle case where locale is not set or availableLocales is empty
+  console.log('availableLocales', availableLocales)
+  if (!availableLocales.length) return;
+  
+  const currentLoc = locale.value || 'en';
+  const currentIndex = availableLocales.indexOf(currentLoc);
+  const nextIndex = (currentIndex < 0 || currentIndex >= availableLocales.length - 1) ? 0 : currentIndex + 1;
+  locale.value = availableLocales[nextIndex];
+};
 </script>
 
 <template>
@@ -39,20 +57,24 @@ const isSubscribed = computed(() => userSubscription.value?.active === true);
           :to="item.path"
           class="text-neutral-300 hover:text-white transition"
         >
-          {{ item.label }}
+          {{ item.label() }}
         </NuxtLink>
       </div>
 
       <div class="flex items-center space-x-4">
-        <!-- <UButton
-          color="black"
+        <!-- Language Switcher -->
+        <UButton
+          color="white"
           variant="ghost"
-          icon="i-heroicons-magnifying-glass"
-        /> -->
+          :label="currentLocale.toUpperCase()"
+          @click="toggleLanguage"
+          class="hover:bg-neutral-800"
+        />
+        
         <UButton
           v-if="!isSubscribed"
           color="brand"
-          label="Subscribe"
+          :label="t('Subscribe')"
           class="bg-brand text-brand-content hover:bg-brand-focus"
           to="/subscription/plans"
         />
@@ -69,7 +91,7 @@ const isSubscribed = computed(() => userSubscription.value?.active === true);
             color="white"
             variant="outline"
             icon="i-heroicons-arrow-right-on-rectangle"
-            label="Sign Out"
+            :label="t('Sign Out')"
             @click="signOut"
           />
         </div>
@@ -77,7 +99,7 @@ const isSubscribed = computed(() => userSubscription.value?.active === true);
           v-else
           color="white"
           variant="outline"
-          label="Sign In"
+          :label="t('Sign In')"
           to="/auth/login"
         />
       </div>
