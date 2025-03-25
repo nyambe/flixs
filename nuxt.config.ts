@@ -3,11 +3,10 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-03-15',
   devtools: { enabled: true },
   css: ['~/assets/css/tailwind.css'],
-  modules: [
-    '@nuxt/ui',
-    '@nuxt/fonts',
-    '@nuxt/eslint',
-  ],
+  modules: ['@nuxt/ui', '@nuxt/fonts', '@nuxt/eslint', '@nuxtjs/i18n'],
+  i18n: {
+    vueI18n: './i18n.config.ts',
+  },
   debug: {
     // Enable specific debugging features
     templates: false,
