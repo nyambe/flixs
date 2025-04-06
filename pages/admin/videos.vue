@@ -16,6 +16,7 @@ interface VimeoVideo {
     download: boolean;
     add: boolean;
     comments: string;
+    password?: string;
   };
   status: string;
   id: string;
@@ -49,11 +50,17 @@ const filteredVideos = computed(() => {
 
 // Open modal with selected video
 const openVideoModal = (video: VimeoVideo) => {
-  selectedVideo.value = { ...video };
+  // Create a deep copy of the video to avoid reference issues
+  selectedVideo.value = JSON.parse(JSON.stringify(video));
+  
+  // Initialize password if not present and selectedVideo exists
+  if (selectedVideo.value && !selectedVideo.value.privacy.password) {
+    selectedVideo.value.privacy.password = '';
+  }
+  
   isModalOpen.value = true;
   updateMessage.value = { type: '', text: '' };
   whitelistDomains.value = ''; // Reset whitelist domains
-  console.log(selectedVideo.value, 'selectedVideo', video);
 };
 
 // Close modal
@@ -283,6 +290,19 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
                 <option value="disable">Private (disable)</option>
                 <option value="nobody">Private (nobody)</option>
               </select>
+            </div>
+            
+            <!-- Password Field (only when password protection is selected) -->
+            <div v-if="selectedVideo.privacy.view === 'password'" class="mt-3">
+              <label class="block text-sm font-medium text-gray-700">Video Password</label>
+              <input 
+                v-model="selectedVideo.privacy.password" 
+                type="text" 
+                placeholder="Enter password for video" 
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                required
+              >
+              <p class="mt-1 text-xs text-gray-500">Password must be at least 6 characters</p>
             </div>
             
             <!-- Embed Privacy -->
