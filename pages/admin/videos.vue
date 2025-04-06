@@ -29,6 +29,7 @@ const selectedVideo = ref<VimeoVideo | null>(null);
 const isModalOpen = ref(false);
 const updateLoading = ref(false);
 const updateMessage = ref({ type: '', text: '' });
+const whitelistDomains = ref('');
 
 // Fetch videos on mount
 onMounted(async () => {
@@ -51,6 +52,7 @@ const openVideoModal = (video: VimeoVideo) => {
   selectedVideo.value = { ...video };
   isModalOpen.value = true;
   updateMessage.value = { type: '', text: '' };
+  whitelistDomains.value = ''; // Reset whitelist domains
   console.log(selectedVideo.value, 'selectedVideo', video);
 };
 
@@ -74,7 +76,8 @@ const updateVideoStatus = async () => {
       body: {
         privacy: selectedVideo.value.privacy,
         name: selectedVideo.value.name,
-        description: selectedVideo.value.description
+        description: selectedVideo.value.description,
+        domains: selectedVideo.value.privacy.embed === 'whitelist' ? whitelistDomains.value.split(',').map(d => d.trim()) : []
       }
     });
     
@@ -280,6 +283,31 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
                 <option value="disable">Private (disable)</option>
                 <option value="nobody">Private (nobody)</option>
               </select>
+            </div>
+            
+            <!-- Embed Privacy -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Embed Privacy</label>
+              <select 
+                v-model="selectedVideo.privacy.embed" 
+                class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="public">Public (embed anywhere)</option>
+                <option value="private">Private (no embedding)</option>
+                <option value="whitelist">Whitelist (specific domains only)</option>
+              </select>
+            </div>
+            
+            <!-- Whitelist Domains -->
+            <div v-if="selectedVideo.privacy.embed === 'whitelist'">
+              <label class="block text-sm font-medium text-gray-700">Whitelist Domains</label>
+              <textarea 
+                v-model="whitelistDomains" 
+                rows="3" 
+                placeholder="Example: yourdomain.com, example.org" 
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              />
+              <p class="mt-1 text-sm text-gray-500">Enter domain names separated by commas (no http:// or www needed)</p>
             </div>
             
             <!-- Update Message -->
