@@ -10,6 +10,7 @@ interface UpdateVideoRequest {
     add?: boolean;
     comments?: string;
   };
+  domains?: string[]; // Add domains for whitelist
 }
 
 export default defineEventHandler(async (event) => {
@@ -60,7 +61,7 @@ export default defineEventHandler(async (event) => {
       });
     }
     
-    // Call Vimeo API to update the video
+    // First, update the basic video data
     const endpoint = `https://api.vimeo.com/videos/${videoId}`;
     
     await $fetch(endpoint, {
@@ -72,6 +73,34 @@ export default defineEventHandler(async (event) => {
       },
       body: updateData,
     });
+    
+    // Then, if domains are provided and privacy.embed is whitelist, update the domain whitelist
+    if (body.domains && body.domains.length > 0 && body.privacy?.embed === 'whitelist') {
+      // Second API call to update the domain whitelist
+      const domainsEndpoint = `https://api.vimeo.com/videos/${videoId}/privacy/domains`;
+      
+      try {
+        // Vimeo expects an array of domains in a specific format
+        await $fetch(domainsEndpoint, {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            Accept: 'application/vnd.vimeo.*+json;version=3.4',
+          },
+          body: { domains: body.domains },
+        });
+        console.log('Domains updated successfully:', body.domains);
+      } catch (domainError) {
+        console.error('Failed to update domains:', domainError);
+        // Continue despite domain error - video was already updated
+        return { 
+          success: true, 
+          message: 'Video updated but domain whitelist failed',
+          domainsError: true
+        };
+      }
+    }
     
     return { success: true, message: 'Video updated successfully' };
   } catch (error: unknown) {
