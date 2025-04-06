@@ -6,13 +6,11 @@ const route = useRoute()
 const movieId = route.params.id
 const { getMovieById } = useMovieData()
 const imagePath = useImagePath()
-const isPlaying = ref(false)
 const showTrailer = ref(false)
 
 const movie = getMovieById(Number(movieId))
 
 const togglePlay = () => {
-  // isPlaying.value = !isPlaying.value
   // If movie has a video_id, use it; otherwise use a default
   const video_id = movie?.video_id || '933381480'
   
@@ -38,33 +36,9 @@ definePageMeta({
       :trailer-id="movie?.trailer_id || null"
     />
 
-    <!-- Movie Player Section -->
-    <div v-if="isPlaying" class="fixed inset-0 z-50 bg-black">
-      <div class="relative h-screen">
-        <!-- Video Simulation -->
-        <div class="absolute inset-0 flex items-center justify-center bg-black">
-          <img 
-            :src="imagePath.backdrop(movie?.backdrop_path ?? imagePath.backdrop(''))"
-            :alt="movie?.title"
-            class="w-full h-full object-contain"
-          >
-          <!-- Player Controls -->
-          <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <UButton
-              size="xl"
-              color="primary"
-              variant="ghost"
-              icon="i-heroicons-pause"
-              class="text-4xl"
-              @click="togglePlay"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Movie Details -->
-    <div v-else class="min-h-screen">
+    <div class="min-h-screen">
       <!-- Background -->
       <div class="relative">
         <div class="w-full aspect-[16/9]">
@@ -78,7 +52,7 @@ definePageMeta({
       </div>
 
       <!-- Content -->
-      <div class="container mx-auto px-4 -mt-32 relative">
+      <div class="container mx-auto px-4 -mt-96 relative">
         <div class="flex flex-col md:flex-row gap-8">
           <!-- Poster -->
           <div class="w-64 flex-shrink-0">

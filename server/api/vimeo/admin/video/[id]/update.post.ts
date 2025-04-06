@@ -9,6 +9,7 @@ interface UpdateVideoRequest {
     download?: boolean;
     add?: boolean;
     comments?: string;
+    password?: string;
   };
   domains?: string[]; // Add domains for whitelist
 }
@@ -50,6 +51,14 @@ export default defineEventHandler(async (event) => {
     }
     
     if (body.privacy) {
+      // Check if trying to set password protection without a password
+      if (body.privacy.view === 'password' && !body.privacy.password) {
+        throw createError({
+          statusCode: 400,
+          message: 'Password is required when setting privacy to password-protected',
+        });
+      }
+      
       updateData.privacy = body.privacy;
     }
     
