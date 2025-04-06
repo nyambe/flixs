@@ -64,6 +64,9 @@ export default defineEventHandler(async (event): Promise<VimeoVideo | null> => {
         'Content-Type': 'application/json',
         Accept: 'application/vnd.vimeo.*+json;version=3.4',
       },
+      query: {
+        fields: 'uri,name,description,duration,pictures,created_time,link,player_embed_url,privacy,embed,status'
+      }
     });
     
     // Process the video to include additional useful properties
@@ -74,14 +77,19 @@ export default defineEventHandler(async (event): Promise<VimeoVideo | null> => {
                       video.pictures.sizes[video.pictures.sizes.length - 1]?.link;
     
     // For private videos, we'll use the embed.html which contains the necessary tokens
-    if (video.privacy.view === 'nobody') {
-      const embedHtml = video.embed?.html;
-      if (embedHtml) {
-        // Extract the player URL from the embed HTML
-        const srcMatch = embedHtml.match(/src="([^"]+)"/);
-        if (srcMatch && srcMatch[1]) {
-          video.player_embed_url = srcMatch[1];
-        }
+    if ((video.privacy.view === 'nobody' || video.privacy.embed === 'whitelist') && !video.embed?.html) {
+      // If embed.html is missing for a private/whitelisted video, domain may not be whitelisted
+      throw createError({
+        statusCode: 403,
+        message: 'This video cannot be played. Please ensure your domain is in the video\'s whitelist.',
+      });
+    }
+    
+    // If the video has embed HTML, extract the player URL
+    if (video.embed?.html) {
+      const srcMatch = video.embed.html.match(/src="([^"]+)"/);
+      if (srcMatch && srcMatch[1]) {
+        video.player_embed_url = srcMatch[1];
       }
     }
     
