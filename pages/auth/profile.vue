@@ -1,6 +1,5 @@
 <!-- pages/auth/profile.vue -->
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useAuth } from '~/composables/useAuth';
 import { updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
