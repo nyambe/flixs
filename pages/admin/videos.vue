@@ -51,6 +51,7 @@ const openVideoModal = (video: VimeoVideo) => {
   selectedVideo.value = { ...video };
   isModalOpen.value = true;
   updateMessage.value = { type: '', text: '' };
+  console.log(selectedVideo.value, 'selectedVideo', video);
 };
 
 // Close modal
@@ -78,7 +79,7 @@ const updateVideoStatus = async () => {
     });
     
     // Update the video in the list
-    const index = videos.value.findIndex(v => v.id === selectedVideo.value.id);
+    const index = videos.value.findIndex(v => v.id === selectedVideo.value?.id);
     if (index !== -1 && selectedVideo.value) {
       videos.value[index] = { ...selectedVideo.value };
     }
@@ -135,7 +136,7 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
             type="text"
             placeholder="Search videos..."
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          >
           <span class="absolute right-3 top-2 text-gray-400">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -146,7 +147,7 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
       
       <!-- Loading State -->
       <div v-if="loading" class="text-center py-10">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500" />
         <p class="mt-2 text-gray-600">Loading videos...</p>
       </div>
       
@@ -199,8 +200,8 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <button 
-                  @click="openVideoModal(video)" 
-                  class="text-blue-600 hover:text-blue-900 mr-3"
+                class="text-blue-600 hover:text-blue-900 mr-3"
+                @click="openVideoModal(video)" 
                 >
                   Edit
                 </button>
@@ -228,14 +229,14 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
       <div class="bg-white rounded-lg max-w-2xl w-full mx-4 overflow-hidden">
         <div class="px-6 py-4 bg-gray-50 border-b flex justify-between items-center">
           <h3 class="text-lg font-medium text-gray-900">Edit Video</h3>
-          <button @click="closeModal" class="text-gray-400 hover:text-gray-500">
+          <button  class="text-gray-400 hover:text-gray-500" @click="closeModal">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
         
-        <div v-if="selectedVideo" class="px-6 py-4">
+        <div v-if="selectedVideo" class="px-6 py-4 text-neutral">
           <!-- Video Preview -->
           <div class="mb-4 flex items-center">
             <img :src="selectedVideo.thumbnail" alt="Video thumbnail" class="h-24 w-36 object-cover rounded">
@@ -254,9 +255,9 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
                 v-model="selectedVideo.name" 
                 type="text" 
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
+              >
             </div>
-            
+
             <!-- Description -->
             <div>
               <label class="block text-sm font-medium text-gray-700">Description</label>
@@ -264,7 +265,7 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
                 v-model="selectedVideo.description" 
                 rows="3" 
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              ></textarea>
+              />
             </div>
             
             <!-- Privacy Settings -->
@@ -282,7 +283,8 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
             </div>
             
             <!-- Update Message -->
-            <div v-if="updateMessage.text" :class="[
+            <div 
+            v-if="updateMessage.text" :class="[
               'p-3 rounded',
               updateMessage.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
             ]">
@@ -293,19 +295,19 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
         
         <div class="px-6 py-4 bg-gray-50 flex justify-end">
           <button 
-            @click="closeModal" 
-            class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-3"
+          class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-3"
+          @click="closeModal" 
           >
             Cancel
           </button>
           <button 
-            @click="updateVideoStatus" 
-            :disabled="updateLoading" 
-            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          :disabled="updateLoading" 
+          class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          @click="updateVideoStatus" 
           >
             <svg v-if="updateLoading" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
             </svg>
             Save Changes
           </button>
