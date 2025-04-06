@@ -1,16 +1,24 @@
 <!-- pages/auth/profile.vue -->
 <script setup lang="ts">
-import { useAuth } from '~/composables/useAuth';
 import { updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { useI18n } from 'vue-i18n';
+import * as z from 'zod';
+import type { FormSubmitEvent } from '@nuxt/ui';
 
 const { t } = useI18n();
 const { currentUser } = useAuth();
-
 const { $firebase } = useNuxtApp();
 
-const name = ref<string>('');
+const schema = z.object({
+  name: z.string().min(1, t('Name is required'))
+});
+
+type Schema = z.output<typeof schema>;
+
+const state = reactive<Schema>({
+  name: ''
+});
+
 const loading = ref<boolean>(false);
 const error = ref<string>('');
 const success = ref<string>('');
@@ -18,14 +26,14 @@ const success = ref<string>('');
 // Initialize the form with the current user's name
 onMounted(() => {
   if (currentUser.value) {
-    name.value = currentUser.value.displayName || '';
+    state.name = currentUser.value.displayName || '';
   } else {
     error.value = t('You must be signed in to edit your profile.');
   }
 });
 
 // Handle form submission
-const handleSubmit = async () => {
+const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   if (!currentUser.value) {
     error.value = t('You must be signed in to update your profile.');
     return;
@@ -37,12 +45,12 @@ const handleSubmit = async () => {
 
   try {
     // Update Firebase Authentication displayName
-    await updateProfile(currentUser.value, { displayName: name.value });
+    await updateProfile(currentUser.value, { displayName: event.data.name });
 
     // Update Firestore
     await setDoc(
-    doc($firebase.firestore, 'users', currentUser.value.uid),
-      { name: name.value },
+      doc($firebase.firestore, 'users', currentUser.value.uid),
+      { name: event.data.name },
       { merge: true }
     );
 
@@ -57,22 +65,29 @@ const handleSubmit = async () => {
 
 <template>
   <div class="max-w-md mx-auto mt-16 mb-20">
-    <h1 class="text-3xl font-bold text-brand-content mb-6">{{ t('Edit Profile') }}</h1>
+    <h1 class="text-3xl font-bold text-brand mb-6">{{ t('Edit Profile') }}</h1>
 
-    <UAlert v-if="error" color="error" class="mb-4" :title="error" />
-    <UAlert v-if="success" color="success" class="mb-4" :title="success" />
+    <UAlert v-if="error" color="red" class="mb-4" :title="error" />
+    <UAlert v-if="success" color="green" class="mb-4" :title="success" />
 
-    <UCard v-if="currentUser" class="bg-neutral" >
-      <UForm @submit="handleSubmit">
-        <UFormItem :label="t('Name')" name="name" class="mb-4">
+    <UCard v-if="currentUser" class="bg-gray-400 text-white">
+      <UForm 
+        :schema="schema" 
+        :state="state" 
+        @submit="onSubmit"
+      >
+        <UFormField 
+          :label="t('Name')" 
+          name="name" 
+          class="mb-4 text-white"
+        >
           <UInput
-            v-model="name"
+            v-model="state.name"
             type="text"
             placeholder="Your Name"
-            required
             :disabled="loading"
           />
-        </UFormItem>
+        </UFormField>
 
         <div class="flex justify-between items-center">
           <UButton
