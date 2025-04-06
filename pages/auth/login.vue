@@ -1,20 +1,32 @@
 <script setup lang="ts">
 // pages/auth/login.vue
 import { useI18n } from 'vue-i18n';
+import * as z from 'zod';
+import type { FormSubmitEvent } from '@nuxt/ui';
 
 const { t } = useI18n();
 const { signIn } = useAuth();
 
-const email = ref('');
-const password = ref('');
+const schema = z.object({
+  email: z.string().email(t('Invalid email')),
+  password: z.string().min(1, t('Password is required'))
+});
+
+type Schema = z.output<typeof schema>;
+
+const state = reactive<Schema>({
+  email: '',
+  password: ''
+});
+
 const error = ref('');
 const loading = ref(false);
 
-const handleSubmit = async () => {
+async function onSubmit(event: FormSubmitEvent<Schema>) {
   loading.value = true;
   error.value = '';
   
-  const result = await signIn(email.value, password.value);
+  const result = await signIn(event.data.email, event.data.password);
   
   if (!result.success) {
     error.value = result.error || '';
@@ -28,24 +40,34 @@ const handleSubmit = async () => {
   <div class="max-w-md mx-auto mt-16 mb-2 p-4 bg-gray-400 bg-opacity-20 rounded-lg">
     <h1 class="text-3xl font-bold mb-6">{{ t('Sign In') }}</h1>
     
-    <UAlert v-if="error" color="error" class="mb-4" :title="error" />
+    <UAlert v-if="error" color="red" class="mb-4" :title="error" />
     
-    <UForm @submit="handleSubmit">
-      <UFormField :label="t('Email')" name="email" class="mb-4">
+    <UForm 
+      :schema="schema" 
+      :state="state" 
+      @submit="onSubmit"
+    >
+      <UFormField 
+        :label="t('Email')" 
+        name="email" 
+        class="mb-4"
+      >
         <UInput
-          v-model="email"
+          v-model="state.email"
           type="email"
           placeholder="your@email.com"
-          required
         />
       </UFormField>
       
-      <UFormField :label="t('Password')" name="password" class="mb-6 text-white">
+      <UFormField 
+        :label="t('Password')" 
+        name="password" 
+        class="mb-6 text-white"
+      >
         <UInput
-          v-model="password"
+          v-model="state.password"
           type="password"
           placeholder="********"
-          required
         />
       </UFormField>
       
