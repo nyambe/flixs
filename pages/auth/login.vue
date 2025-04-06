@@ -25,29 +25,29 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-16 mb-20">
+  <div class="max-w-md mx-auto mt-16 mb-2 p-4 bg-gray-400 bg-opacity-20 rounded-lg">
     <h1 class="text-3xl font-bold mb-6">{{ t('Sign In') }}</h1>
     
     <UAlert v-if="error" color="error" class="mb-4" :title="error" />
     
     <UForm @submit="handleSubmit">
-      <UFormItem :label="t('Email')" name="email" class="mb-4">
+      <UFormField :label="t('Email')" name="email" class="mb-4">
         <UInput
           v-model="email"
           type="email"
           placeholder="your@email.com"
           required
         />
-      </UFormItem>
+      </UFormField>
       
-      <UFormItem :label="t('Password')" name="password" class="mb-6">
+      <UFormField :label="t('Password')" name="password" class="mb-6 text-white">
         <UInput
           v-model="password"
           type="password"
           placeholder="********"
           required
         />
-      </UFormItem>
+      </UFormField>
       
       <div class="flex justify-between items-center">
         <UButton
