@@ -47,9 +47,15 @@ export const useAuth = () => {
       router.push('/movies');
       return { success: true };
     } catch (error: unknown) {
+      if (error instanceof Error && error.message.includes('auth')) {
+        return { 
+          success: false, 
+          error: 'Invalid user or password'
+        };
+      }
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : 'An unknown error occurred'
+        error: 'An unknown error occurred'
       };
     }
   };
