@@ -65,7 +65,8 @@ const footerSections = computed<FooterSection[]>(() => [
     links: [
       { label: t('Legal Notice'), path: '/legal' },
       { label: t('Cookie Policy'), path: '/cookies' },
-      { label: t('Privacy Policy'), path: '/privacy' }
+      { label: t('Privacy Policy'), path: '/privacy' },
+      { label: t('Terms and Conditions'), path: '/terms' }
     ]
   }
 ]);

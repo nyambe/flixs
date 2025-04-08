@@ -74,14 +74,14 @@ definePageMeta({
           <img 
             :src="imagePath.backdrop(movie?.backdrop_path ?? imagePath.backdrop(''))"
             :alt="movie?.title"
-            class="w-full h-full object-cover"
+            class="w-full h-full object-cover opacity-60"
           >
         </div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40" />
       </div>
 
       <!-- Content -->
-      <div class="container mx-auto px-4 -mt-64 relative">
+      <div class="container mx-auto px-4 -mt-80 relative">
         <div class="flex flex-col md:flex-row gap-4">
           <!-- Poster -->
           <div class="w-64 flex-shrink-0">

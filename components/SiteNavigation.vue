@@ -58,7 +58,7 @@ function changeLanguage(newLocale: string) {
   <header class="sticky top-0 w-full z-50 bg-black/50 backdrop-blur">
     <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
       <NuxtLink to="/" class="text-2xl font-bold text-brand">
-        Moaba Cinema TV
+        <img src="/logo.png" alt="Moaba Cinema TV" class="h-12">
       </NuxtLink>
 
       <div class="hidden md:flex items-center space-x-6">
@@ -76,7 +76,7 @@ function changeLanguage(newLocale: string) {
         <!-- Elegant Language Switcher -->
         <UDropdownMenu :items="languageOptions">
           <UButton
-            color="white"
+            color="neutral"
             variant="ghost"
             class="hover:bg-neutral-800"
             trailing-icon="i-heroicons-language"
@@ -96,7 +96,7 @@ function changeLanguage(newLocale: string) {
         
         <UButton
           v-if="!isSubscribed"
-          color="brand"
+          color="primary"
           :label="t('Subscribe')"
           class="bg-brand text-brand-content hover:bg-brand-focus"
           to="/subscription/plans"
@@ -104,23 +104,23 @@ function changeLanguage(newLocale: string) {
         <div v-if="currentUser" class="flex items-center space-x-4">
           <span class="text-white">{{ userDisplayName }}</span>
           <UButton
-            color="white"
+            color="neutral"
             variant="ghost"
             icon="i-heroicons-user-circle"
             to="/auth/profile"
             class="hover:bg-neutral-800"
           />
           <UButton
-            color="white"
+            color="neutral"
             variant="outline"
             icon="i-heroicons-arrow-right-on-rectangle"
             :label="t('Sign Out')"
-            @click="signOut"
+            @click="() => { signOut(); }"
           />
         </div>
         <UButton
           v-else
-          color="white"
+          color="neutral"
           variant="outline"
           :label="t('Sign In')"
           to="/auth/login"
