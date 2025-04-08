@@ -1,14 +1,43 @@
 <script setup lang="ts">
 // pages/movie/[id].vue
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+
+// Define types for the additional data
+interface MovieDetails {
+  runtime?: number | null;
+  director?: string | null;
+  producer?: string | null;
+  cast?: string | null;
+}
 
 const route = useRoute()
 const movieId = route.params.id
 const { getMovieById } = useMovieData()
 const imagePath = useImagePath()
 const showTrailer = ref(false)
+const additionalData = ref<MovieDetails | null>(null)
+const loading = ref(false)
 
 const movie = getMovieById(Number(movieId))
+
+// Fetch additional movie details
+const fetchAdditionalData = async () => {
+  if (!movie) return
+  
+  loading.value = true
+  try {
+    const { data } = await useFetch(`/api/movie/${movie.id}`)
+    additionalData.value = data.value
+  } catch (error) {
+    console.error('Error fetching movie details:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchAdditionalData()
+})
 
 const togglePlay = () => {
   // If movie has a video_id, use it; otherwise use a default
@@ -52,8 +81,8 @@ definePageMeta({
       </div>
 
       <!-- Content -->
-      <div class="container mx-auto px-4 -mt-96 relative">
-        <div class="flex flex-col md:flex-row gap-8">
+      <div class="container mx-auto px-4 -mt-64 relative">
+        <div class="flex flex-col md:flex-row gap-4">
           <!-- Poster -->
           <div class="w-64 flex-shrink-0">
             <img 
@@ -78,6 +107,31 @@ definePageMeta({
             <p class="text-lg text-neutral-300 mb-8">
               {{ movie?.overview }}
             </p>
+            
+            <!-- Additional information -->
+            <div class="mb-8 space-y-2">
+              <div v-if="movie?.release_date" class="flex items-start">
+                <span class="font-medium text-neutral-200 w-32">Mes:</span>
+                <span>{{ new Date(movie?.release_date).toLocaleString('es', { month: 'long' }) }}</span>
+              </div>
+              <div v-if="additionalData?.runtime || movie?.runtime" class="flex items-start">
+                <span class="font-medium text-neutral-200 w-32">Duración:</span>
+                <span>{{ additionalData?.runtime || movie?.runtime }} minutos</span>
+              </div>
+              <div v-if="additionalData?.director || movie?.director" class="flex items-start">
+                <span class="font-medium text-neutral-200 w-32">Dirigida por:</span>
+                <span>{{ additionalData?.director || movie?.director }}</span>
+              </div>
+              <div v-if="additionalData?.producer || movie?.producer" class="flex items-start">
+                <span class="font-medium text-neutral-200 w-32">Producida por:</span>
+                <span>{{ additionalData?.producer || movie?.producer }}</span>
+              </div>
+              <div v-if="additionalData?.cast || movie?.cast" class="flex items-start">
+                <span class="font-medium text-neutral-200 w-32">Reparto:</span>
+                <span>{{ additionalData?.cast || movie?.cast }}</span>
+              </div>
+            </div>
+            
             <div class="flex gap-4">
               <UButton
                 size="xl"
