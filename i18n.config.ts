@@ -29,6 +29,7 @@ export default defineI18nConfig(() => ({
       'Legal Notice': 'Legal Notice',
       'Cookie Policy': 'Cookie Policy',
       'Privacy Policy': 'Privacy Policy',
+      'Terms and Conditions': 'Terms and Conditions',
       'All rights reserved': 'All rights reserved',
       
       // Auth pages
@@ -103,6 +104,7 @@ export default defineI18nConfig(() => ({
       'Legal Notice': 'Mentions Légales',
       'Cookie Policy': 'Politique des Cookies',
       'Privacy Policy': 'Politique de Confidentialité',
+      'Terms and Conditions': 'Conditions Générales',
       'All rights reserved': 'Tous droits réservés',
       
       // Auth pages
@@ -177,6 +179,7 @@ export default defineI18nConfig(() => ({
       'Legal Notice': 'Aviso legal',
       'Cookie Policy': 'Política de cookies',
       'Privacy Policy': 'Política de privacidad',
+      'Terms and Conditions': 'Términos y Condiciones',
       'All rights reserved': 'Todos los derechos reservados',
       
       // Auth pages
