@@ -28,6 +28,10 @@ export interface TMDBMovie {
     media_type: string
     video_id?: string
     trailer_id?: string
+    runtime?: number
+    director?: string
+    producer?: string
+    cast?: string
   }
   
 export interface TMDBList {

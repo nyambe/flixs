@@ -105,7 +105,7 @@ async function handleSubmit() {
               type="submit"
               block
               size="lg"
-              color="black"
+              color="primary"
               class="bg-brand text-brand-content hover:bg-brand-hover"
               :loading="loading"
             >
@@ -116,7 +116,7 @@ async function handleSubmit() {
           <!-- Success and Error messages -->
           <UAlert
             v-if="success"
-            color="green"
+            color="success"
             variant="soft"
             icon="i-heroicons-check-circle"
             title="Mensaje enviado"
@@ -126,7 +126,7 @@ async function handleSubmit() {
           
           <UAlert
             v-if="error"
-            color="red"
+            color="error"
             variant="soft"
             icon="i-heroicons-exclamation-triangle"
             :title="error"
@@ -140,7 +140,6 @@ async function handleSubmit() {
         <div class="flex items-start space-x-4">
           <UIcon name="i-heroicons-envelope" class="w-6 h-6 mt-1 flex-shrink-0" />
           <div>
-            <h3 class="font-medium">ICONO:</h3>
             <a 
               href="mailto:info@moabacinematv.cc" 
               class="text-lg hover:text-brand transition"
@@ -153,7 +152,6 @@ async function handleSubmit() {
         <div class="flex items-start space-x-4">
           <UIcon name="i-heroicons-phone" class="w-6 h-6 mt-1 flex-shrink-0" />
           <div>
-            <h3 class="font-medium">ICONO:</h3>
             <a 
               href="tel:+34631163686" 
               class="text-lg hover:text-brand transition"

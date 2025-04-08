@@ -1,7 +1,6 @@
 <!-- pages/legal.vue -->
 <script setup lang="ts">
-// Current year for footer
-const currentYear = new Date().getFullYear()
+// No variables needed
 </script>
 
 <template>
@@ -65,6 +64,7 @@ const currentYear = new Date().getFullYear()
     <div class="mt-12 flex justify-center space-x-4">
       <NuxtLink to="/privacy" class="text-brand hover:underline">Política de Privacidad</NuxtLink>
       <NuxtLink to="/cookies" class="text-brand hover:underline">Política de Cookies</NuxtLink>
+      <NuxtLink to="/terms" class="text-brand hover:underline">Términos y Condiciones</NuxtLink>
     </div>
   </div>
 </template>
