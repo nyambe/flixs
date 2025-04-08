@@ -70,7 +70,7 @@ definePageMeta({
     <div class="min-h-screen">
       <!-- Background -->
       <div class="relative">
-        <div class="w-full aspect-[16/9]">
+        <div class="w-full aspect-[16/9] xl:aspect-[21/9]">
           <img 
             :src="imagePath.backdrop(movie?.backdrop_path ?? imagePath.backdrop(''))"
             :alt="movie?.title"
@@ -81,10 +81,10 @@ definePageMeta({
       </div>
 
       <!-- Content -->
-      <div class="container mx-auto px-4 -mt-80 relative">
-        <div class="flex flex-col md:flex-row gap-4">
+      <div class="container mx-auto px-4 -mt-80 xl:-mt-96 relative">
+        <div class="flex flex-col md:flex-row gap-4 xl:gap-8 xl:items-start xl:max-w-7xl xl:mx-auto">
           <!-- Poster -->
-          <div class="w-64 flex-shrink-0">
+          <div class="w-64 xl:w-80 flex-shrink-0">
             <img 
               :src="imagePath.poster(movie?.poster_path ?? imagePath.poster(''))"
               :alt="movie?.title"
@@ -93,23 +93,23 @@ definePageMeta({
           </div>
 
           <!-- Details -->
-          <div class="flex-1">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          <div class="flex-1 xl:py-8">
+            <h1 class="text-4xl md:text-5xl xl:text-6xl font-bold mb-4">
               {{ movie?.title }}
             </h1>
             <div class="flex items-center gap-4 mb-6">
-              <span class="flex items-center">
+              <span class="flex items-center text-lg xl:text-xl">
                 <span class="text-yellow-400 mr-1">★</span>
                 {{ movie?.vote_average.toFixed(1) }}
               </span>
-              <span v-if="movie?.release_date">{{ new Date(movie?.release_date).getFullYear() }}</span>
+              <span v-if="movie?.release_date" class="text-lg xl:text-xl">{{ new Date(movie?.release_date).getFullYear() }}</span>
             </div>
-            <p class="text-lg text-neutral-300 mb-8">
+            <p class="text-lg xl:text-xl text-neutral-300 mb-8 max-w-3xl">
               {{ movie?.overview }}
             </p>
             
             <!-- Additional information -->
-            <div class="mb-8 space-y-2">
+            <div class="mb-8 space-y-3 xl:text-lg">
               <div v-if="movie?.release_date" class="flex items-start">
                 <span class="font-medium text-neutral-200 w-32">Mes:</span>
                 <span>{{ new Date(movie?.release_date).toLocaleString('es', { month: 'long' }) }}</span>
