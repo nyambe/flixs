@@ -16,6 +16,7 @@ interface User {
     status?: string;
     cancelAtPeriodEnd?: boolean;
     updatedAt?: string;
+    subscriptionType?: 'monthly' | 'yearly' | 'education';
   } | null;
 }
 
