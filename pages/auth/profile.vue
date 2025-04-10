@@ -64,58 +64,60 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-16 mb-20">
-    <h1 class="text-3xl font-bold text-brand mb-6">{{ t('Edit Profile') }}</h1>
+  <div class="max-w-md mx-auto mt-16 mb-8">
+    <UCard>
+      <UCardTitle class="text-3xl font-bold">{{ t('Edit Profile') }}</UCardTitle>
 
-    <UAlert v-if="error" color="red" class="mb-4" :title="error" />
-    <UAlert v-if="success" color="green" class="mb-4" :title="success" />
+      <UAlert v-if="error" color="error" class="mb-4" :title="error" />
+      <UAlert v-if="success" color="success" class="mb-4" :title="success" />
 
-    <UCard v-if="currentUser" class="bg-gray-400 text-white">
-      <UForm 
-        :schema="schema" 
-        :state="state" 
-        @submit="onSubmit"
-      >
-        <UFormField 
-          :label="t('Name')" 
-          name="name" 
-          class="mb-4 text-white"
+      <template v-if="currentUser">
+        <UForm 
+          :schema="schema" 
+          :state="state" 
+          @submit="onSubmit"
+          class="space-y-4"
         >
-          <UInput
-            v-model="state.name"
-            type="text"
-            placeholder="Your Name"
-            :disabled="loading"
-          />
-        </UFormField>
-
-        <div class="flex justify-between items-center">
-          <UButton
-            type="submit"
-            color="primary"
-            class="bg-brand text-brand-content hover:bg-brand-focus"
-            :loading="loading"
-            :disabled="loading"
+          <UFormField 
+            :label="t('Name')" 
+            name="name"
           >
-            {{ t('Save Changes') }}
+            <UInput
+              v-model="state.name"
+              type="text"
+              placeholder="Your Name"
+              :disabled="loading"
+            />
+          </UFormField>
+
+          <div class="flex justify-between items-center pt-4">
+            <UButton
+              type="submit"
+              color="primary"
+              :loading="loading"
+              :disabled="loading"
+            >
+              {{ t('Save Changes') }}
+            </UButton>
+
+            <NuxtLink to="/movies" class="text-(--ui-primary) hover:underline">
+              {{ t('Back to Movies') }}
+            </NuxtLink>
+          </div>
+        </UForm>
+      </template>
+
+      <template v-else>
+        <div class="text-center py-6">
+          <p class="text-(--ui-text-muted) mb-4">{{ t('Please sign in to edit your profile.') }}</p>
+          <UButton
+            color="primary"
+            to="/auth/login"
+          >
+            {{ t('Sign In') }}
           </UButton>
-
-          <NuxtLink to="/movies" class="text-brand hover:underline">
-            {{ t('Back to Movies') }}
-          </NuxtLink>
         </div>
-      </UForm>
+      </template>
     </UCard>
-
-    <div v-else class="text-center">
-      <p class="text-support-content mb-4">{{ t('Please sign in to edit your profile.') }}</p>
-      <UButton
-        color="white"
-        variant="outline"
-        to="/auth/login"
-      >
-        {{ t('Sign In') }}
-      </UButton>
-    </div>
   </div>
 </template>
