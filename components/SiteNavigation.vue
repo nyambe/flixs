@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { useAuth } from '~/composables/useAuth';
 import { useI18n } from 'vue-i18n';
+import { useColorMode } from '#imports';
 
 // Initialize i18n
 const { t, locale, availableLocales } = useI18n();
+
+// Initialize color mode
+const colorMode = useColorMode();
 
 // Navigation items with i18n
 const navigationItems = [
@@ -14,6 +18,11 @@ const navigationItems = [
   // { label: () => t('New & Popular'), path: '/new' },
   // { label: () => t('My List'), path: '/my-list' },
 ];
+
+// Toggle color mode
+const toggleColorMode = () => {
+  colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark';
+};
 
 // Auth state
 const { currentUser, userSubscription, signOut } = useAuth();
@@ -73,6 +82,16 @@ function changeLanguage(newLocale: string) {
       </div>
 
       <div class="flex items-center space-x-4">
+        <!-- Color Mode Toggle -->
+        <UButton
+          color="neutral"
+          variant="ghost"
+          class="hover:bg-neutral-800"
+          :icon="colorMode.value === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'"
+          @click="toggleColorMode"
+          aria-label="Toggle color mode"
+        />
+        
         <!-- Elegant Language Switcher -->
         <UDropdownMenu :items="languageOptions">
           <UButton

@@ -47,10 +47,10 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-16 mb-20">
-    <h1 class="text-3xl font-bold mb-6 text-white">{{ t('Create Account') }}</h1>
+  <UCard class="max-w-md mx-auto mt-16 mb-8 shadow-lg">
+    <UCardTitle class="text-3xl font-bold">{{ t('Create Account') }}</UCardTitle>
     
-    <UAlert v-if="error" color="red" class="mb-4" :title="error" />
+    <UAlert v-if="error" color="error" class="mb-4" :title="error" />
     
     <UForm 
       :schema="schema" 
@@ -60,8 +60,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     >
       <UFormField 
         :label="t('Name')" 
-        name="name" 
-        class="text-white"
+        name="name"
       >
         <UInput
           v-model="state.name"
@@ -72,8 +71,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       
       <UFormField 
         :label="t('Email')" 
-        name="email" 
-        class="text-white"
+        name="email"
       >
         <UInput
           v-model="state.email"
@@ -84,8 +82,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       
       <UFormField 
         :label="t('Password')" 
-        name="password" 
-        class="text-white"
+        name="password"
       >
         <UInput
           v-model="state.password"
@@ -96,8 +93,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       
       <UFormField 
         :label="t('Confirm Password')" 
-        name="confirmPassword" 
-        class="text-white"
+        name="confirmPassword"
       >
         <UInput
           v-model="state.confirmPassword"
@@ -110,17 +106,16 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
         <UButton
           type="submit"
           color="primary"
-          class="bg-brand text-brand-content hover:bg-brand-hover"
           :loading="loading"
           :disabled="loading"
         >
           {{ t('Sign Up') }}
         </UButton>
         
-        <NuxtLink to="/auth/login" class="text-brand hover:underline">
+        <NuxtLink to="/auth/login" class="text-(--ui-primary) hover:underline">
           {{ t('Already have an account?') }}
         </NuxtLink>
       </div>
     </UForm>
-  </div>
+  </UCard>
 </template>

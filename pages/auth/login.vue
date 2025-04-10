@@ -37,20 +37,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-16 mb-2 p-4 bg-gray-400 bg-opacity-20 rounded-lg">
-    <h1 class="text-3xl font-bold mb-6">{{ t('Sign In') }}</h1>
+  <UCard class="max-w-md mx-auto mt-16 mb-8 shadow-lg">
+    <UCardTitle class="text-3xl font-bold">{{ t('Sign In') }}</UCardTitle>
     
-    <UAlert v-if="error" color="red" class="mb-4" :title="error" />
+    <UAlert v-if="error" color="error" class="mb-4" :title="error" />
     
     <UForm 
       :schema="schema" 
       :state="state" 
       @submit="onSubmit"
+      class="space-y-4"
     >
       <UFormField 
         :label="t('Email')" 
-        name="email" 
-        class="mb-4"
+        name="email"
       >
         <UInput
           v-model="state.email"
@@ -61,8 +61,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       
       <UFormField 
         :label="t('Password')" 
-        name="password" 
-        class="mb-6 text-white"
+        name="password"
       >
         <UInput
           v-model="state.password"
@@ -71,21 +70,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         />
       </UFormField>
       
-      <div class="flex justify-between items-center">
+      <div class="flex justify-between items-center pt-4">
         <UButton
           type="submit"
           color="primary"
-          class="bg-brand text-brand-content hover:bg-brand-hover"
           :loading="loading"
           :disabled="loading"
         >
           {{ t('Sign In') }}
         </UButton>
         
-        <NuxtLink to="/auth/register" class="text-brand hover:underline">
+        <NuxtLink to="/auth/register" class="text-(--ui-primary) hover:underline">
           {{ t('Need an account?') }}
         </NuxtLink>
       </div>
     </UForm>
-  </div>
+  </UCard>
 </template>
