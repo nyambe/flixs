@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useAdminUser } from '../../composables/useAdminUser';
+
 interface User {
   id: string;
   email: string;
@@ -18,6 +20,9 @@ interface User {
   } | null;
 }
 
+// Add admin user composable
+const { user: adminUser } = useAdminUser();
+
 const users = ref<User[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
@@ -29,7 +34,11 @@ const fetchUsers = async () => {
   error.value = null;
   
   try {
-    const response = await $fetch<User[]>('/api/admin/users');
+    const response = await $fetch<User[]>('/api/admin/users', {
+      headers: {
+        'Authorization': `Bearer ${await adminUser.value?.getIdToken()}`
+      }
+    });
     users.value = response;
   } catch (err) {
     console.error('Failed to fetch users:', err);

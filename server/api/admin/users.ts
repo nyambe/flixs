@@ -20,17 +20,35 @@ interface User {
 }
 
 export default defineEventHandler(async (event): Promise<User[]> => {
-  // Verify the user is an admin - check the session
-  // This is a simple check - in production, you might want more robust auth checks
-  const { user } = event.context.auth || {};
-  
-  if (!user || !user.email?.includes('developer')) {
+  // Get the authorization header
+  const authHeader = getHeader(event, 'authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    throw createError({
+      statusCode: 401,
+      message: 'Missing or invalid authorization token',
+    });
+  }
+
+  // Extract and verify the Firebase ID token
+  const idToken = authHeader.split('Bearer ')[1];
+  let adminUser;
+  try {
+    adminUser = await adminAuth.verifyIdToken(idToken);
+  } catch (error) {
+    throw createError({
+      statusCode: 401,
+      message: 'Invalid authorization token',
+    });
+  }
+
+  // Verify the user is an admin
+  if (!adminUser.email?.includes('developer')) {
     throw createError({
       statusCode: 403,
       message: 'Unauthorized access - admin privileges required',
     });
   }
-  
+
   try {
     // Get all users from Firebase Auth
     const { users: authUsers } = await adminAuth.listUsers(100); // Limit to 100 users for performance
