@@ -9,6 +9,15 @@ const showTrailer = ref(false)
 const backdropAspectRatio = 'aspect-[16/9]'
 const posterAspectRatio = 'aspect-[2/3]'
 
+// Add SEO metadata
+useSeoMeta({
+  title: 'MOABA Cinema TV - African Movies on Demand',
+  ogTitle: 'MOABA Cinema TV - African Movies on Demand',
+  description: 'Stream premium African movies and TV shows. Experience the richness of African cinema with MOABA TV.',
+  ogDescription: 'Stream premium African movies and TV shows. Experience the richness of African cinema with MOABA TV.',
+  ogImage: featuredMovie.backdrop_path ? imagePath.backdrop(featuredMovie.backdrop_path) : '/logo.png',
+  twitterCard: 'summary_large_image',
+})
 </script>
 
 <template>
@@ -71,7 +80,7 @@ const posterAspectRatio = 'aspect-[2/3]'
             />
             <UButton
               size="xl"
-              color="white"
+              color="neutral"
               variant="ghost"
               label="More Info"
               icon="i-heroicons-information-circle"
