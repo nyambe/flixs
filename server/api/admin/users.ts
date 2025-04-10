@@ -88,7 +88,12 @@ export default defineEventHandler(async (event): Promise<User[]> => {
       })
     );
     
-    return usersData;
+    // Filter out users without stripeSubscriptionId and ensure subscription is active
+    const filteredUsers = usersData.filter(user => 
+      user.subscription?.stripeSubscriptionId 
+    );
+    
+    return filteredUsers;
   } catch (error) {
     console.error('Error fetching users:', error);
     throw createError({
