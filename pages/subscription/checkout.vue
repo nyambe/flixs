@@ -169,13 +169,13 @@
 <template>
   <div class="max-w-md mx-auto mt-16 mb-20">
     <UCard class="mb-6">
-      <UCardTitle class="text-3xl font-bold">{{ t('Checkout') }}</UCardTitle>
+      <UCardTitle class="text-3xl font-bold text-(--ui-text-highlighted)">{{ t('Checkout') }}</UCardTitle>
 
       <UAlert v-if="error" color="error" class="mb-4" :title="error" />
 
       <!-- Authentication Card (shown if user is not logged in) -->
       <UCard v-if="!currentUser" class="mb-6">
-        <UCardTitle>
+        <UCardTitle class="text-(--ui-text-highlighted)">
           {{ authMode === 'login' ? t('Sign In') : t('Create Account') }}
         </UCardTitle>
 
@@ -309,7 +309,7 @@
       </UCard>
 
       <UCard class="mt-6">
-        <UCardTitle>{{ t('Subscription Plan') }}</UCardTitle>
+        <UCardTitle class="text-(--ui-text-highlighted)">{{ t('Subscription Plan') }}</UCardTitle>
 
         <div v-if="loadingPlan" class="text-center py-4">
           <UIcon name="i-heroicons-arrow-path" class="animate-spin h-8 w-8 text-(--ui-primary) mx-auto" />
