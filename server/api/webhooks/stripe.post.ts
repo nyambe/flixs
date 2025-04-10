@@ -2,6 +2,52 @@ import { stripe } from '~/server/utils/stripe'
 import { adminDb } from '~/server/utils/firebase-admin'
 import type { Stripe } from 'stripe'
 
+interface User {
+  id: string;
+  email: string;
+  displayName: string | null;
+  photoURL: string | null;
+  lastLogin: string | null;
+  createdAt: string;
+  subscription: {
+    active: boolean;
+    stripeSubscriptionId?: string;
+    stripeCustomerId?: string;
+    priceId?: string;
+    currentPeriodEnd?: number;
+    status?: string;
+    cancelAtPeriodEnd?: boolean;
+    updatedAt?: string;
+    subscriptionType?: 'monthly' | 'yearly' | 'education';
+  } | null;
+}
+
+// Helper function to determine subscription type
+const determineSubscriptionType = async (priceId: string): Promise<'monthly' | 'yearly' | 'education'> => {
+  try {
+    const price = await stripe.prices.retrieve(priceId, {
+      expand: ['product']
+    });
+    
+    const interval = price.recurring?.interval || 'month';
+    const unitAmount = price.unit_amount || 0;
+    const product = price.product as Stripe.Product;
+    const metadata = product.metadata || {};
+    
+    // Check if it's an education plan based on metadata or price
+    if (metadata.type === 'education' || 
+        (interval === 'year' && unitAmount >= 1000)) { // 10000 in cents = $100
+      return 'education';
+    }
+    
+    // Otherwise, determine by interval
+    return interval === 'month' ? 'monthly' : 'yearly';
+  } catch (error) {
+    console.error('Error determining subscription type:', error);
+    return 'monthly'; // Default to monthly if there's an error
+  }
+};
+
 export default defineEventHandler(async (event) => {
   const body = await readRawBody(event)
   const signature = getHeader(event, 'stripe-signature')
@@ -44,38 +90,42 @@ export default defineEventHandler(async (event) => {
   }
 
   const userRef = adminDb.collection('users').doc(firebaseUserId)
-
+  const priceId = subscription.items.data[0].price.id;
+  let subscriptionType: 'monthly' | 'yearly' | 'education' | null = null;
+  
   switch (stripeEvent.type) {
     case 'customer.subscription.created':
+      subscriptionType = await determineSubscriptionType(priceId);
       await userRef.update({
         subscription: {
           active: true,
           stripeSubscriptionId: subscription.id,
           stripeCustomerId: customerId,
-          priceId: subscription.items.data[0].price.id,
+          priceId: priceId,
           currentPeriodEnd: subscription.current_period_end,
           status: subscription.status,
-          subscriptionType: subscription.items.data[0].price.recurring?.interval || 'monthly',
+          subscriptionType: subscriptionType,
           updatedAt: new Date().toISOString()
         }
-      })
-      break
+      });
+      break;
 
     case 'customer.subscription.updated':
+      subscriptionType = await determineSubscriptionType(priceId);
       await userRef.update({
         subscription: {
           active: subscription.status === 'active',
           stripeSubscriptionId: subscription.id,
           stripeCustomerId: customerId,
-          priceId: subscription.items.data[0].price.id,
+          priceId: priceId,
           currentPeriodEnd: subscription.current_period_end,
           status: subscription.status,
           cancelAtPeriodEnd: subscription.cancel_at_period_end,
-          subscriptionType: subscription.items.data[0].price.recurring?.interval || 'monthly',
+          subscriptionType: subscriptionType,
           updatedAt: new Date().toISOString()
         }
-      })
-      break
+      });
+      break;
 
     case 'customer.subscription.deleted':
       await userRef.update({
@@ -90,8 +140,8 @@ export default defineEventHandler(async (event) => {
           subscriptionType: null,
           updatedAt: new Date().toISOString()
         }
-      })
-      break
+      });
+      break;
 
     default:
       console.log(`Unhandled event type ${stripeEvent.type}`)
