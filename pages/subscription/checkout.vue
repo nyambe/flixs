@@ -2,6 +2,8 @@
   import { useAuth } from '~/composables/useAuth';
   import { useI18n } from 'vue-i18n';
   import type { Stripe } from 'stripe';
+  import * as z from 'zod';
+  import type { FormSubmitEvent } from '@nuxt/ui';
 
   // Initialize i18n
   const { t } = useI18n();
@@ -16,12 +18,34 @@
   const loadingCheckout = ref<boolean>(false);
   const loadingAuth = ref<boolean>(false);
   
+  // Auth form schema
+  const loginSchema = z.object({
+    email: z.string().email(t('Invalid email')),
+    password: z.string().min(1, t('Password is required'))
+  });
+
+  const signupSchema = z.object({
+    email: z.string().email(t('Invalid email')),
+    name: z.string().optional(),
+    password: z.string().min(8, t('Password must be at least 8 characters')),
+    confirmPassword: z.string()
+  }).refine((data) => data.password === data.confirmPassword, {
+    message: t('Passwords do not match'),
+    path: ['confirmPassword']
+  });
+  
   // Auth form state
   const authMode = ref<'login' | 'signup'>('login');
-  const email = ref<string>('');
-  const password = ref<string>('');
-  const confirmPassword = ref<string>('');
-  const name = ref<string>('');
+  const loginState = reactive({
+    email: '',
+    password: ''
+  });
+  const signupState = reactive({
+    email: '',
+    name: '',
+    password: '',
+    confirmPassword: ''
+  });
   const authError = ref<string>('');
 
   // Get the plan (priceId) from the URL query
@@ -35,34 +59,41 @@
   };
 
   // Handle authentication
-  const handleAuth = async () => {
+  const handleLogin = async (event: FormSubmitEvent<typeof loginState>) => {
     authError.value = '';
-    
-    if (!email.value || !password.value) {
-      authError.value = t('Please fill in all fields');
-      return;
-    }
-
-    if (authMode.value === 'signup' && password.value !== confirmPassword.value) {
-      authError.value = t('Passwords do not match');
-      return;
-    }
-
     loadingAuth.value = true;
-
+    
     try {
-      if (authMode.value === 'signup') {
-        await register(email.value, password.value, name.value || email.value);
-      } else {
-        await signIn(email.value, password.value);
+      const result = await signIn(event.data.email, event.data.password);
+      
+      if (!result.success) {
+        authError.value = result.error || t('Authentication failed');
       }
-      // After successful auth, clear form
-      email.value = '';
-      password.value = '';
-      confirmPassword.value = '';
-      name.value = '';
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : t('Authentication failed');
+      authError.value = errorMessage;
+      console.error('Auth error:', err);
+    } finally {
+      loadingAuth.value = false;
+    }
+  };
+
+  const handleSignup = async (event: FormSubmitEvent<typeof signupState>) => {
+    authError.value = '';
+    loadingAuth.value = true;
+    
+    try {
+      const result = await register(
+        event.data.email, 
+        event.data.password, 
+        event.data.name || event.data.email
+      );
+      
+      if (!result.success) {
+        authError.value = result.error || t('Registration failed');
+      }
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : t('Registration failed');
       authError.value = errorMessage;
       console.error('Auth error:', err);
     } finally {
@@ -137,110 +168,188 @@
 <!-- pages/subscription/checkout.vue -->
 <template>
   <div class="max-w-md mx-auto mt-16 mb-20">
-    <h1 class="text-3xl font-bold text-brand mb-6">{{ t('Checkout') }}</h1>
+    <UCard class="mb-6">
+      <UCardTitle class="text-3xl font-bold">{{ t('Checkout') }}</UCardTitle>
 
-    <UAlert v-if="error" color="red" class="mb-4" :title="error" />
+      <UAlert v-if="error" color="error" class="mb-4" :title="error" />
 
-    <!-- Authentication Card (shown if user is not logged in) -->
-    <UCard v-if="!currentUser" class="bg-black mb-6">
-      <template #header>
-        <h2 class="text-lg font-semibold text-neutral-content">
+      <!-- Authentication Card (shown if user is not logged in) -->
+      <UCard v-if="!currentUser" class="mb-6">
+        <UCardTitle>
           {{ authMode === 'login' ? t('Sign In') : t('Create Account') }}
-        </h2>
-      </template>
+        </UCardTitle>
 
-      <div class="space-y-4">
-        <UAlert v-if="authError" color="red" class="mb-4" :title="authError" />
+        <UAlert v-if="authError" color="error" class="mb-4" :title="authError" />
 
-        <UForm>
-          <UFormItem :label="t('Email')" required>
-            <UInput v-model="email" type="email" placeholder="email@example.com" />
-          </UFormItem>
-
-          <UFormItem v-if="authMode === 'signup'" :label="t('Name')">
-            <UInput v-model="name" type="text" placeholder="Your name (optional)" />
-          </UFormItem>
-
-          <UFormItem :label="t('Password')" required>
-            <UInput v-model="password" type="password" />
-          </UFormItem>
-
-          <UFormItem v-if="authMode === 'signup'" :label="t('Confirm Password')" required>
-            <UInput v-model="confirmPassword" type="password" />
-          </UFormItem>
-        </UForm>
-      </div>
-
-      <template #footer>
-        <div class="space-y-4">
-          <UButton
-            color="brand"
-            variant="solid"
-            class="w-full bg-brand text-brand-content hover:bg-brand-focus"
-            :loading="loadingAuth"
-            @click="handleAuth"
+        <!-- Login Form -->
+        <UForm 
+          v-if="authMode === 'login'"
+          :schema="loginSchema" 
+          :state="loginState" 
+          @submit="handleLogin"
+          class="space-y-4"
+        >
+          <UFormField 
+            :label="t('Email')" 
+            name="email"
+            required
           >
-            {{ authMode === 'login' ? t('Sign In') : t('Create Account') }}
-          </UButton>
-          
-          <p class="text-center text-sm text-neutral-content">
+            <UInput
+              v-model="loginState.email"
+              type="email"
+              placeholder="email@example.com"
+            />
+          </UFormField>
+
+          <UFormField 
+            :label="t('Password')" 
+            name="password"
+            required
+          >
+            <UInput
+              v-model="loginState.password"
+              type="password"
+              placeholder="********"
+            />
+          </UFormField>
+
+          <div class="pt-4">
+            <UButton
+              type="submit"
+              color="primary"
+              :loading="loadingAuth"
+              :disabled="loadingAuth"
+              block
+            >
+              {{ t('Sign In') }}
+            </UButton>
+          </div>
+        </UForm>
+
+        <!-- Signup Form -->
+        <UForm 
+          v-else
+          :schema="signupSchema" 
+          :state="signupState" 
+          @submit="handleSignup"
+          class="space-y-4"
+        >
+          <UFormField 
+            :label="t('Email')" 
+            name="email"
+            required
+          >
+            <UInput
+              v-model="signupState.email"
+              type="email"
+              placeholder="email@example.com"
+            />
+          </UFormField>
+
+          <UFormField 
+            :label="t('Name')" 
+            name="name"
+          >
+            <UInput
+              v-model="signupState.name"
+              type="text"
+              placeholder="Your name (optional)"
+            />
+          </UFormField>
+
+          <UFormField 
+            :label="t('Password')" 
+            name="password"
+            required
+          >
+            <UInput
+              v-model="signupState.password"
+              type="password"
+              placeholder="********"
+            />
+          </UFormField>
+
+          <UFormField 
+            :label="t('Confirm Password')" 
+            name="confirmPassword"
+            required
+          >
+            <UInput
+              v-model="signupState.confirmPassword"
+              type="password"
+              placeholder="********"
+            />
+          </UFormField>
+
+          <div class="pt-4">
+            <UButton
+              type="submit"
+              color="primary"
+              :loading="loadingAuth"
+              :disabled="loadingAuth"
+              block
+            >
+              {{ t('Create Account') }}
+            </UButton>
+          </div>
+        </UForm>
+
+        <div class="text-center mt-4">
+          <p class="text-(--ui-text-muted) text-sm">
             {{ authMode === 'login' ? t('Don\'t have an account?') : t('Already have an account?') }}
             <UButton
               variant="link"
-              class="text-brand"
+              color="primary"
               @click="toggleAuthMode"
             >
               {{ authMode === 'login' ? t('Sign Up') : t('Sign In') }}
             </UButton>
           </p>
         </div>
-      </template>
-    </UCard>
+      </UCard>
 
-    <UCard class="bg-black">
-      <template #header>
-        <h2 class="text-lg font-semibold text-neutral-content">{{ t('Subscription Plan') }}</h2>
-      </template>
+      <UCard class="mt-6">
+        <UCardTitle>{{ t('Subscription Plan') }}</UCardTitle>
 
-      <div v-if="loadingPlan" class="text-center">
-        <USpinner color="brand" />
-        <p class="text-neutral-content mt-2">{{ t('Loading plan details...') }}</p>
-      </div>
-      <div v-else-if="price" class="space-y-4">
-        <p class="text-neutral-content">
-          {{ t('Plan') }}: {{ price.metadata?.name || t('Selected Plan') }}
-        </p>
-        <p v-if="price.unit_amount" class="text-brand-focus">
-          {{ t('Price') }}: ${{ (price.unit_amount / 100).toFixed(2) }} {{ price.currency.toUpperCase() }}
-          {{ price.recurring?.interval ? `/ ${price.recurring.interval}` : '' }}
-        </p>
-      </div>
-      <div v-else>
-        <p class="text-support-content">{{ t('No plan selected or invalid plan ID.') }}</p>
-      </div>
+        <div v-if="loadingPlan" class="text-center py-4">
+          <UIcon name="i-heroicons-arrow-path" class="animate-spin h-8 w-8 text-(--ui-primary) mx-auto" />
+          <p class="mt-2 text-(--ui-text-muted)">{{ t('Loading plan details...') }}</p>
+        </div>
+        <div v-else-if="price" class="space-y-4 py-4">
+          <p class="text-(--ui-text)">
+            {{ t('Plan') }}: {{ price.metadata?.name || t('Selected Plan') }}
+          </p>
+          <p v-if="price.unit_amount" class="text-(--ui-primary) font-semibold">
+            {{ t('Price') }}: ${{ (price.unit_amount / 100).toFixed(2) }} {{ price.currency.toUpperCase() }}
+            {{ price.recurring?.interval ? `/ ${price.recurring.interval}` : '' }}
+          </p>
+        </div>
+        <div v-else class="py-4">
+          <p class="text-(--ui-text-muted)">{{ t('No plan selected or invalid plan ID.') }}</p>
+        </div>
 
-      <template #footer>
-        <UButton
-          v-if="price && currentUser"
-          color="brand"
-          variant="solid"
-          class="w-full bg-brand text-brand-content hover:bg-brand-focus"
-          :loading="loadingCheckout"
-          :disabled="loadingCheckout"
-          @click="handleCheckout"
-        >
-          {{ t('Proceed to Payment') }}
-        </UButton>
-        <UButton
-          v-else-if="!price"
-          color="white"
-          variant="outline"
-          class="w-full"
-          to="/subscription/plans"
-        >
-          {{ t('Choose a Plan') }}
-        </UButton>
-      </template>
+        <div class="mt-6">
+          <UButton
+            v-if="price && currentUser"
+            color="primary"
+            :loading="loadingCheckout"
+            :disabled="loadingCheckout"
+            block
+            @click="handleCheckout"
+          >
+            {{ t('Proceed to Payment') }}
+          </UButton>
+          <UButton
+            v-else-if="!price"
+            color="neutral"
+            variant="outline"
+            block
+            to="/subscription/plans"
+          >
+            {{ t('Choose a Plan') }}
+          </UButton>
+        </div>
+      </UCard>
     </UCard>
   </div>
 </template>
