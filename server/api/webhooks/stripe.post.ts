@@ -48,29 +48,48 @@ export default defineEventHandler(async (event) => {
   switch (stripeEvent.type) {
     case 'customer.subscription.created':
       await userRef.update({
-        subscriptionId: subscription.id,
-        subscriptionStatus: subscription.status,
-        priceId: subscription.items.data[0].price.id,
-        currentPeriodEnd: subscription.current_period_end
+        subscription: {
+          active: true,
+          stripeSubscriptionId: subscription.id,
+          stripeCustomerId: customerId,
+          priceId: subscription.items.data[0].price.id,
+          currentPeriodEnd: subscription.current_period_end,
+          status: subscription.status,
+          subscriptionType: subscription.items.data[0].price.recurring?.interval || 'monthly',
+          updatedAt: new Date().toISOString()
+        }
       })
       break
 
     case 'customer.subscription.updated':
       await userRef.update({
-        subscriptionStatus: subscription.status,
-        priceId: subscription.items.data[0].price.id,
-        currentPeriodEnd: subscription.current_period_end,
-        cancelAtPeriodEnd: subscription.cancel_at_period_end
+        subscription: {
+          active: subscription.status === 'active',
+          stripeSubscriptionId: subscription.id,
+          stripeCustomerId: customerId,
+          priceId: subscription.items.data[0].price.id,
+          currentPeriodEnd: subscription.current_period_end,
+          status: subscription.status,
+          cancelAtPeriodEnd: subscription.cancel_at_period_end,
+          subscriptionType: subscription.items.data[0].price.recurring?.interval || 'monthly',
+          updatedAt: new Date().toISOString()
+        }
       })
       break
 
     case 'customer.subscription.deleted':
       await userRef.update({
-        subscriptionId: null,
-        subscriptionStatus: 'canceled',
-        priceId: null,
-        currentPeriodEnd: null,
-        cancelAtPeriodEnd: null
+        subscription: {
+          active: false,
+          stripeSubscriptionId: null,
+          stripeCustomerId: customerId,
+          priceId: null,
+          currentPeriodEnd: null,
+          status: 'canceled',
+          cancelAtPeriodEnd: null,
+          subscriptionType: null,
+          updatedAt: new Date().toISOString()
+        }
       })
       break
 

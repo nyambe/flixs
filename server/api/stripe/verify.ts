@@ -52,7 +52,10 @@ export default defineEventHandler(async (event): Promise<VerifyResponse> => {
       subscription: {
         active: true,
         stripeSubscriptionId: session.subscription,
-        updatedAt: new Date(),
+        stripeCustomerId: session.customer,
+        updatedAt: new Date().toISOString(),
+        status: 'active',
+        subscriptionType: session.mode === 'subscription' ? 'monthly' : 'education' // Default to monthly for subscription mode
       },
     }, { merge: true });
 

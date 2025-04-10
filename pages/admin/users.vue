@@ -17,6 +17,7 @@ interface User {
     status?: string;
     cancelAtPeriodEnd?: boolean;
     updatedAt?: string;
+    subscriptionType?: 'monthly' | 'yearly' | 'education';
   } | null;
 }
 
@@ -98,9 +99,10 @@ const getSubscriptionStatus = (user: User) => {
   if (!user.subscription) return 'No subscription';
   
   if (user.subscription.status === 'active') {
-    return user.subscription.cancelAtPeriodEnd 
-      ? 'Canceling' 
-      : 'Active';
+    if (user.subscription.cancelAtPeriodEnd) {
+      return 'Canceling';
+    }
+    return `Active (${user.subscription.subscriptionType || 'Monthly'})`;
   }
   
   return user.subscription.status 
