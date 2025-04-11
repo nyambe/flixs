@@ -122,6 +122,20 @@ useSeoMeta({
         </div>
       </div>
     </section>
+
+    <!-- Sponsors/Patrocinadores Section -->
+    <section class="py-16 bg-black">
+      <div class="container mx-auto px-4">
+        <h2 class="text-xl font-bold mb-8">Patrocinadores</h2>
+        <div class="flex justify-center">
+          <img 
+            src="/patrocinadores.png" 
+            alt="Nuestros Patrocinadores" 
+            class="max-w-[80%] md:max-w-[70%] lg:max-w-[60%]"
+          >
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
