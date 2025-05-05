@@ -4,6 +4,16 @@
 const { featuredMovie, popularMovies } = useMovieData()
 const imagePath = useImagePath()
 const showTrailer = ref(false)
+const { currentUser } = useAuth()
+
+// Add email handling for subscription
+const handleSubscribe = async (email: string) => {
+  try {
+    await navigateTo('/register?email=' + encodeURIComponent(email))
+  } catch (error) {
+    console.error('Error during subscription:', error)
+  }
+}
 
 // Calculate aspect ratios
 const backdropAspectRatio = 'aspect-[16/9]'
@@ -21,21 +31,21 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class=" bg-black text-white">
+  <div class="bg-black text-white">
     <!-- Trailer Modal -->
     <TrailerModal 
       v-model:open="showTrailer" 
       :trailer-id="featuredMovie.trailer_id || null"
     />
     
-    <!-- Hero Section -->
-    <section class="relative min-h-[60vh] overflow-hidden">
+    <!-- Hero Section for logged-in users -->
+    <section v-if="currentUser" class="relative min-h-[60vh] overflow-hidden">
       <div class="absolute inset-0">
         <div :class="backdropAspectRatio" class="w-full ">
           <img 
             :src="imagePath.backdrop(featuredMovie.backdrop_path)"
             :alt="featuredMovie.title"
-            class="w-full aspect-[16/9]  object-cover"
+            class="w-full aspect-[16/9] object-cover"
           >
         </div>
         <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
@@ -60,15 +70,6 @@ useSeoMeta({
               class="bg-amber-400 hover:bg-amber-500"
               @click="navigateTo(`/watch/${featuredMovie.video_id}`)"
             />
-            <!-- <UButton
-              v-else
-              size="xl"
-              color="primary"
-              label="Play"
-              icon="i-heroicons-play"
-              class="bg-amber-400 hover:bg-amber-500"
-              @click="navigateTo(`/movie/${featuredMovie.id}`)"
-            /> -->
             <UButton
               v-if="featuredMovie.trailer_id"
               size="xl"
@@ -90,6 +91,13 @@ useSeoMeta({
         </div>
       </div>
     </section>
+    
+    <!-- Subscription Hero for non-logged-in users -->
+    <SubscriptionHero 
+      v-else 
+      :movie="featuredMovie" 
+      @subscribe="handleSubscribe" 
+    />
 
     <!-- Featured Categories Section -->
     <section class="py-16 bg-black">

@@ -105,6 +105,9 @@ const changeSubscription = async (newType: string) => {
   if (!currentUser.value) return;
   
   loading.value = true;
+  error.value = '';
+  success.value = '';
+  
   try {
     // In a real application, this would connect to a payment processor
     // For now, we'll just update the subscription type in Firestore
@@ -125,6 +128,7 @@ const changeSubscription = async (newType: string) => {
     success.value = t('Subscription updated successfully!');
   } catch (err) {
     error.value = err instanceof Error ? err.message : t('An unknown error occurred');
+    console.error('Error updating subscription:', err);
   } finally {
     loading.value = false;
   }
@@ -258,49 +262,53 @@ const changeSubscription = async (newType: string) => {
     <!-- Subscription Change Modal -->
     <UModal v-model="showSubscriptionModal">
       <UCard>
-        <UCardTitle>{{ t('Change Subscription') }}</UCardTitle>
-        <UCardBody>
-          <div class="grid gap-4">
+        <template #header>
+          <UCardTitle>{{ t('Change Subscription') }}</UCardTitle>
+        </template>
+        
+        <div class="p-4 grid gap-4">
+          <UButton
+            block
+            color="primary"
+            @click="changeSubscription('Basic')"
+            :loading="loading && subscriptionType === 'Basic'"
+            :disabled="loading || subscriptionType === 'Basic'"
+          >
+            {{ t('Basic') }} - 4.99€/{{ t('month') }}
+          </UButton>
+          
+          <UButton
+            block
+            color="primary"
+            @click="changeSubscription('Premium')"
+            :loading="loading && subscriptionType === 'Premium'"
+            :disabled="loading || subscriptionType === 'Premium'"
+          >
+            {{ t('Premium') }} - 9.99€/{{ t('month') }}
+          </UButton>
+          
+          <UButton
+            block
+            color="primary"
+            @click="changeSubscription('Family')"
+            :loading="loading && subscriptionType === 'Family'"
+            :disabled="loading || subscriptionType === 'Family'"
+          >
+            {{ t('Family') }} - 14.99€/{{ t('month') }}
+          </UButton>
+        </div>
+        
+        <template #footer>
+          <div class="flex justify-end">
             <UButton
-              block
-              color="primary"
-              @click="changeSubscription('Basic')"
-              :loading="loading"
-              :disabled="loading || subscriptionType === 'Basic'"
+              color="neutral"
+              variant="ghost"
+              @click="showSubscriptionModal = false"
             >
-              {{ t('Basic') }} - 4.99€/{{ t('month') }}
-            </UButton>
-            
-            <UButton
-              block
-              color="primary"
-              @click="changeSubscription('Premium')"
-              :loading="loading"
-              :disabled="loading || subscriptionType === 'Premium'"
-            >
-              {{ t('Premium') }} - 9.99€/{{ t('month') }}
-            </UButton>
-            
-            <UButton
-              block
-              color="primary"
-              @click="changeSubscription('Family')"
-              :loading="loading"
-              :disabled="loading || subscriptionType === 'Family'"
-            >
-              {{ t('Family') }} - 14.99€/{{ t('month') }}
+              {{ t('Cancel') }}
             </UButton>
           </div>
-        </UCardBody>
-        <UCardFooter class="justify-end">
-          <UButton
-            color="gray"
-            variant="ghost"
-            @click="showSubscriptionModal = false"
-          >
-            {{ t('Cancel') }}
-          </UButton>
-        </UCardFooter>
+        </template>
       </UCard>
     </UModal>
   </div>
