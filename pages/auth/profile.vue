@@ -1,7 +1,7 @@
 <!-- pages/auth/profile.vue -->
 <script setup lang="ts">
 import { updateProfile } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import * as z from 'zod';
 import type { FormSubmitEvent } from '@nuxt/ui';
 
@@ -10,25 +10,55 @@ const { currentUser } = useAuth();
 const { $firebase } = useNuxtApp();
 
 const schema = z.object({
-  name: z.string().min(1, t('Name is required'))
+  name: z.string().min(1, t('Name is required')),
+  email: z.string().email(t('Invalid email address')).optional(),
+  birthDate: z.string().optional(),
+  phoneNumber: z.string().optional()
 });
 
 type Schema = z.output<typeof schema>;
 
 const state = reactive<Schema>({
-  name: ''
+  name: '',
+  email: '',
+  birthDate: '',
+  phoneNumber: ''
 });
 
 const loading = ref<boolean>(false);
 const error = ref<string>('');
 const success = ref<string>('');
+const subscriptionType = ref<string>('');
+const subscriptionStatus = ref<string>('');
+const subscriptionExpiry = ref<string>('');
+const showSubscriptionModal = ref<boolean>(false);
 
-// Initialize the form with the current user's name
-onMounted(() => {
+// Initialize the form with the current user's data
+onMounted(async () => {
+  loading.value = true;
   if (currentUser.value) {
     state.name = currentUser.value.displayName || '';
+    state.email = currentUser.value.email || '';
+    
+    // Fetch additional user data from Firestore
+    try {
+      const userDoc = await getDoc(doc($firebase.firestore, 'users', currentUser.value.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        state.birthDate = userData.birthDate || '';
+        state.phoneNumber = userData.phoneNumber || '';
+        subscriptionType.value = userData.subscriptionType || 'Basic';
+        subscriptionStatus.value = userData.subscriptionStatus || 'Active';
+        subscriptionExpiry.value = userData.subscriptionExpiry || '';
+      }
+    } catch (err) {
+      console.error('Error fetching user data:', err);
+    } finally {
+      loading.value = false;
+    }
   } else {
     error.value = t('You must be signed in to edit your profile.');
+    loading.value = false;
   }
 });
 
@@ -47,10 +77,15 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     // Update Firebase Authentication displayName
     await updateProfile(currentUser.value, { displayName: event.data.name });
 
-    // Update Firestore
+    // Update Firestore with all user data
     await setDoc(
       doc($firebase.firestore, 'users', currentUser.value.uid),
-      { name: event.data.name },
+      { 
+        name: event.data.name,
+        birthDate: event.data.birthDate,
+        phoneNumber: event.data.phoneNumber,
+        email: state.email, // Keep existing email from auth
+      },
       { merge: true }
     );
 
@@ -61,10 +96,43 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     loading.value = false;
   }
 };
+
+const openSubscriptionModal = () => {
+  showSubscriptionModal.value = true;
+};
+
+const changeSubscription = async (newType: string) => {
+  if (!currentUser.value) return;
+  
+  loading.value = true;
+  try {
+    // In a real application, this would connect to a payment processor
+    // For now, we'll just update the subscription type in Firestore
+    await setDoc(
+      doc($firebase.firestore, 'users', currentUser.value.uid),
+      { 
+        subscriptionType: newType,
+        subscriptionStatus: 'Active',
+        subscriptionExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days from now
+      },
+      { merge: true }
+    );
+    
+    subscriptionType.value = newType;
+    subscriptionStatus.value = 'Active';
+    subscriptionExpiry.value = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString();
+    showSubscriptionModal.value = false;
+    success.value = t('Subscription updated successfully!');
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : t('An unknown error occurred');
+  } finally {
+    loading.value = false;
+  }
+};
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-16 mb-8">
+  <div class="max-w-xl mx-auto mt-16 mb-8">
     <UCard>
       <UCardTitle class="text-3xl font-bold">{{ t('Edit Profile') }}</UCardTitle>
 
@@ -72,6 +140,35 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       <UAlert v-if="success" color="success" class="mb-4" :title="success" />
 
       <template v-if="currentUser">
+        <!-- Subscription Information Section -->
+        <div class="mb-8 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800">
+          <h3 class="text-xl font-semibold mb-3">{{ t('Subscription Information') }}</h3>
+          <div class="grid gap-2">
+            <div class="flex justify-between">
+              <span class="text-gray-600 dark:text-gray-400">{{ t('Type') }}:</span>
+              <span class="font-medium">{{ subscriptionType }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600 dark:text-gray-400">{{ t('Status') }}:</span>
+              <span class="font-medium">{{ subscriptionStatus }}</span>
+            </div>
+            <div v-if="subscriptionExpiry" class="flex justify-between">
+              <span class="text-gray-600 dark:text-gray-400">{{ t('Expiry Date') }}:</span>
+              <span class="font-medium">{{ subscriptionExpiry }}</span>
+            </div>
+            <div class="mt-3">
+              <UButton
+                color="primary"
+                variant="outline"
+                size="sm"
+                @click="openSubscriptionModal"
+              >
+                {{ t('Change Subscription') }}
+              </UButton>
+            </div>
+          </div>
+        </div>
+
         <UForm 
           :schema="schema" 
           :state="state" 
@@ -86,6 +183,44 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
               v-model="state.name"
               type="text"
               placeholder="Your Name"
+              :disabled="loading"
+            />
+          </UFormField>
+
+          <UFormField 
+            :label="t('Email')" 
+            name="email"
+          >
+            <UInput
+              v-model="state.email"
+              type="email"
+              placeholder="your.email@example.com"
+              disabled
+            />
+            <template #description>
+              <span class="text-sm text-gray-500">{{ t('Email cannot be changed') }}</span>
+            </template>
+          </UFormField>
+
+          <UFormField 
+            :label="t('Date of Birth')" 
+            name="birthDate"
+          >
+            <UInput
+              v-model="state.birthDate"
+              type="date"
+              :disabled="loading"
+            />
+          </UFormField>
+
+          <UFormField 
+            :label="t('Phone Number')" 
+            name="phoneNumber"
+          >
+            <UInput
+              v-model="state.phoneNumber"
+              type="tel"
+              placeholder="+34 123 456 789"
               :disabled="loading"
             />
           </UFormField>
@@ -119,5 +254,54 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
         </div>
       </template>
     </UCard>
+
+    <!-- Subscription Change Modal -->
+    <UModal v-model="showSubscriptionModal">
+      <UCard>
+        <UCardTitle>{{ t('Change Subscription') }}</UCardTitle>
+        <UCardBody>
+          <div class="grid gap-4">
+            <UButton
+              block
+              color="primary"
+              @click="changeSubscription('Basic')"
+              :loading="loading"
+              :disabled="loading || subscriptionType === 'Basic'"
+            >
+              {{ t('Basic') }} - 4.99€/{{ t('month') }}
+            </UButton>
+            
+            <UButton
+              block
+              color="primary"
+              @click="changeSubscription('Premium')"
+              :loading="loading"
+              :disabled="loading || subscriptionType === 'Premium'"
+            >
+              {{ t('Premium') }} - 9.99€/{{ t('month') }}
+            </UButton>
+            
+            <UButton
+              block
+              color="primary"
+              @click="changeSubscription('Family')"
+              :loading="loading"
+              :disabled="loading || subscriptionType === 'Family'"
+            >
+              {{ t('Family') }} - 14.99€/{{ t('month') }}
+            </UButton>
+          </div>
+        </UCardBody>
+        <UCardFooter class="justify-end">
+          <UButton
+            color="gray"
+            variant="ghost"
+            @click="showSubscriptionModal = false"
+          >
+            {{ t('Cancel') }}
+          </UButton>
+        </UCardFooter>
+      </UCard>
+    </UModal>
   </div>
 </template>
