@@ -15,6 +15,15 @@ const handleSubscribe = async (email: string) => {
   }
 }
 
+// Handle skip newsletter
+const handleSkip = async () => {
+  try {
+    await navigateTo('/register')
+  } catch (error) {
+    console.error('Error during navigation:', error)
+  }
+}
+
 // Calculate aspect ratios
 const backdropAspectRatio = 'aspect-[16/9]'
 const posterAspectRatio = 'aspect-[2/3]'
@@ -96,7 +105,8 @@ useSeoMeta({
     <SubscriptionHero 
       v-else 
       :movie="featuredMovie" 
-      @subscribe="handleSubscribe" 
+      @subscribe="handleSubscribe"
+      @skip="handleSkip"
     />
 
     <!-- Featured Categories Section -->
