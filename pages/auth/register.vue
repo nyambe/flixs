@@ -67,8 +67,15 @@ const verificationQuestions = [
   { question: t('Is fire hot or cold?'), answer: 'hot' }
 ];
 
-// Set a random verification question
+// Pre-fill email from URL query parameter and set verification question
 onMounted(() => {
+  // Handle email pre-fill from URL query parameter (e.g., from newsletter)
+  const route = useRoute();
+  if (route.query.email && typeof route.query.email === 'string') {
+    state.email = decodeURIComponent(route.query.email);
+  }
+  
+  // Set a random verification question
   const randomIndex = Math.floor(Math.random() * verificationQuestions.length);
   verificationQuestion.value = verificationQuestions[randomIndex].question;
   verificationAnswer.value = verificationQuestions[randomIndex].answer.toLowerCase();

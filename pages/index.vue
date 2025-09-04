@@ -9,7 +9,7 @@ const { currentUser } = useAuth()
 // Add email handling for subscription
 const handleSubscribe = async (email: string) => {
   try {
-    await navigateTo('/register?email=' + encodeURIComponent(email))
+    await navigateTo('/auth/register?email=' + encodeURIComponent(email))
   } catch (error) {
     console.error('Error during subscription:', error)
   }
@@ -18,7 +18,7 @@ const handleSubscribe = async (email: string) => {
 // Handle skip newsletter
 const handleSkip = async () => {
   try {
-    await navigateTo('/register')
+    await navigateTo('/auth/register')
   } catch (error) {
     console.error('Error during navigation:', error)
   }
