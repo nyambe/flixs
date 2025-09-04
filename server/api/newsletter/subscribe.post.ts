@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { adminDb } from '~/server/utils/firebase-admin'
 import { sendConfirmationEmail } from '~/server/utils/resend'
+import { validateEnvironmentConfig } from '~/server/utils/env-validation'
 import type { H3Error } from 'h3'
 
 const subscribeSchema = z.object({
@@ -37,9 +38,17 @@ function generateConfirmationToken(): string {
 
 export default defineEventHandler(async (event) => {
   try {
+    console.log('📧 Newsletter subscription attempt started')
+    
+    // Validate environment configuration
+    validateEnvironmentConfig()
+
     // Rate limiting
-    const clientIP = getClientIP(event, { xForwardedFor: true }) || 'unknown'
+    const clientIP = getHeader(event, 'x-forwarded-for') || getHeader(event, 'x-real-ip') || 'unknown'
+    console.log(`🔍 Client IP: ${clientIP}`)
+    
     if (!checkRateLimit(clientIP)) {
+      console.warn(`⚠️ Rate limit exceeded for IP: ${clientIP}`)
       throw createError({
         statusCode: 429,
         statusMessage: 'Too many requests. Please try again later.',
@@ -48,9 +57,12 @@ export default defineEventHandler(async (event) => {
 
     // Validate request body
     const body = await readBody(event)
+    console.log(`📝 Request body received: ${JSON.stringify({ email: body.email, source: body.source, privacyConsent: body.privacyConsent })}`)
+    
     const validation = subscribeSchema.safeParse(body)
     
     if (!validation.success) {
+      console.error('❌ Validation failed:', validation.error.issues)
       throw createError({
         statusCode: 400,
         statusMessage: 'Invalid request data',
@@ -59,16 +71,21 @@ export default defineEventHandler(async (event) => {
     }
 
     const { email, source, privacyConsent } = validation.data
+    console.log(`✅ Validated subscription for: ${email}`)
 
     // Check if email already exists
     const newsletterRef = adminDb.collection('newsletter_subscribers')
+    console.log('🔍 Checking for existing subscriber...')
+    
     const existingSubscriber = await newsletterRef.where('email', '==', email).get()
     
     if (!existingSubscriber.empty) {
       const doc = existingSubscriber.docs[0]
       const data = doc.data()
+      console.log(`👤 Existing subscriber found: confirmed=${data.confirmed}`)
       
       if (data.confirmed) {
+        console.log('✅ User already confirmed, returning success')
         return { 
           success: true, 
           message: 'You are already subscribed to our newsletter.',
@@ -76,14 +93,18 @@ export default defineEventHandler(async (event) => {
         }
       } else {
         // Resend confirmation email for unconfirmed subscribers
+        console.log('📧 Resending confirmation email...')
         const confirmationToken = generateConfirmationToken()
+        
         await doc.ref.update({
           confirmationToken,
           updatedAt: new Date(),
           lastConfirmationSent: new Date(),
         })
         
+        console.log('💌 Sending confirmation email...')
         await sendConfirmationEmail(email, confirmationToken)
+        console.log('✅ Confirmation email resent successfully')
         
         return { 
           success: true, 
@@ -94,6 +115,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Create new subscriber record
+    console.log('🆕 Creating new subscriber record...')
     const confirmationToken = generateConfirmationToken()
     const subscriberData = {
       email,
@@ -108,10 +130,14 @@ export default defineEventHandler(async (event) => {
       ipAddress: clientIP, // For audit purposes
     }
 
+    console.log('💾 Saving subscriber to Firebase...')
     await newsletterRef.add(subscriberData)
+    console.log('✅ Subscriber saved successfully')
 
     // Send confirmation email
+    console.log('💌 Sending confirmation email...')
     await sendConfirmationEmail(email, confirmationToken)
+    console.log('✅ Newsletter subscription process completed successfully')
 
     return {
       success: true,
@@ -119,10 +145,18 @@ export default defineEventHandler(async (event) => {
     }
 
   } catch (error) {
-    console.error('Newsletter subscription error:', error)
+    console.error('❌ Newsletter subscription error:', error)
+    
+    // Log additional details for debugging
+    if (error instanceof Error) {
+      console.error('Error name:', error.name)
+      console.error('Error message:', error.message)
+      console.error('Error stack:', error.stack)
+    }
     
     const h3Error = error as H3Error
     if (h3Error.statusCode) {
+      console.error(`HTTP Error ${h3Error.statusCode}: ${h3Error.statusMessage}`)
       throw error
     }
     

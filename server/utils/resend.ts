@@ -1,14 +1,29 @@
 import { Resend } from 'resend'
 
 const config = useRuntimeConfig()
+
+// Validate configuration
+if (!config.resend?.apiKey) {
+  console.error('❌ RESEND_API_KEY is not configured')
+  throw new Error('Resend API key is required')
+}
+
+if (!config.public?.baseUrl) {
+  console.error('❌ BASE_URL is not configured')
+  throw new Error('Base URL is required')
+}
+
+console.log('✅ Resend configuration validated')
 const resend = new Resend(config.resend.apiKey)
 
 export async function sendConfirmationEmail(email: string, confirmationToken: string) {
   const confirmationUrl = `${config.public.baseUrl}/newsletter/confirm?token=${confirmationToken}`
+  console.log(`📧 Sending confirmation email to: ${email}`)
+  console.log(`🔗 Confirmation URL: ${confirmationUrl}`)
   
   try {
     const { data, error } = await resend.emails.send({
-      from: 'MOABA Cinema TV <noreply@moaba.tv>',
+      from: 'MOABA Cinema TV <onboarding@resend.dev>',
       to: [email],
       subject: 'Confirma tu suscripción a MOABA Cinema TV',
       html: `
@@ -50,21 +65,27 @@ export async function sendConfirmationEmail(email: string, confirmationToken: st
     })
 
     if (error) {
-      console.error('Error sending confirmation email:', error)
-      throw error
+      console.error('❌ Resend API error:', error)
+      throw new Error(`Failed to send confirmation email: ${error.message}`)
     }
 
+    console.log('✅ Confirmation email sent successfully:', data)
     return data
   } catch (error) {
-    console.error('Failed to send confirmation email:', error)
-    throw error
+    console.error('❌ Failed to send confirmation email:', error)
+    if (error instanceof Error) {
+      throw new Error(`Email sending failed: ${error.message}`)
+    }
+    throw new Error('Unknown email sending error')
   }
 }
 
 export async function sendWelcomeEmail(email: string) {
+  console.log(`🎉 Sending welcome email to: ${email}`)
+  
   try {
     const { data, error } = await resend.emails.send({
-      from: 'MOABA Cinema TV <noreply@moaba.tv>',
+      from: 'MOABA Cinema TV <onboarding@resend.dev>',
       to: [email],
       subject: '¡Bienvenido a MOABA Cinema TV! 🎬',
       html: `
@@ -109,13 +130,17 @@ export async function sendWelcomeEmail(email: string) {
     })
 
     if (error) {
-      console.error('Error sending welcome email:', error)
-      throw error
+      console.error('❌ Resend API error (welcome email):', error)
+      throw new Error(`Failed to send welcome email: ${error.message}`)
     }
 
+    console.log('✅ Welcome email sent successfully:', data)
     return data
   } catch (error) {
-    console.error('Failed to send welcome email:', error)
-    throw error
+    console.error('❌ Failed to send welcome email:', error)
+    if (error instanceof Error) {
+      throw new Error(`Welcome email sending failed: ${error.message}`)
+    }
+    throw new Error('Unknown welcome email sending error')
   }
 }
