@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // app.vue
-
+const { t } = useI18n()
 const { featuredMovie, popularMovies } = useMovieData()
 const imagePath = useImagePath()
 const showTrailer = ref(false)
@@ -74,7 +74,7 @@ useSeoMeta({
               v-if="featuredMovie.video_id"
               size="xl"
               color="primary"
-              label="Play"
+              :label="t('Play')"
               icon="i-heroicons-play"
               class="bg-amber-400 hover:bg-amber-500"
               @click="navigateTo(`/watch/${featuredMovie.video_id}`)"
@@ -84,7 +84,7 @@ useSeoMeta({
               size="xl"
               color="warning"
               variant="outline"
-              label="Trailer"
+              :label="t('Trailer')"
               icon="i-heroicons-film"
               @click="showTrailer = true"
             />
@@ -92,7 +92,7 @@ useSeoMeta({
               size="xl"
               color="neutral"
               variant="ghost"
-              label="More Info"
+              :label="t('More Info')"
               icon="i-heroicons-information-circle"
               :to="`/movie/${featuredMovie.id}`"
             />
@@ -112,7 +112,7 @@ useSeoMeta({
     <!-- Featured Categories Section -->
     <section class="py-16 bg-black">
       <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold mb-8">Las Joyas de MOABA</h2>
+        <h2 class="text-3xl font-bold mb-8">{{ t('Las Joyas de MOABA') }}</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <NuxtLink 
             v-for="movie in popularMovies" 
@@ -144,11 +144,11 @@ useSeoMeta({
     <!-- Sponsors/Patrocinadores Section -->
     <section class="py-16 bg-black">
       <div class="container mx-auto px-4">
-        <h2 class="text-xl font-bold mb-8">Patrocinadores</h2>
+        <h2 class="text-xl font-bold mb-8">{{ t('Patrocinadores') }}</h2>
         <div class="flex justify-center">
           <img 
             src="/patrocinadores.png" 
-            alt="Nuestros Patrocinadores" 
+:alt="t('Nuestros Patrocinadores')" 
             class="max-w-[80%] md:max-w-[70%] lg:max-w-[60%]"
           >
         </div>

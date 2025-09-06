@@ -20,17 +20,17 @@ const handleSubscribe = async () => {
   subscriptionMessage.value = ''
   
   if (!email.value) {
-    emailError.value = 'Por favor ingresa tu correo electrónico'
+    emailError.value = t('Por favor ingresa tu correo electrónico')
     return
   }
   
   if (!validateEmail(email.value)) {
-    emailError.value = 'Por favor ingresa un correo electrónico válido'
+    emailError.value = t('Por favor ingresa un correo electrónico válido')
     return
   }
   
   if (!privacyConsent.value) {
-    emailError.value = 'Debes aceptar la política de privacidad para continuar'
+    emailError.value = t('Debes aceptar la política de privacidad para continuar')
     return
   }
 
@@ -76,11 +76,11 @@ const handleSkip = () => {
     <!-- Content -->
     <div class="flex flex-col items-center justify-center container mx-auto px-4 relative py-16 h-full text-center">
       <h1 class="text-4xl md:text-6xl font-bold mb-6">
-        Descubre la esencia del cine africano
+        {{ t('Descubre la esencia del cine africano') }}
       </h1>
       
       <p class="text-xl text-neutral-200 mb-12 max-w-3xl">
-        Sumérgete en nuestra colección premium de películas y series africanas: obras maestras galardonadas, historias culturales auténticas, producciones independientes y documentales cautivadores.
+        {{ t('Sumérgete en nuestra colección premium de películas y series africanas: obras maestras galardonadas, historias culturales auténticas, producciones independientes y documentales cautivadores.') }}
       </p>
 
       <!-- Success Message -->
@@ -89,10 +89,10 @@ const handleSkip = () => {
           <svg class="w-8 h-8 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-          <h3 class="text-xl font-semibold text-green-400">¡Perfecto!</h3>
+          <h3 class="text-xl font-semibold text-green-400">{{ t('¡Perfecto!') }}</h3>
         </div>
         <p class="text-green-200">{{ subscriptionMessage }}</p>
-        <p class="text-sm text-neutral-300 mt-2">Redirigiendo...</p>
+        <p class="text-sm text-neutral-300 mt-2">{{ t('Redirigiendo...') }}</p>
       </div>
 
       <!-- Subscription Form -->
@@ -102,7 +102,7 @@ const handleSkip = () => {
             <input
               v-model="email"
               type="email"
-              placeholder="Tu correo electrónico"
+              :placeholder="t('Tu correo electrónico')"
               :class="[
                 'flex-1 py-4 px-6 rounded-md bg-neutral-800 text-white border transition-colors',
                 emailError ? 'border-red-500 focus:ring-red-400' : 'border-neutral-700 focus:ring-amber-400',
@@ -139,9 +139,9 @@ const handleSkip = () => {
               class="mt-1 h-4 w-4 text-amber-400 bg-neutral-800 border-neutral-600 rounded focus:ring-amber-400 focus:ring-2"
             />
             <label for="privacy-consent" class="text-sm text-neutral-300 leading-relaxed">
-              Acepto recibir correos electrónicos de MOABA Cinema TV y he leído la 
+              {{ t('Acepto recibir correos electrónicos de MOABA Cinema TV y he leído la') }} 
               <NuxtLink to="/privacy" class="text-amber-400 hover:text-amber-300 underline">
-                política de privacidad
+                {{ t('política de privacidad') }}
               </NuxtLink>.
             </label>
           </div>
@@ -158,13 +158,13 @@ const handleSkip = () => {
             @click="handleSkip"
             class="text-neutral-400 hover:text-neutral-200 underline text-sm transition-colors"
           >
-            Saltar y continuar sin newsletter
+            {{ t('Saltar y continuar sin newsletter') }}
           </button>
         </div>
       </div>
       
       <p v-if="!showSuccess" class="text-neutral-400 text-center">
-        Accede a títulos africanos exclusivos. Sin compromisos, cancela cuando quieras.
+        {{ t('Accede a títulos africanos exclusivos. Sin compromisos, cancela cuando quieras.') }}
       </p>
     </div>
   </section>
