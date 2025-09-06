@@ -45,6 +45,24 @@ export default defineI18nConfig(() => ({
       'Passwords do not match': 'Passwords do not match',
       'Authentication failed': 'Authentication failed',
       
+      // Newsletter signup
+      'Subscribe to Newsletter': 'Subscribe to Newsletter',
+      'How did you find us?': 'How did you find us?',
+      'Search Engine': 'Search Engine',
+      'Social Media': 'Social Media',
+      'Friend Recommendation': 'Friend Recommendation',
+      'Advertisement': 'Advertisement',
+      'Other': 'Other',
+      'Successfully subscribed to newsletter!': 'Successfully subscribed to newsletter!',
+      'Thank you for subscribing! You\'ll receive updates about our latest content.': 'Thank you for subscribing! You\'ll receive updates about our latest content.',
+      'Subscribe Another Email': 'Subscribe Another Email',
+      'Name is required': 'Name is required',
+      'Invalid email address': 'Invalid email address',
+      'An unknown error occurred': 'An unknown error occurred',
+      'John Doe': 'John Doe',
+      'your@email.com': 'your@email.com',
+      'Select an option': 'Select an option',
+      
       // Subscription pages
       'Checkout': 'Checkout',
       'Choose Your Plan': 'Choose Your Plan',
@@ -120,6 +138,24 @@ export default defineI18nConfig(() => ({
       'Passwords do not match': 'Les mots de passe ne correspondent pas',
       'Authentication failed': 'Échec de l\'authentification',
       
+      // Newsletter signup
+      'Subscribe to Newsletter': 'S\'abonner à la Newsletter',
+      'How did you find us?': 'Comment nous avez-vous trouvés?',
+      'Search Engine': 'Moteur de recherche',
+      'Social Media': 'Réseaux sociaux',
+      'Friend Recommendation': 'Recommandation d\'un ami',
+      'Advertisement': 'Publicité',
+      'Other': 'Autre',
+      'Successfully subscribed to newsletter!': 'Abonnement à la newsletter réussi!',
+      'Thank you for subscribing! You\'ll receive updates about our latest content.': 'Merci pour votre abonnement! Vous recevrez des mises à jour sur notre contenu le plus récent.',
+      'Subscribe Another Email': 'Abonner un autre email',
+      'Name is required': 'Le nom est requis',
+      'Invalid email address': 'Adresse email invalide',
+      'An unknown error occurred': 'Une erreur inconnue s\'est produite',
+      'John Doe': 'Jean Dupont',
+      'your@email.com': 'votre@email.com',
+      'Select an option': 'Sélectionnez une option',
+      
       // Subscription pages
       'Checkout': 'Paiement',
       'Choose Your Plan': 'Choisissez votre forfait',
@@ -194,6 +230,24 @@ export default defineI18nConfig(() => ({
       'Please fill in all fields': 'Por favor, rellena todos los campos',
       'Passwords do not match': 'Las contraseñas no coinciden',
       'Authentication failed': 'Error de autenticación',
+      
+      // Newsletter signup
+      'Subscribe to Newsletter': 'Suscribirse al Newsletter',
+      'How did you find us?': '¿Cómo nos encontraste?',
+      'Search Engine': 'Motor de búsqueda',
+      'Social Media': 'Redes sociales',
+      'Friend Recommendation': 'Recomendación de un amigo',
+      'Advertisement': 'Publicidad',
+      'Other': 'Otro',
+      'Successfully subscribed to newsletter!': '¡Suscripción al newsletter exitosa!',
+      'Thank you for subscribing! You\'ll receive updates about our latest content.': '¡Gracias por suscribirte! Recibirás actualizaciones sobre nuestro contenido más reciente.',
+      'Subscribe Another Email': 'Suscribir otro email',
+      'Name is required': 'El nombre es requerido',
+      'Invalid email address': 'Dirección de email inválida',
+      'An unknown error occurred': 'Ocurrió un error desconocido',
+      'John Doe': 'Juan Pérez',
+      'your@email.com': 'tu@email.com',
+      'Select an option': 'Selecciona una opción',
       
       // Subscription pages
       'Checkout': 'Pago',
