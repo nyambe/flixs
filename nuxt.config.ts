@@ -5,10 +5,12 @@ export default defineNuxtConfig({
   css: ['~/assets/css/tailwind.css'],
   modules: ['@nuxt/ui', '@nuxt/fonts', '@nuxt/eslint', '@nuxtjs/i18n'],
   i18n: {
-    vueI18n: './i18n.config.ts',
-    bundle: {
-      optimizeTranslationDirective: false,
-    }
+    defaultLocale: 'es',
+    locales: [
+      { code: 'en', name: 'English', file: 'en.json' },
+      { code: 'es', name: 'Español', file: 'es.json' },
+      { code: 'fr', name: 'Français', file: 'fr.json' }
+    ]
   },
   debug: {
     // Enable specific debugging features
