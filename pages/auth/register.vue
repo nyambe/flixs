@@ -136,148 +136,126 @@ const verifyHuman = () => {
 </script>
 
 <template>
-  <UCard class="max-w-md mx-auto mt-16 mb-8 shadow-lg">
-    <UCardTitle class="text-3xl font-bold">{{ t('Create Account') }}</UCardTitle>
-    
-    <UAlert v-if="error" color="error" class="mb-4" :title="error" />
-    
-    <UForm 
-      :schema="schema" 
-      :state="state" 
-      @submit="onSubmit"
-      class="space-y-4"
-    >
-      <UFormField 
-        :label="t('Name')" 
-        name="name"
-      >
-        <UInput
-          v-model="state.name"
-          type="text"
-          placeholder="John Doe"
-        />
-      </UFormField>
+  <div class="max-w-md mx-auto mt-16 mb-8">
+    <UCard>
+      <template #header>
+        <h1 class="text-3xl font-bold">{{ t('Create Account') }}</h1>
+      </template>
       
-      <UFormField 
-        :label="t('Email')" 
-        name="email"
-      >
-        <UInput
-          v-model="state.email"
-          type="email"
-          placeholder="your@email.com"
-        />
-      </UFormField>
+      <UAlert v-if="error" color="red" class="mb-4" :title="error" />
       
-      <UFormField 
-        :label="t('Date of Birth')" 
-        name="birthDate"
+      <UForm 
+        :schema="schema" 
+        :state="state" 
+        @submit="onSubmit"
+        class="space-y-4"
       >
-        <UInput
-          v-model="state.birthDate"
-          type="date"
-        />
-      </UFormField>
-      
-      <UFormField 
-        :label="t('Phone Number')" 
-        name="phoneNumber"
-      >
-        <UInput
-          v-model="state.phoneNumber"
-          type="tel"
-          placeholder="+34 123 456 789"
-        />
-      </UFormField>
-      
-      <UFormField 
-        :label="t('Country')" 
-        name="country"
-      >
-        <USelectMenu v-model="state.country" :options="countries" />
-      </UFormField>
-      
-      <UFormField 
-        :label="t('Password')" 
-        name="password"
-      >
-        <UInput
-          v-model="state.password"
-          type="password"
-          placeholder="********"
-        />
-        <template #description>
-          <span class="text-sm text-gray-500">{{ t('Must be at least 8 characters') }}</span>
-        </template>
-      </UFormField>
-      
-      <UFormField 
-        :label="t('Confirm Password')" 
-        name="confirmPassword"
-      >
-        <UInput
-          v-model="state.confirmPassword"
-          type="password"
-          placeholder="********"
-        />
-      </UFormField>
-      
-      <!-- Human Verification Field -->
-      <UFormField
-        :label="t('Human Verification')"
-        name="humanVerification"
-      >
-        <div class="border rounded-lg p-4 mb-2 bg-gray-50 dark:bg-gray-800">
-          <p class="font-medium mb-2">{{ verificationQuestion }}</p>
-          <div class="flex gap-2">
-            <UInput
-              v-model="userVerificationInput"
-              type="text"
-              placeholder="Your answer"
-              class="flex-grow"
-            />
-            <UButton 
-              color="primary" 
-              @click="verifyHuman"
-              size="sm"
-            >
-              {{ t('Verify') }}
-            </UButton>
-          </div>
-          <div v-if="state.humanVerification" class="mt-2 text-green-600">
-            <span class="flex items-center">
-              <UIcon name="i-heroicons-check-circle" class="mr-1" />
-              {{ t('Verification successful') }}
-            </span>
-          </div>
-        </div>
-      </UFormField>
-      
-      <!-- Terms and Conditions -->
-      <UFormField
-        name="termsAccepted"
-      >
-        <UCheckbox
-          v-model="state.termsAccepted"
-          :label="t('I accept the Terms and Conditions')"
-        />
-      </UFormField>
-      
-      <div class="flex justify-between items-center pt-4">
-        <UButton
-          type="submit"
-          color="primary"
-          class="bg-amber-400 hover:bg-amber-500 text-black"
-          :loading="loading"
-          :disabled="loading"
-        >
-          {{ t('Sign Up') }}
-        </UButton>
+        <UField :label="t('Name')" name="name" required>
+          <UInput
+            v-model="state.name"
+            type="text"
+            placeholder="John Doe"
+          />
+        </UField>
         
-        <NuxtLink to="/auth/login" class="text-(--ui-primary) hover:underline">
-          {{ t('Already have an account?') }}
-        </NuxtLink>
-      </div>
-    </UForm>
-  </UCard>
+        <UField :label="t('Email')" name="email" required>
+          <UInput
+            v-model="state.email"
+            type="email"
+            placeholder="your@email.com"
+          />
+        </UField>
+        
+        <UField :label="t('Date of Birth')" name="birthDate">
+          <UInput
+            v-model="state.birthDate"
+            type="date"
+          />
+        </UField>
+        
+        <UField :label="t('Phone Number')" name="phoneNumber">
+          <UInput
+            v-model="state.phoneNumber"
+            type="tel"
+            placeholder="+34 123 456 789"
+          />
+        </UField>
+        
+        <UField :label="t('Country')" name="country" required>
+          <USelect v-model="state.country" :items="countries" />
+        </UField>
+        
+        <UField :label="t('Password')" name="password" required>
+          <UInput
+            v-model="state.password"
+            type="password"
+            placeholder="********"
+          />
+          <template #hint>
+            <span class="text-sm text-gray-500">{{ t('Must be at least 8 characters') }}</span>
+          </template>
+        </UField>
+        
+        <UField :label="t('Confirm Password')" name="confirmPassword" required>
+          <UInput
+            v-model="state.confirmPassword"
+            type="password"
+            placeholder="********"
+          />
+        </UField>
+        
+        <!-- Human Verification Field -->
+        <UField :label="t('Human Verification')" name="humanVerification" required>
+          <div class="border rounded-lg p-4 mb-2 bg-gray-50 dark:bg-gray-800">
+            <p class="font-medium mb-2">{{ verificationQuestion }}</p>
+            <div class="flex gap-2">
+              <UInput
+                v-model="userVerificationInput"
+                type="text"
+                placeholder="Your answer"
+                class="flex-grow"
+              />
+              <UButton 
+                color="primary" 
+                @click="verifyHuman"
+                size="sm"
+              >
+                {{ t('Verify') }}
+              </UButton>
+            </div>
+            <div v-if="state.humanVerification" class="mt-2 text-green-600">
+              <span class="flex items-center">
+                <UIcon name="i-heroicons-check-circle" class="mr-1" />
+                {{ t('Verification successful') }}
+              </span>
+            </div>
+          </div>
+        </UField>
+        
+        <!-- Terms and Conditions -->
+        <UField name="termsAccepted" required>
+          <UCheckbox
+            v-model="state.termsAccepted"
+            :label="t('I accept the Terms and Conditions')"
+          />
+        </UField>
+        
+        <div class="flex justify-between items-center pt-4">
+          <UButton
+            type="submit"
+            color="primary"
+            class="bg-amber-400 hover:bg-amber-500 text-black"
+            :loading="loading"
+            :disabled="loading"
+          >
+            {{ t('Sign Up') }}
+          </UButton>
+          
+          <NuxtLink to="/auth/login" class="text-primary hover:underline">
+            {{ t('Already have an account?') }}
+          </NuxtLink>
+        </div>
+      </UForm>
+    </UCard>
+  </div>
 </template>

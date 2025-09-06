@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { getHeader } from 'h3'
 import { adminDb } from '~/server/utils/firebase-admin'
 import { sendConfirmationEmail } from '~/server/utils/resend'
 import { validateEnvironmentConfig } from '~/server/utils/env-validation'
