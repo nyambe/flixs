@@ -104,12 +104,13 @@ function changeLanguage(newLocale: string) {
           </UButton>
           
           <template #item="{ item }">
-            <UDropdownMenuItem
-              :active="item.value === currentLocale"
+            <div
+              :class="{ 'bg-neutral-800': item.value === currentLocale }"
               @click="changeLanguage(item.value)"
+              class="cursor-pointer"
             >
               {{ item.label }}
-            </UDropdownMenuItem>
+            </div>
           </template>
         </UDropdownMenu>
         

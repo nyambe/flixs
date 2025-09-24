@@ -10,7 +10,8 @@
       "Bash(cd:*)",
       "Bash(cd:*)",
       "Bash(cd:*)",
-      "WebFetch(domain:ui.nuxt.com)"
+      "WebFetch(domain:ui.nuxt.com)",
+      "Bash(npm run dev:*)"
     ],
     "deny": [],
     "ask": []

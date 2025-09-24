@@ -139,7 +139,7 @@ const handleSkip = () => {
               class="mt-1 h-4 w-4 text-amber-400 bg-neutral-800 border-neutral-600 rounded focus:ring-amber-400 focus:ring-2"
             />
             <label for="privacy-consent" class="text-sm text-neutral-300 leading-relaxed">
-              {{ t('Acepto recibir correos electrónicos de MOABA Cinema TV y he leído la') }} 
+              {{ t('Acepto recibir correos electrónicos de MOABA Cinema TV y he leído la') }}
               <NuxtLink to="/privacy" class="text-amber-400 hover:text-amber-300 underline">
                 {{ t('política de privacidad') }}
               </NuxtLink>.
