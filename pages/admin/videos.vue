@@ -24,6 +24,7 @@ interface VimeoVideo {
 }
 
 const { getVideos, formatDuration, formatDate, loading, error } = useVimeoAdmin();
+const { t } = useI18n();
 const videos = ref<VimeoVideo[]>([]);
 const searchQuery = ref('');
 const selectedVideo = ref<VimeoVideo | null>(null);
@@ -134,8 +135,8 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
     
     <div class="container mx-auto px-4 py-8">
       <div class="mb-8">
-        <h1 class="text-3xl font-bold">Video Management</h1>
-        <p class="text-gray-600 mt-1">Manage your Vimeo videos</p>
+        <h1 class="text-3xl font-bold">{{ t('Video Management') }}</h1>
+        <p class="text-gray-600 mt-1">{{ t('Manage your Vimeo videos') }}</p>
       </div>
       
       <!-- Search and Filters -->
@@ -144,7 +145,7 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Search videos..."
+            :placeholder="t('Search videos...')"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
           <span class="absolute right-3 top-2 text-gray-400">
@@ -158,7 +159,7 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
       <!-- Loading State -->
       <div v-if="loading" class="text-center py-10">
         <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500" />
-        <p class="mt-2 text-gray-600">Loading videos...</p>
+        <p class="mt-2 text-gray-600">{{ t('Loading videos...') }}</p>
       </div>
       
       <!-- Error State -->
@@ -171,12 +172,12 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Video</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Privacy</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('Video') }}</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('Duration') }}</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('Created') }}</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('Status') }}</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('Privacy') }}</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('Actions') }}</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
@@ -188,7 +189,7 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
                   </div>
                   <div class="ml-4">
                     <div class="text-sm font-medium text-gray-900 max-w-xs truncate">{{ video.name }}</div>
-                    <div class="text-sm text-gray-500 max-w-xs truncate">{{ video.description || 'No description' }}</div>
+                    <div class="text-sm text-gray-500 max-w-xs truncate">{{ video.description || t('No description') }}</div>
                   </div>
                 </div>
               </td>
@@ -205,7 +206,7 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <span :class="['px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full', getPrivacyClass(video.privacy)]">
-                  {{ video.privacy?.view || 'Unknown' }}
+                  {{ video.privacy?.view || t('Unknown') }}
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -213,20 +214,20 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
                 class="text-blue-600 hover:text-blue-900 mr-3"
                 @click="openVideoModal(video)" 
                 >
-                  Edit
+                  {{ t('Edit') }}
                 </button>
                 <a 
                   :href="video.link" 
                   target="_blank" 
                   class="text-gray-600 hover:text-gray-900"
                 >
-                  View
+                  {{ t('View') }}
                 </a>
               </td>
             </tr>
             <tr v-if="filteredVideos.length === 0" class="hover:bg-gray-50">
               <td colspan="6" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                No videos found
+                {{ t('No videos found') }}
               </td>
             </tr>
           </tbody>
@@ -238,7 +239,7 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
     <div v-if="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded-lg max-w-2xl w-full mx-4 overflow-hidden">
         <div class="px-6 py-4 bg-gray-50 border-b flex justify-between items-center">
-          <h3 class="text-lg font-medium text-gray-900">Edit Video</h3>
+          <h3 class="text-lg font-medium text-gray-900">{{ t('Edit Video') }}</h3>
           <button  class="text-gray-400 hover:text-gray-500" @click="closeModal">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -260,7 +261,7 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
           <div class="space-y-4">
             <!-- Title -->
             <div>
-              <label class="block text-sm font-medium text-gray-700">Title</label>
+              <label class="block text-sm font-medium text-gray-700">{{ t('Title') }}</label>
               <input 
                 v-model="selectedVideo.name" 
                 type="text" 
@@ -270,7 +271,7 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
 
             <!-- Description -->
             <div>
-              <label class="block text-sm font-medium text-gray-700">Description</label>
+              <label class="block text-sm font-medium text-gray-700">{{ t('Description') }}</label>
               <textarea 
                 v-model="selectedVideo.description" 
                 rows="3" 
@@ -280,7 +281,7 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
             
             <!-- Privacy Settings -->
             <div>
-              <label class="block text-sm font-medium text-gray-700">Privacy</label>
+              <label class="block text-sm font-medium text-gray-700">{{ t('Privacy') }}</label>
               <select 
                 v-model="selectedVideo.privacy.view" 
                 class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -294,20 +295,20 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
             
             <!-- Password Field (only when password protection is selected) -->
             <div v-if="selectedVideo.privacy.view === 'password'" class="mt-3">
-              <label class="block text-sm font-medium text-gray-700">Video Password</label>
+              <label class="block text-sm font-medium text-gray-700">{{ t('Video Password') }}</label>
               <input 
                 v-model="selectedVideo.privacy.password" 
                 type="text" 
-                placeholder="Enter password for video" 
+                :placeholder="t('Enter password for video')" 
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 required
               >
-              <p class="mt-1 text-xs text-gray-500">Password must be at least 6 characters</p>
+              <p class="mt-1 text-xs text-gray-500">{{ t('Password must be at least 6 characters') }}</p>
             </div>
             
             <!-- Embed Privacy -->
             <div>
-              <label class="block text-sm font-medium text-gray-700">Embed Privacy</label>
+              <label class="block text-sm font-medium text-gray-700">{{ t('Embed Privacy') }}</label>
               <select 
                 v-model="selectedVideo.privacy.embed" 
                 class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -320,11 +321,11 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
             
             <!-- Whitelist Domains -->
             <div v-if="selectedVideo.privacy.embed === 'whitelist'">
-              <label class="block text-sm font-medium text-gray-700">Whitelist Domains</label>
+              <label class="block text-sm font-medium text-gray-700">{{ t('Whitelist Domains') }}</label>
               <textarea 
                 v-model="whitelistDomains" 
                 rows="3" 
-                placeholder="Example: yourdomain.com, example.org" 
+                :placeholder="t('Example: yourdomain.com, example.org')" 
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
               <p class="mt-1 text-sm text-gray-500">Enter domain names separated by commas (no http:// or www needed)</p>
@@ -346,7 +347,7 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
           class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-3"
           @click="closeModal" 
           >
-            Cancel
+            {{ t('Cancel') }}
           </button>
           <button 
           :disabled="updateLoading" 
@@ -357,7 +358,7 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
             </svg>
-            Save Changes
+            {{ t('Save Changes') }}
           </button>
         </div>
       </div>

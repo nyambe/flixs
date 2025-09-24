@@ -28,6 +28,7 @@ interface VimeoVideo {
 const route = useRoute();
 const videoId = route.params.id as string
 const { getVideo, loading, error } = useVimeo();
+const { t } = useI18n();
 
 const video = ref<VimeoVideo | null>(null);
 const isFullscreen = ref(true);
@@ -145,13 +146,13 @@ definePageMeta({
       
       <div class="mb-4">
         <p v-if="video.description" class="text-gray-300">{{ video.description }}</p>
-        <p v-else class="text-gray-500 italic">No description available</p>
+        <p v-else class="text-gray-500 italic">{{ t('No description available') }}</p>
       </div>
       
       <div class="flex items-center text-sm text-gray-400">
-        <span>Duration: {{ Math.floor(video.duration / 60) }}:{{ String(video.duration % 60).padStart(2, '0') }}</span>
+        <span>{{ t('Duration') }}: {{ Math.floor(video.duration / 60) }}:{{ String(video.duration % 60).padStart(2, '0') }}</span>
         <span class="mx-2">•</span>
-        <span>Uploaded: {{ new Date(video.created_time).toLocaleDateString() }}</span>
+        <span>{{ t('Uploaded') }}: {{ new Date(video.created_time).toLocaleDateString() }}</span>
       </div>
       
       <div class="mt-6">
