@@ -136,7 +136,7 @@ definePageMeta({
               <UButton
                 size="xl"
                 color="primary"
-                label="Play"
+                :label="t('Play')"
                 icon="i-heroicons-play"
                 class="bg-amber-400 hover:bg-amber-500"
                 @click="togglePlay"
@@ -146,7 +146,7 @@ definePageMeta({
                 size="xl"
                 color="warning"
                 variant="outline"
-                label="Trailer"
+                :label="t('Trailer')"
                 icon="i-heroicons-film"
                 @click="showTrailer = true"
               />

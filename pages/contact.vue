@@ -1,5 +1,6 @@
 <!-- pages/contact.vue -->
 <script setup lang="ts">
+const { t } = useI18n()
 const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
@@ -14,7 +15,7 @@ async function handleSubmit() {
   
   // Form validation
   if (!firstName.value || !lastName.value || !email.value || !message.value) {
-    error.value = 'Por favor, complete todos los campos.'
+    error.value = t('Por favor, complete todos los campos.')
     loading.value = false
     return
   }
@@ -36,7 +37,7 @@ async function handleSubmit() {
       success.value = false
     }, 5000)
   } catch (err) {
-    error.value = 'Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.'
+    error.value = t('Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.')
     console.error(err)
   } finally {
     loading.value = false
@@ -46,7 +47,7 @@ async function handleSubmit() {
 
 <template>
   <div class="container mx-auto px-4 py-12 max-w-6xl">
-    <h1 class="text-4xl font-bold mb-12">Contact</h1>
+    <h1 class="text-4xl font-bold mb-12">{{ t('Contact') }}</h1>
     
     <div class="flex flex-col md:flex-row gap-12">
       <!-- Contact Form -->
@@ -54,22 +55,22 @@ async function handleSubmit() {
         <form @submit.prevent="handleSubmit" class="space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label for="firstName" class="block text-sm font-medium mb-1">First name</label>
+              <label for="firstName" class="block text-sm font-medium mb-1">{{ t('First name') }}</label>
               <UInput
                 id="firstName"
                 v-model="firstName"
-                placeholder="Jane"
+                :placeholder="t('Jane')"
                 class="w-full"
                 size="lg"
               />
             </div>
             
             <div>
-              <label for="lastName" class="block text-sm font-medium mb-1">Last name</label>
+              <label for="lastName" class="block text-sm font-medium mb-1">{{ t('Last name') }}</label>
               <UInput
                 id="lastName"
                 v-model="lastName"
-                placeholder="Smitherton"
+                :placeholder="t('Smitherton')"
                 class="w-full"
                 size="lg"
               />
@@ -77,23 +78,23 @@ async function handleSubmit() {
           </div>
           
           <div>
-            <label for="email" class="block text-sm font-medium mb-1">Email address</label>
+            <label for="email" class="block text-sm font-medium mb-1">{{ t('Email address') }}</label>
             <UInput
               id="email"
               v-model="email"
               type="email"
-              placeholder="email@jansfakedomain.net"
+              :placeholder="t('email@jansfakedomain.net')"
               class="w-full"
               size="lg"
             />
           </div>
           
           <div>
-            <label for="message" class="block text-sm font-medium mb-1">Your message</label>
+            <label for="message" class="block text-sm font-medium mb-1">{{ t('Your message') }}</label>
             <UTextarea
               id="message"
               v-model="message"
-              placeholder="Enter your question or message"
+              :placeholder="t('Enter your question or message')"
               class="w-full"
               size="lg"
               :rows="6"
@@ -109,7 +110,7 @@ async function handleSubmit() {
               class="bg-brand text-brand-content hover:bg-brand-hover"
               :loading="loading"
             >
-              Submit
+              {{ t('Submit') }}
             </UButton>
           </div>
           
@@ -119,8 +120,8 @@ async function handleSubmit() {
             color="success"
             variant="soft"
             icon="i-heroicons-check-circle"
-            title="Mensaje enviado"
-            description="Gracias por contactarnos. Nos pondremos en contacto contigo pronto."
+            :title="t('Mensaje enviado')"
+            :description="t('Gracias por contactarnos. Nos pondremos en contacto contigo pronto.')"
             class="mt-4"
           />
           

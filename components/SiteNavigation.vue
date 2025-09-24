@@ -67,7 +67,7 @@ function changeLanguage(newLocale: string) {
   <header class="sticky top-0 w-full z-50 bg-black/50 backdrop-blur">
     <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
       <NuxtLink to="/" class="text-2xl font-bold text-brand">
-        <img src="/logo.png" alt="Moaba Cinema TV" class="h-12">
+        <img src="/logo.png" :alt="t('Moaba Cinema TV')" class="h-12">
       </NuxtLink>
 
       <div class="hidden md:flex items-center space-x-6">
@@ -89,7 +89,7 @@ function changeLanguage(newLocale: string) {
           class="hover:bg-neutral-800"
           :icon="colorMode.value === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'"
           @click="toggleColorMode"
-          aria-label="Toggle color mode"
+          :aria-label="t('Toggle color mode')"
         />
         
         <!-- Elegant Language Switcher -->

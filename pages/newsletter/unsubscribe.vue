@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
@@ -13,12 +14,12 @@ const handleUnsubscribe = async () => {
   unsubscribeMessage.value = ''
   
   if (!email.value) {
-    emailError.value = 'Por favor ingresa tu correo electrónico'
+    emailError.value = t('Por favor ingresa tu correo electrónico')
     return
   }
   
   if (!validateEmail(email.value)) {
-    emailError.value = 'Por favor ingresa un correo electrónico válido'
+    emailError.value = t('Por favor ingresa un correo electrónico válido')
     return
   }
 
@@ -48,7 +49,7 @@ useSeoMeta({
           </svg>
         </div>
         
-        <h1 class="text-2xl font-bold mb-4">Suscripción Cancelada</h1>
+        <h1 class="text-2xl font-bold mb-4">{{ t('Suscripción Cancelada') }}</h1>
         <p class="text-neutral-300 mb-6">{{ unsubscribeMessage }}</p>
         
         <div class="space-y-4">
@@ -56,13 +57,13 @@ useSeoMeta({
             size="lg"
             color="primary"
             class="w-full bg-amber-400 hover:bg-amber-500"
-            label="Volver al Inicio"
+            :label="t('Volver al Inicio')"
             @click="router.push('/')"
           />
         </div>
         
         <p class="text-sm text-neutral-400 mt-6">
-          Si cambias de opinión, siempre puedes volver a suscribirte desde nuestra página principal.
+          {{ t('Si cambias de opinión, siempre puedes volver a suscribirte desde nuestra página principal.') }}
         </p>
       </div>
 
@@ -74,16 +75,16 @@ useSeoMeta({
           </svg>
         </div>
         
-        <h1 class="text-2xl font-bold mb-4">Cancelar Suscripción</h1>
+        <h1 class="text-2xl font-bold mb-4">{{ t('Cancelar Suscripción') }}</h1>
         <p class="text-neutral-300 mb-8">
-          Lamentamos verte partir. Ingresa tu correo electrónico para cancelar tu suscripción al newsletter.
+          {{ t('Lamentamos verte partir. Ingresa tu correo electrónico para cancelar tu suscripción al newsletter.') }}
         </p>
         
         <div class="space-y-4">
           <input
             v-model="email"
             type="email"
-            placeholder="Tu correo electrónico"
+            :placeholder="t('Tu correo electrónico')"
             :class="[
               'w-full py-4 px-6 rounded-md bg-neutral-800 text-white border transition-colors',
               emailError ? 'border-red-500 focus:ring-red-400' : 'border-neutral-700 focus:ring-amber-400',
@@ -96,7 +97,7 @@ useSeoMeta({
             color="error"
             class="w-full"
             :loading="isUnsubscribing"
-            :label="isUnsubscribing ? 'Cancelando...' : 'Cancelar Suscripción'"
+            :label="isUnsubscribing ? t('Cancelando...') : t('Cancelar Suscripción')"
             @click="handleUnsubscribe"
           />
           
@@ -107,13 +108,13 @@ useSeoMeta({
         
         <div class="mt-8 pt-6 border-t border-neutral-800">
           <p class="text-sm text-neutral-400 mb-4">
-            ¿No querías cancelar tu suscripción?
+            {{ t('¿No querías cancelar tu suscripción?') }}
           </p>
           <UButton
             size="sm"
             variant="outline"
             color="neutral"
-            label="Volver al Inicio"
+            :label="t('Volver al Inicio')"
             @click="router.push('/')"
           />
         </div>

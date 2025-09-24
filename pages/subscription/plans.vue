@@ -24,7 +24,7 @@ interface Plan {
 const plans = ref<Plan[]>([
   {
     id: config.public.stripe.basicPriceId,
-    name: 'Basic',
+    name: t('Basic'),
     price: 0, // placeholder
     interval: 'month',
     description: t('Perfect for individual movie lovers'),
@@ -38,7 +38,7 @@ const plans = ref<Plan[]>([
   },
   {
     id: config.public.stripe.premiumPriceId,
-    name: 'Premium',
+    name: t('Premium'),
     price: 0, // placeholder
     interval: 'year',
     description: t('Best value for movie enthusiasts'),
@@ -54,7 +54,7 @@ const plans = ref<Plan[]>([
   },
   {
     id: config.public.stripe.educationPriceId,
-    name: 'Education',
+    name: t('Education'),
     price: 0, // placeholder
     interval: 'year',
     description: t('Perfect for schools and educational institutions'),

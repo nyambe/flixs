@@ -186,7 +186,7 @@ const changeSubscription = async (newType: string) => {
             <UInput
               v-model="state.name"
               type="text"
-              placeholder="Your Name"
+              :placeholder="t('Your Name')"
               :disabled="loading"
             />
           </UFormField>
