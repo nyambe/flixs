@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { buildConfirmationUrl, buildUnsubscribeUrl, buildAppUrl, getEnvironmentInfo } from './url-builder'
 
 const config = useRuntimeConfig()
 
@@ -17,8 +18,11 @@ console.log('✅ Resend configuration validated')
 const resend = new Resend(config.resend.apiKey)
 
 export async function sendConfirmationEmail(email: string, confirmationToken: string) {
-  const confirmationUrl = `${config.public.baseUrl}/newsletter/confirm?token=${confirmationToken}`
+  const confirmationUrl = buildConfirmationUrl(confirmationToken)
+  const envInfo = getEnvironmentInfo()
+  
   console.log(`📧 Sending confirmation email to: ${email}`)
+  console.log(`🌐 Environment: ${envInfo.environment} (${envInfo.protocol})`)
   console.log(`🔗 Confirmation URL: ${confirmationUrl}`)
   
   try {
@@ -110,7 +114,7 @@ export async function sendWelcomeEmail(email: string) {
             </ul>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${config.public.baseUrl}" 
+              <a href="${buildAppUrl()}" 
                  style="background: #f59e0b; color: #000000; padding: 16px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
                 Explorar MOABA
               </a>
@@ -118,7 +122,7 @@ export async function sendWelcomeEmail(email: string) {
             
             <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">
               Si deseas cancelar tu suscripción en cualquier momento, puedes hacerlo 
-              <a href="${config.public.baseUrl}/newsletter/unsubscribe?email=${encodeURIComponent(email)}" style="color: #3b82f6;">aquí</a>.
+              <a href="${buildUnsubscribeUrl(email)}" style="color: #3b82f6;">aquí</a>.
             </p>
           </div>
           

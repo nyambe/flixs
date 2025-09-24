@@ -9,10 +9,14 @@ const confirmSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   try {
+    console.log('📧 Newsletter confirmation attempt started')
     const body = await readBody(event)
+    console.log('📝 Request body received:', { token: body.token?.substring(0, 20) + '...' })
+    
     const validation = confirmSchema.safeParse(body)
     
     if (!validation.success) {
+      console.error('❌ Token validation failed:', validation.error.issues)
       throw createError({
         statusCode: 400,
         statusMessage: 'Invalid token',
@@ -21,15 +25,43 @@ export default defineEventHandler(async (event) => {
     }
 
     const { token } = validation.data
+    console.log('✅ Token validated:', token.substring(0, 20) + '...')
 
     // Find subscriber by confirmation token
     const newsletterRef = adminDb.collection('newsletter_subscribers')
+    console.log('🔍 Searching for subscriber with token...')
+    
     const subscriberQuery = await newsletterRef
       .where('confirmationToken', '==', token)
       .where('confirmed', '==', false)
       .get()
 
+    console.log(`📊 Query results: ${subscriberQuery.size} documents found`)
+    
     if (subscriberQuery.empty) {
+      // Let's also check if there's a confirmed user with this token
+      const confirmedQuery = await newsletterRef
+        .where('confirmationToken', '==', token)
+        .get()
+      
+      console.log(`📊 Confirmed query results: ${confirmedQuery.size} documents found`)
+      
+      if (!confirmedQuery.empty) {
+        const doc = confirmedQuery.docs[0]
+        const data = doc.data()
+        console.log('👤 Found confirmed subscriber:', { email: data.email, confirmed: data.confirmed })
+        
+        if (data.confirmed) {
+          return {
+            success: true,
+            message: 'Email already confirmed. You can now complete your registration.',
+            email: data.email,
+            alreadyConfirmed: true
+          }
+        }
+      }
+      
+      console.error('❌ No subscriber found with token:', token.substring(0, 20) + '...')
       throw createError({
         statusCode: 404,
         statusMessage: 'Invalid or expired confirmation token',
@@ -38,12 +70,16 @@ export default defineEventHandler(async (event) => {
 
     const subscriberDoc = subscriberQuery.docs[0]
     const subscriberData = subscriberDoc.data()
+    console.log('👤 Found subscriber:', { email: subscriberData.email, confirmed: subscriberData.confirmed })
 
     // Check if token is not too old (7 days max)
     const tokenAge = Date.now() - subscriberData.lastConfirmationSent.toDate().getTime()
     const maxAge = 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
     
+    console.log(`⏰ Token age: ${Math.round(tokenAge / (1000 * 60 * 60))} hours (max: ${Math.round(maxAge / (1000 * 60 * 60))} hours)`)
+    
     if (tokenAge > maxAge) {
+      console.error('❌ Token expired')
       throw createError({
         statusCode: 410,
         statusMessage: 'Confirmation token has expired',
@@ -51,12 +87,14 @@ export default defineEventHandler(async (event) => {
     }
 
     // Update subscriber to confirmed status
+    console.log('✅ Confirming subscriber...')
     await subscriberDoc.ref.update({
       confirmed: true,
       confirmedAt: new Date(),
       confirmationToken: null, // Remove token after confirmation
       updatedAt: new Date(),
     })
+    console.log('✅ Subscriber confirmed successfully')
 
     // Send welcome email
     try {

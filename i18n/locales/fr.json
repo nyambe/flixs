@@ -123,5 +123,15 @@
   "Change Subscription": "Changer d'abonnement",
   "Invalid email": "E-mail invalide",
   "Password is required": "Le mot de passe est requis",
-  "Password must be at least 8 characters": "Le mot de passe doit contenir au moins 8 caractères"
+  "Password must be at least 8 characters": "Le mot de passe doit contenir au moins 8 caractères",
+  "Confirmando tu suscripción...": "Confirmation de votre abonnement...",
+  "¡Suscripción Confirmada!": "Abonnement Confirmé!",
+  "Completar Registro": "Compléter l'inscription",
+  "Explorar MOABA": "Explorer MOABA",
+  "Error de Confirmación": "Erreur de Confirmation",
+  "Volver al Inicio": "Retour à l'accueil",
+  "Contactar Soporte": "Contacter le Support",
+  "Email already confirmed": "Cet email a déjà été confirmé",
+  "Invalid confirmation link. Please check your email for the correct link.": "Lien de confirmation invalide. Veuillez vérifier votre email pour le bon lien.",
+  "Failed to confirm subscription. Please try again.": "Échec de la confirmation de l'abonnement. Veuillez réessayer."
 }

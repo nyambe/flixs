@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
@@ -14,14 +15,14 @@ onMounted(async () => {
   if (!token) {
     confirmationResult.value = {
       success: false,
-      message: 'Invalid confirmation link. Please check your email for the correct link.'
+      message: t('Invalid confirmation link. Please check your email for the correct link.')
     }
     isLoading.value = false
     return
   }
 
   try {
-    const { data } = await $fetch('/api/newsletter/confirm', {
+    const data = await $fetch('/api/newsletter/confirm', {
       method: 'POST',
       body: { token }
     })
@@ -32,9 +33,10 @@ onMounted(async () => {
       email?: string
     }
   } catch (error: any) {
+    console.error('Newsletter confirmation error:', error)
     confirmationResult.value = {
       success: false,
-      message: error?.data?.message || 'Failed to confirm subscription. Please try again.'
+      message: error?.data?.statusMessage || error?.statusMessage || error?.message || t('Failed to confirm subscription. Please try again.')
     }
   } finally {
     isLoading.value = false
@@ -53,7 +55,7 @@ useSeoMeta({
       <!-- Loading State -->
       <div v-if="isLoading" class="text-center">
         <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400 mb-4"></div>
-        <p class="text-neutral-300">Confirmando tu suscripción...</p>
+        <p class="text-neutral-300">{{ t('Confirmando tu suscripción...') }}</p>
       </div>
 
       <!-- Success State -->
@@ -64,7 +66,7 @@ useSeoMeta({
           </svg>
         </div>
         
-        <h1 class="text-2xl font-bold mb-4">¡Suscripción Confirmada!</h1>
+        <h1 class="text-2xl font-bold mb-4">{{ t('¡Suscripción Confirmada!') }}</h1>
         <p class="text-neutral-300 mb-6">{{ confirmationResult.message }}</p>
         
         <div class="space-y-4">
@@ -72,8 +74,8 @@ useSeoMeta({
             size="lg"
             color="primary"
             class="w-full bg-amber-400 hover:bg-amber-500"
-            label="Explorar MOABA"
-            @click="router.push('/')"
+            :label="t('Completar Registro')"
+            @click="router.push(`/auth/register?email=${encodeURIComponent(confirmationResult.email || '')}`)"
           />
           
           <UButton
@@ -81,8 +83,8 @@ useSeoMeta({
             variant="outline"
             color="neutral"
             class="w-full"
-            label="Ver Mi Perfil"
-            @click="router.push('/auth/profile')"
+            :label="t('Explorar MOABA')"
+            @click="router.push('/')"
           />
         </div>
       </div>
@@ -95,7 +97,7 @@ useSeoMeta({
           </svg>
         </div>
         
-        <h1 class="text-2xl font-bold mb-4">Error de Confirmación</h1>
+        <h1 class="text-2xl font-bold mb-4">{{ t('Error de Confirmación') }}</h1>
         <p class="text-neutral-300 mb-6">{{ confirmationResult?.message }}</p>
         
         <div class="space-y-4">
@@ -103,7 +105,7 @@ useSeoMeta({
             size="lg"
             color="primary"
             class="w-full bg-amber-400 hover:bg-amber-500"
-            label="Volver al Inicio"
+            :label="t('Volver al Inicio')"
             @click="router.push('/')"
           />
           
@@ -112,7 +114,7 @@ useSeoMeta({
             variant="outline"
             color="neutral"
             class="w-full"
-            label="Contactar Soporte"
+            :label="t('Contactar Soporte')"
             @click="router.push('/contact')"
           />
         </div>

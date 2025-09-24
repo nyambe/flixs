@@ -1,6 +1,6 @@
 // Test script for newsletter functionality
 const testEmail = 'samuel.ebuka@gmail.com' // Use your verified email for testing
-const testUrl = 'http://localhost:3003/api/newsletter/subscribe'
+const testUrl = 'https://flixs.vercel.app/api/newsletter/subscribe'
 
 const testData = {
   email: testEmail,
