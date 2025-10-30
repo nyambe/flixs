@@ -4,11 +4,20 @@ import * as z from 'zod';
 import type { FormSubmitEvent } from '@nuxt/ui';
 
 const { t } = useI18n();
+const appConfig = useAppConfig();
+
+// Redirect to home if newsletter is disabled
+if (!appConfig.features.newsletter.enabled) {
+  navigateTo('/');
+}
 
 const schema = z.object({
   name: z.string().min(1, t('Name is required')),
   email: z.string().email(t('Invalid email address')),
-  howDidYouFindUs: z.string().optional()
+  howDidYouFindUs: z.string().optional(),
+  privacyConsent: z.boolean().refine(val => val === true, {
+    message: t('You must accept the privacy policy')
+  })
 });
 
 type Schema = z.output<typeof schema>;
@@ -16,7 +25,8 @@ type Schema = z.output<typeof schema>;
 const state = reactive<Schema>({
   name: '',
   email: '',
-  howDidYouFindUs: ''
+  howDidYouFindUs: '',
+  privacyConsent: false
 });
 
 const howDidYouFindUsOptions = [
@@ -47,9 +57,9 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     const response = await $fetch('/api/newsletter/subscribe', {
       method: 'POST',
       body: {
-        name: event.data.name,
         email: event.data.email,
-        howDidYouFindUs: event.data.howDidYouFindUs
+        source: 'registration_page',
+        privacyConsent: event.data.privacyConsent
       }
     });
     
@@ -101,13 +111,27 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
         </UFormField>
         
         <UFormField :label="t('How did you find us?')" name="howDidYouFindUs">
-          <USelect 
-            v-model="state.howDidYouFindUs" 
-            :items="howDidYouFindUsOptions" 
+          <USelect
+            v-model="state.howDidYouFindUs"
+            :items="howDidYouFindUsOptions"
             :placeholder="t('Select an option')"
           />
         </UFormField>
-        
+
+        <UFormField name="privacyConsent" required>
+          <div class="flex items-start gap-3">
+            <UCheckbox
+              v-model="state.privacyConsent"
+              :label="t('I accept the privacy policy and consent to receive emails from MOABA Cinema TV')"
+            />
+          </div>
+          <template #help>
+            <NuxtLink to="/privacy" class="text-amber-400 hover:text-amber-300 underline text-sm">
+              {{ t('Read our privacy policy') }}
+            </NuxtLink>
+          </template>
+        </UFormField>
+
         <div class="pt-4">
           <UButton
             type="submit"
@@ -128,7 +152,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
         <UButton
           color="primary"
           variant="outline"
-          @click="() => { success = false; error = ''; state.name = ''; state.email = ''; state.howDidYouFindUs = ''; }"
+          @click="() => { success = false; error = ''; state.name = ''; state.email = ''; state.howDidYouFindUs = ''; state.privacyConsent = false; }"
         >
           {{ t('Subscribe Another Email') }}
         </UButton>

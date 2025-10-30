@@ -4,7 +4,8 @@ import { useI18n } from 'vue-i18n';
 import { useColorMode } from '#imports';
 
 // Initialize i18n
-const { t, locale, availableLocales } = useI18n();
+const { t, locale, locales } = useI18n();
+const switchLocalePath = useSwitchLocalePath();
 
 // Initialize color mode
 const colorMode = useColorMode();
@@ -39,28 +40,25 @@ const isSubscribed = computed(() => userSubscription.value?.active === true);
 // Computed property for current locale display with fallback
 const currentLocale = computed(() => locale.value || 'en');
 
-// Language options with display names
-const languageOptions = computed(() => {
-  return availableLocales.map(code => ({
-    value: code,
-    label: getLanguageName(code)
-  }));
+// Available locales for the language switcher
+const availableLocales = computed(() => {
+  return locales.value.filter((i: any) => i.code !== locale.value);
 });
 
-// Get full language name from language code
-function getLanguageName(code: string): string {
-  const names: Record<string, string> = {
-    en: 'English',
-    fr: 'Français',
-    es: 'Español'
-  };
-  return names[code] || code.toUpperCase();
-}
+// Get current locale name
+const currentLocaleName = computed(() => {
+  const current = locales.value.find((i: any) => i.code === locale.value);
+  return current?.name || locale.value.toUpperCase();
+});
 
-// Change language handler
-function changeLanguage(newLocale: string) {
-  locale.value = newLocale;
-}
+// Language dropdown items using switchLocalePath
+const languageItems = computed(() => [
+  locales.value.map((loc: any) => ({
+    label: loc.name,
+    icon: locale.value === loc.code ? 'i-heroicons-check-circle' : 'i-heroicons-language',
+    to: switchLocalePath(loc.code)
+  }))
+]);
 </script>
 
 <template>
@@ -91,28 +89,21 @@ function changeLanguage(newLocale: string) {
           @click="toggleColorMode"
           :aria-label="t('Toggle color mode')"
         />
-        
-        <!-- Elegant Language Switcher -->
-        <UDropdownMenu :items="languageOptions">
+
+        <!-- Simple Language Switcher - Debug with buttons -->
+        <div class="flex items-center gap-2">
           <UButton
-            color="neutral"
-            variant="ghost"
-            class="hover:bg-neutral-800"
-            trailing-icon="i-heroicons-language"
+            v-for="loc in locales"
+            :key="loc.code"
+            :to="switchLocalePath(loc.code)"
+            color="white"
+            :variant="locale === loc.code ? 'solid' : 'ghost'"
+            size="sm"
+            class="text-white"
           >
-            {{ getLanguageName(currentLocale) }}
+            {{ loc.code.toUpperCase() }}
           </UButton>
-          
-          <template #item="{ item }">
-            <div
-              :class="{ 'bg-neutral-800': item.value === currentLocale }"
-              @click="changeLanguage(item.value)"
-              class="cursor-pointer"
-            >
-              {{ item.label }}
-            </div>
-          </template>
-        </UDropdownMenu>
+        </div>
         
         <UButton
           v-if="!isSubscribed"

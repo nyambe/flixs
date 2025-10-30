@@ -92,10 +92,10 @@ definePageMeta({
     class="fixed inset-0 z-50 bg-black flex items-center justify-center"
   >
     <div class="absolute top-4 right-4 z-10">
-      <button 
-        @click="toggleFullscreen" 
+      <button
+        @click="toggleFullscreen"
         class="text-white bg-black/50 hover:bg-black/80 rounded-full p-2 transition-colors"
-        aria-label="Exit fullscreen"
+        :aria-label="t('Exit fullscreen')"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -157,13 +157,13 @@ definePageMeta({
       
       <div class="mt-6">
         <NuxtLink to="/movies" class="text-blue-400 hover:underline">
-          Back to all videos
+          {{ t('Back to all videos') }}
         </NuxtLink>
       </div>
     </div>
-    
+
     <div v-else class="text-center text-gray-500">
-      Video not found
+      {{ t('Video not found') }}
     </div>
   </div>
 </template>

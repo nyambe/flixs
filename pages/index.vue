@@ -5,6 +5,7 @@ const { featuredMovie, popularMovies } = useMovieData()
 const imagePath = useImagePath()
 const showTrailer = ref(false)
 const { currentUser } = useAuth()
+const appConfig = useAppConfig()
 
 // Add email handling for subscription
 const handleSubscribe = async (email: string) => {
@@ -47,8 +48,8 @@ useSeoMeta({
       :trailer-id="featuredMovie.trailer_id || null"
     />
     
-    <!-- Hero Section for logged-in users -->
-    <section v-if="currentUser" class="relative min-h-[60vh] overflow-hidden">
+    <!-- Hero Section for logged-in users OR when newsletter is disabled -->
+    <section v-if="currentUser || !appConfig.features.newsletter.showOnHomepage" class="relative min-h-[60vh] overflow-hidden">
       <div class="absolute inset-0">
         <div :class="backdropAspectRatio" class="w-full ">
           <img 
@@ -101,10 +102,10 @@ useSeoMeta({
       </div>
     </section>
     
-    <!-- Subscription Hero for non-logged-in users -->
-    <SubscriptionHero 
-      v-else 
-      :movie="featuredMovie" 
+    <!-- Subscription Hero for non-logged-in users (only if newsletter enabled) -->
+    <SubscriptionHero
+      v-else-if="appConfig.features.newsletter.showOnHomepage"
+      :movie="featuredMovie"
       @subscribe="handleSubscribe"
       @skip="handleSkip"
     />

@@ -95,10 +95,10 @@ const updateVideoStatus = async () => {
       videos.value[index] = { ...selectedVideo.value };
     }
     
-    updateMessage.value = { type: 'success', text: 'Video updated successfully' };
+    updateMessage.value = { type: 'success', text: t('Video updated successfully') };
   } catch (err) {
     console.error('Failed to update video:', err);
-    updateMessage.value = { type: 'error', text: 'Failed to update video. Please try again.' };
+    updateMessage.value = { type: 'error', text: t('Failed to update video. Please try again.') };
   } finally {
     updateLoading.value = false;
   }
@@ -252,8 +252,8 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
           <div class="mb-4 flex items-center">
             <img :src="selectedVideo.thumbnail" alt="Video thumbnail" class="h-24 w-36 object-cover rounded">
             <div class="ml-4">
-              <p class="text-xs text-gray-500">Video ID: {{ selectedVideo.id }}</p>
-              <p class="text-xs text-gray-500">Status: {{ selectedVideo.status }}</p>
+              <p class="text-xs text-gray-500">{{ t('Video ID') }}: {{ selectedVideo.id }}</p>
+              <p class="text-xs text-gray-500">{{ t('Status') }}: {{ selectedVideo.status }}</p>
             </div>
           </div>
           
@@ -282,14 +282,14 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
             <!-- Privacy Settings -->
             <div>
               <label class="block text-sm font-medium text-gray-700">{{ t('Privacy') }}</label>
-              <select 
-                v-model="selectedVideo.privacy.view" 
+              <select
+                v-model="selectedVideo.privacy.view"
                 class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="anybody">Public (anybody)</option>
-                <option value="password">Password Protected</option>
-                <option value="disable">Private (disable)</option>
-                <option value="nobody">Private (nobody)</option>
+                <option value="anybody">{{ t('Public (anybody)') }}</option>
+                <option value="password">{{ t('Password Protected') }}</option>
+                <option value="disable">{{ t('Private (disable)') }}</option>
+                <option value="nobody">{{ t('Private (nobody)') }}</option>
               </select>
             </div>
             
@@ -309,26 +309,26 @@ const getPrivacyClass = (privacy: VimeoVideo['privacy'] | undefined) => {
             <!-- Embed Privacy -->
             <div>
               <label class="block text-sm font-medium text-gray-700">{{ t('Embed Privacy') }}</label>
-              <select 
-                v-model="selectedVideo.privacy.embed" 
+              <select
+                v-model="selectedVideo.privacy.embed"
                 class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="public">Public (embed anywhere)</option>
-                <option value="private">Private (no embedding)</option>
-                <option value="whitelist">Whitelist (specific domains only)</option>
+                <option value="public">{{ t('Public (embed anywhere)') }}</option>
+                <option value="private">{{ t('Private (no embedding)') }}</option>
+                <option value="whitelist">{{ t('Whitelist (specific domains only)') }}</option>
               </select>
             </div>
             
             <!-- Whitelist Domains -->
             <div v-if="selectedVideo.privacy.embed === 'whitelist'">
               <label class="block text-sm font-medium text-gray-700">{{ t('Whitelist Domains') }}</label>
-              <textarea 
-                v-model="whitelistDomains" 
-                rows="3" 
-                :placeholder="t('Example: yourdomain.com, example.org')" 
+              <textarea
+                v-model="whitelistDomains"
+                rows="3"
+                :placeholder="t('Example: yourdomain.com, example.org')"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
-              <p class="mt-1 text-sm text-gray-500">Enter domain names separated by commas (no http:// or www needed)</p>
+              <p class="mt-1 text-sm text-gray-500">{{ t('Enter domain names separated by commas (no http:// or www needed)') }}</p>
             </div>
             
             <!-- Update Message -->
