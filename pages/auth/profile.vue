@@ -138,7 +138,9 @@ const changeSubscription = async (newType: string) => {
 <template>
   <div class="max-w-xl mx-auto mt-16 mb-8">
     <UCard>
-      <UCardTitle class="text-3xl font-bold">{{ t('Edit Profile') }}</UCardTitle>
+      <template #header>
+        <h1 class="text-3xl font-bold">{{ t('Edit Profile') }}</h1>
+      </template>
 
       <UAlert v-if="error" color="error" class="mb-4" :title="error" />
       <UAlert v-if="success" color="success" class="mb-4" :title="success" />
@@ -263,7 +265,7 @@ const changeSubscription = async (newType: string) => {
     <UModal v-model="showSubscriptionModal">
       <UCard>
         <template #header>
-          <UCardTitle>{{ t('Change Subscription') }}</UCardTitle>
+          <h2 class="text-xl font-bold">{{ t('Change Subscription') }}</h2>
         </template>
         
         <div class="p-4 grid gap-4">

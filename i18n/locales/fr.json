@@ -232,5 +232,7 @@
   "Public (embed anywhere)": "Public (intégrer n'importe où)",
   "Private (no embedding)": "Privé (pas d'intégration)",
   "Whitelist (specific domains only)": "Liste blanche (domaines spécifiques uniquement)",
-  "Enter domain names separated by commas (no http:// or www needed)": "Entrez les noms de domaine séparés par des virgules (sans http:// ou www)"
+  "Enter domain names separated by commas (no http:// or www needed)": "Entrez les noms de domaine séparés par des virgules (sans http:// ou www)",
+  "Limited time offer: Stream premium African movies for just 4.95€/month!": "Offre limitée : Diffusez des films africains premium pour seulement 4,95€/mois !",
+  "Close notification": "Fermer la notification"
 }

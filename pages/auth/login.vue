@@ -38,8 +38,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
   <UCard class="max-w-md mx-auto mt-16 mb-8 shadow-lg">
-    <UCardTitle class="text-3xl font-bold">{{ t('Sign In') }}</UCardTitle>
-    
+    <template #header>
+      <h1 class="text-3xl font-bold">{{ t('Sign In') }}</h1>
+    </template>
+
     <UAlert v-if="error" color="error" class="mb-4" :title="error" />
     
     <UForm 

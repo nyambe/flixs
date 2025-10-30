@@ -169,15 +169,19 @@
 <template>
   <div class="max-w-md mx-auto mt-16 mb-20">
     <UCard class="mb-6">
-      <UCardTitle class="text-3xl font-bold text-(--ui-text-highlighted)">{{ t('Checkout') }}</UCardTitle>
+      <template #header>
+        <h1 class="text-3xl font-bold">{{ t('Checkout') }}</h1>
+      </template>
 
       <UAlert v-if="error" color="error" class="mb-4" :title="error" />
 
       <!-- Authentication Card (shown if user is not logged in) -->
       <UCard v-if="!currentUser" class="mb-6">
-        <UCardTitle class="text-(--ui-text-highlighted)">
-          {{ authMode === 'login' ? t('Sign In') : t('Create Account') }}
-        </UCardTitle>
+        <template #header>
+          <h2 class="text-xl font-bold">
+            {{ authMode === 'login' ? t('Sign In') : t('Create Account') }}
+          </h2>
+        </template>
 
         <UAlert v-if="authError" color="error" class="mb-4" :title="authError" />
 
@@ -309,7 +313,9 @@
       </UCard>
 
       <UCard class="mt-6">
-        <UCardTitle class="text-(--ui-text-highlighted)">{{ t('Subscription Plan') }}</UCardTitle>
+        <template #header>
+          <h2 class="text-xl font-bold">{{ t('Subscription Plan') }}</h2>
+        </template>
 
         <div v-if="loadingPlan" class="text-center py-4">
           <UIcon name="i-heroicons-arrow-path" class="animate-spin h-8 w-8 text-(--ui-primary) mx-auto" />

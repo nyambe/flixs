@@ -6,6 +6,7 @@ import { useColorMode } from '#imports';
 // Initialize i18n
 const { t, locale, locales } = useI18n();
 const switchLocalePath = useSwitchLocalePath();
+const localePath = useLocalePath();
 
 // Initialize color mode
 const colorMode = useColorMode();
@@ -64,7 +65,7 @@ const languageItems = computed(() => [
 <template>
   <header class="sticky top-0 w-full z-50 bg-black/50 backdrop-blur">
     <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
-      <NuxtLink to="/" class="text-2xl font-bold text-brand">
+      <NuxtLink :to="localePath('/')" class="text-2xl font-bold text-brand">
         <img src="/logo.png" :alt="t('Moaba Cinema TV')" class="h-12">
       </NuxtLink>
 
@@ -72,7 +73,7 @@ const languageItems = computed(() => [
         <NuxtLink
           v-for="item in navigationItems"
           :key="item.path"
-          :to="item.path"
+          :to="localePath(item.path)"
           class="text-neutral-300 hover:text-white transition"
         >
           {{ item.label() }}
@@ -110,7 +111,7 @@ const languageItems = computed(() => [
           color="primary"
           :label="t('Subscribe')"
           class="bg-brand text-brand-content hover:bg-brand-focus"
-          to="/subscription/plans"
+          :to="localePath('/subscription/plans')"
         />
         <div v-if="currentUser" class="flex items-center space-x-4">
           <span class="text-white">{{ userDisplayName }}</span>
@@ -118,7 +119,7 @@ const languageItems = computed(() => [
             color="neutral"
             variant="ghost"
             icon="i-heroicons-user-circle"
-            to="/auth/profile"
+            :to="localePath('/auth/profile')"
             class="hover:bg-neutral-800"
           />
           <UButton
@@ -134,7 +135,7 @@ const languageItems = computed(() => [
           color="neutral"
           variant="outline"
           :label="t('Sign In')"
-          to="/auth/login"
+          :to="localePath('/auth/login')"
         />
       </div>
     </nav>
