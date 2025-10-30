@@ -12,9 +12,17 @@
       "Bash(cd:*)",
       "WebFetch(domain:ui.nuxt.com)",
       "Bash(npm run dev:*)",
-      "Read(//Volumes/**)"
+      "Read(//Volumes/**)",
+      "Bash(curl:*)",
+      "Bash(/dev/null)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enabledMcpjsonServers": [
+    "firebase",
+    "playwright",
+    "sequential-thinking",
+    "nuxt-docs"
+  ]
 }
