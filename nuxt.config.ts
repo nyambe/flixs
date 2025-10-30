@@ -31,6 +31,12 @@ export default defineNuxtConfig({
     router: false,
     hydration: false,
   },
+  nitro: {
+    preset: 'vercel',
+    rollupConfig: {
+      external: ['crypto', 'node:crypto', 'string_decoder', 'node:string_decoder']
+    }
+  },
   runtimeConfig: {
     // Server-side environment variables
     tmdbToken: process.env.TMDB_TOKEN,
@@ -58,6 +64,7 @@ export default defineNuxtConfig({
     },
     public: {
       baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || process.env.BASE_URL || 'http://localhost:3000',
       firebase: {
         apiKey: process.env.FIREBASE_API_KEY,
         authDomain: process.env.FIREBASE_AUTH_DOMAIN,

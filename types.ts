@@ -42,4 +42,75 @@ export interface TMDBList {
     items: TMDBMovie[]
     name: string
   }
-  
+
+// Press Link Types
+export interface PressLinkView {
+  timestamp: number
+  ipAddress: string
+  userAgent: string
+  duration?: number
+}
+
+export interface PressLink {
+  id: string
+  token: string
+  videoId: string
+  movieId: number
+  movieTitle: string
+
+  // Sender info
+  createdBy: string
+  createdAt: number
+
+  // Recipient info
+  recipientEmail: string
+  recipientName: string
+  organization?: string
+
+  // Access control
+  expiresAt: number
+  password?: string
+  active: boolean
+
+  // Analytics
+  viewCount: number
+  firstViewedAt?: number
+  lastViewedAt?: number
+  views: PressLinkView[]
+
+  // Notes
+  notes?: string
+}
+
+export interface CreatePressLinkInput {
+  videoId: string
+  movieId: number
+  movieTitle: string
+  recipientEmail: string
+  recipientName: string
+  organization?: string
+  expiresAt: number
+  password?: string
+  notes?: string
+}
+
+export interface UpdatePressLinkInput {
+  recipientEmail?: string
+  recipientName?: string
+  organization?: string
+  expiresAt?: number
+  password?: string
+  active?: boolean
+  notes?: string
+}
+
+export interface PressLinkValidation {
+  valid: boolean
+  expired?: boolean
+  requiresPassword?: boolean
+  movieTitle?: string
+  movieId?: number
+  videoId?: string
+  message?: string
+}
+

@@ -19,6 +19,7 @@ const handleSignOut = async () => {
           <nav class="hidden md:flex space-x-6">
             <NuxtLink to="/admin" class="hover:text-blue-400 transition">{{ t('Dashboard') }}</NuxtLink>
             <NuxtLink to="/admin/videos" class="hover:text-blue-400 transition">{{ t('Video Management') }}</NuxtLink>
+            <NuxtLink to="/admin/press-links" class="hover:text-blue-400 transition">{{ t('press.title') }}</NuxtLink>
             <NuxtLink to="/admin/users" class="hover:text-blue-400 transition">{{ t('Users') }}</NuxtLink>
             <NuxtLink to="/admin/settings" class="hover:text-blue-400 transition">{{ t('Settings') }}</NuxtLink>
           </nav>
