@@ -1,32 +1,40 @@
 import { Resend } from 'resend'
 import { buildConfirmationUrl, buildUnsubscribeUrl, buildAppUrl, getEnvironmentInfo } from './url-builder'
 
-const config = useRuntimeConfig()
+let resend: Resend | null = null
 
-// Validate configuration
-if (!config.resend?.apiKey) {
-  console.error('❌ RESEND_API_KEY is not configured')
-  throw new Error('Resend API key is required')
+function getResendClient() {
+  if (resend) return resend
+
+  const config = useRuntimeConfig()
+
+  // Validate configuration
+  if (!config.resend?.apiKey) {
+    console.error('❌ RESEND_API_KEY is not configured')
+    throw new Error('Resend API key is required for newsletter features')
+  }
+
+  if (!config.public?.baseUrl) {
+    console.error('❌ BASE_URL is not configured')
+    throw new Error('Base URL is required')
+  }
+
+  console.log('✅ Resend configuration validated')
+  resend = new Resend(config.resend.apiKey)
+  return resend
 }
-
-if (!config.public?.baseUrl) {
-  console.error('❌ BASE_URL is not configured')
-  throw new Error('Base URL is required')
-}
-
-console.log('✅ Resend configuration validated')
-const resend = new Resend(config.resend.apiKey)
 
 export async function sendConfirmationEmail(email: string, confirmationToken: string) {
+  const client = getResendClient()
   const confirmationUrl = buildConfirmationUrl(confirmationToken)
   const envInfo = getEnvironmentInfo()
-  
+
   console.log(`📧 Sending confirmation email to: ${email}`)
   console.log(`🌐 Environment: ${envInfo.environment} (${envInfo.protocol})`)
   console.log(`🔗 Confirmation URL: ${confirmationUrl}`)
-  
+
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await client.emails.send({
       from: 'MOABA Cinema TV <onboarding@resend.dev>',
       to: [email],
       subject: 'Confirma tu suscripción a MOABA Cinema TV',
@@ -85,10 +93,11 @@ export async function sendConfirmationEmail(email: string, confirmationToken: st
 }
 
 export async function sendWelcomeEmail(email: string) {
+  const client = getResendClient()
   console.log(`🎉 Sending welcome email to: ${email}`)
-  
+
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await client.emails.send({
       from: 'MOABA Cinema TV <onboarding@resend.dev>',
       to: [email],
       subject: '¡Bienvenido a MOABA Cinema TV! 🎬',

@@ -103,14 +103,15 @@ const handleSubmit = async () => {
             id="movie"
             v-model.number="formData.movieId"
             required
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
           >
-            <option :value="0">{{ t('press.selectMoviePlaceholder') }}</option>
+            <option :value="0" class="text-gray-500">{{ t('press.selectMoviePlaceholder') }}</option>
             <option
               v-for="movie in movies"
               :key="movie.id"
               :value="movie.id"
               :disabled="!movie.video_id"
+              class="text-gray-900"
             >
               {{ movie.title }} {{ movie.video_id ? '' : '(No video)' }}
             </option>
@@ -131,7 +132,7 @@ const handleSubmit = async () => {
             type="text"
             required
             :placeholder="t('press.recipientNamePlaceholder')"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 placeholder-gray-400"
           >
         </div>
 
@@ -146,7 +147,7 @@ const handleSubmit = async () => {
             type="email"
             required
             :placeholder="t('press.recipientEmailPlaceholder')"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 placeholder-gray-400"
           >
         </div>
 
@@ -160,7 +161,7 @@ const handleSubmit = async () => {
             v-model="formData.organization"
             type="text"
             :placeholder="t('press.organizationPlaceholder')"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 placeholder-gray-400"
           >
         </div>
 
@@ -176,7 +177,7 @@ const handleSubmit = async () => {
             min="1"
             max="90"
             required
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
           >
           <p class="mt-1 text-sm text-gray-500">
             {{ t('press.expiresOn') }}: {{ new Date(expiresAt).toLocaleDateString() }}
@@ -193,7 +194,7 @@ const handleSubmit = async () => {
             v-model="formData.password"
             type="text"
             :placeholder="t('press.passwordPlaceholder')"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 placeholder-gray-400"
           >
           <p class="mt-1 text-sm text-gray-500">
             {{ t('press.passwordHelp') }}
@@ -210,7 +211,7 @@ const handleSubmit = async () => {
             v-model="formData.notes"
             rows="3"
             :placeholder="t('press.notesPlaceholder')"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 placeholder-gray-400"
           ></textarea>
         </div>
 

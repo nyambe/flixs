@@ -40,9 +40,18 @@ function generateConfirmationToken(): string {
 export default defineEventHandler(async (event) => {
   try {
     console.log('📧 Newsletter subscription attempt started')
-    
+
     // Validate environment configuration
-    validateEnvironmentConfig()
+    const envConfig = validateEnvironmentConfig()
+
+    // Check if Resend is configured
+    if (!envConfig.resend?.apiKey) {
+      console.error('❌ Newsletter feature is not available - RESEND_API_KEY not configured')
+      throw createError({
+        statusCode: 503,
+        statusMessage: 'Newsletter service is currently unavailable',
+      })
+    }
 
     // Rate limiting
     const clientIP = getHeader(event, 'x-forwarded-for') || getHeader(event, 'x-real-ip') || 'unknown'

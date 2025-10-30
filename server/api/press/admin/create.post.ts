@@ -51,8 +51,8 @@ export default defineEventHandler(async (event): Promise<{ success: boolean; lin
     // Ensure expiration date is within safe limits (max 90 days)
     const safeExpiresAt = getSafeExpirationDate(body.expiresAt)
 
-    // Create press link document
-    const pressLink: Omit<PressLink, 'id'> = {
+    // Create press link document (omit undefined values for Firestore)
+    const pressLink: any = {
       token,
       videoId: body.videoId,
       movieId: body.movieId,
@@ -61,13 +61,23 @@ export default defineEventHandler(async (event): Promise<{ success: boolean; lin
       createdAt: Date.now(),
       recipientEmail: body.recipientEmail,
       recipientName: body.recipientName,
-      organization: body.organization,
       expiresAt: safeExpiresAt,
-      password: hashedPassword,
       active: true,
       viewCount: 0,
       views: [],
-      notes: body.notes,
+    }
+
+    // Only add optional fields if they have values
+    if (body.organization) {
+      pressLink.organization = body.organization
+    }
+
+    if (hashedPassword) {
+      pressLink.password = hashedPassword
+    }
+
+    if (body.notes) {
+      pressLink.notes = body.notes
     }
 
     // Save to Firestore

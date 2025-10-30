@@ -1,6 +1,6 @@
 interface EnvironmentConfig {
-  resend: {
-    apiKey: string
+  resend?: {
+    apiKey?: string
   }
   public: {
     baseUrl: string
@@ -16,10 +16,8 @@ export function validateEnvironmentConfig(): EnvironmentConfig {
   const config = useRuntimeConfig()
   const errors: string[] = []
 
-  // Validate Resend configuration
-  if (!config.resend?.apiKey) {
-    errors.push('RESEND_API_KEY is required')
-  }
+  // Resend is optional - only needed for newsletter feature
+  const hasResend = !!config.resend?.apiKey
 
   // Validate Base URL
   if (!config.public?.baseUrl) {
@@ -49,12 +47,17 @@ export function validateEnvironmentConfig(): EnvironmentConfig {
     })
   }
 
+  // Log warnings for optional services
+  if (!hasResend) {
+    console.warn('⚠️  RESEND_API_KEY not configured - newsletter features will be disabled')
+  }
+
   console.log('✅ Environment configuration validated successfully')
-  
+
   return {
-    resend: {
+    resend: hasResend ? {
       apiKey: config.resend.apiKey
-    },
+    } : undefined,
     public: {
       baseUrl: config.public.baseUrl
     },

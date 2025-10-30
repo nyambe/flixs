@@ -43,8 +43,8 @@ export default defineEventHandler(async (event): Promise<{ success: boolean; lin
 
     const body = await readBody<UpdatePressLinkInput>(event)
 
-    // Build update object with only provided fields
-    const updateData: Partial<PressLink> = {}
+    // Build update object with only provided fields (omit undefined for Firestore)
+    const updateData: any = {}
 
     if (body.recipientEmail !== undefined) {
       updateData.recipientEmail = body.recipientEmail
@@ -54,7 +54,7 @@ export default defineEventHandler(async (event): Promise<{ success: boolean; lin
       updateData.recipientName = body.recipientName
     }
 
-    if (body.organization !== undefined) {
+    if (body.organization !== undefined && body.organization) {
       updateData.organization = body.organization
     }
 
@@ -62,15 +62,15 @@ export default defineEventHandler(async (event): Promise<{ success: boolean; lin
       updateData.expiresAt = getSafeExpirationDate(body.expiresAt)
     }
 
-    if (body.password !== undefined) {
-      updateData.password = body.password ? hashPassword(body.password) : undefined
+    if (body.password !== undefined && body.password) {
+      updateData.password = hashPassword(body.password)
     }
 
     if (body.active !== undefined) {
       updateData.active = body.active
     }
 
-    if (body.notes !== undefined) {
+    if (body.notes !== undefined && body.notes) {
       updateData.notes = body.notes
     }
 
