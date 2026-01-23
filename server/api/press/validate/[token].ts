@@ -35,6 +35,8 @@ export default defineEventHandler(async (event): Promise<PressLinkValidation> =>
       videoId: data.videoId,
       movieId: data.movieId,
       movieTitle: data.movieTitle,
+      bunnyId: data.bunnyId,
+      videoSource: data.videoSource,
       createdBy: data.createdBy,
       createdAt: data.createdAt,
       recipientEmail: data.recipientEmail,
@@ -62,12 +64,17 @@ export default defineEventHandler(async (event): Promise<PressLinkValidation> =>
     }
 
     // Link is valid, return info
+    // Determine video source: explicit source, or infer from bunnyId presence
+    const effectiveVideoSource = link.videoSource || (link.bunnyId ? 'bunny' : 'vimeo')
+
     return {
       valid: true,
       requiresPassword: !!link.password,
       movieTitle: link.movieTitle,
       movieId: link.movieId,
       videoId: link.videoId,
+      bunnyId: link.bunnyId,
+      videoSource: effectiveVideoSource,
     }
   } catch (error) {
     console.error('Error validating press link:', error)

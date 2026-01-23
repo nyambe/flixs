@@ -34,11 +34,12 @@ export default defineEventHandler(async (event): Promise<{ success: boolean; lin
   try {
     const body = await readBody<CreatePressLinkInput>(event)
 
-    // Validate required fields
-    if (!body.videoId || !body.movieId || !body.movieTitle || !body.recipientEmail || !body.recipientName || !body.expiresAt) {
+    // Validate required fields - must have either videoId (Vimeo) or bunnyId (Bunny)
+    const hasVideoSource = body.videoId || body.bunnyId
+    if (!hasVideoSource || !body.movieId || !body.movieTitle || !body.recipientEmail || !body.recipientName || !body.expiresAt) {
       throw createError({
         statusCode: 400,
-        message: 'Missing required fields: videoId, movieId, movieTitle, recipientEmail, recipientName, expiresAt',
+        message: 'Missing required fields: (videoId or bunnyId), movieId, movieTitle, recipientEmail, recipientName, expiresAt',
       })
     }
 
@@ -51,12 +52,16 @@ export default defineEventHandler(async (event): Promise<{ success: boolean; lin
     // Ensure expiration date is within safe limits (max 90 days)
     const safeExpiresAt = getSafeExpirationDate(body.expiresAt)
 
+    // Determine video source
+    const videoSource = body.videoSource || (body.bunnyId ? 'bunny' : 'vimeo')
+
     // Create press link document (omit undefined values for Firestore)
     const pressLink: any = {
       token,
-      videoId: body.videoId,
+      videoId: body.videoId || '',
       movieId: body.movieId,
       movieTitle: body.movieTitle,
+      videoSource,
       createdBy: adminUser.email,
       createdAt: Date.now(),
       recipientEmail: body.recipientEmail,
@@ -68,6 +73,10 @@ export default defineEventHandler(async (event): Promise<{ success: boolean; lin
     }
 
     // Only add optional fields if they have values
+    if (body.bunnyId) {
+      pressLink.bunnyId = body.bunnyId
+    }
+
     if (body.organization) {
       pressLink.organization = body.organization
     }

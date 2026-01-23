@@ -32,7 +32,8 @@ export default defineNuxtConfig({
     hydration: false,
   },
   nitro: {
-    preset: 'vercel',
+    // Preset is auto-detected by Vercel - don't hardcode it
+    // This prevents local builds from generating .vercel/output/
     rollupConfig: {
       external: ['crypto', 'node:crypto', 'string_decoder', 'node:string_decoder']
     }
@@ -61,6 +62,11 @@ export default defineNuxtConfig({
     },
     resend: {
       apiKey: process.env.RESEND_API_KEY,
+    },
+    bunny: {
+      apiUrl: process.env.BUNNY_API_URL,
+      apiKey: process.env.BUNNY_API_KEY,
+      projectId: process.env.BUNNY_PROJECT_ID,
     },
     public: {
       baseUrl: process.env.BASE_URL || 'http://localhost:3000',

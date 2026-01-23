@@ -41,7 +41,8 @@
       "vote_average": 0.0,
       "vote_count": 0,
       "video_id": "1043137980",
-      "trailer_id": "938791617"
+      "trailer_id": "938791617",
+      "bunny_id": "ec018d30-bee6-4283-b0a2-1f3268531162"
     },
     {
       "backdrop_path": "/qQuvPoV9FtUKb56UbZo3qM3UJzA.jpg",
@@ -60,7 +61,8 @@
       "vote_average": 0.0,
       "vote_count": 0,
       "video_id": "1038293755",
-      "trailer_id": "941317602"
+      "trailer_id": "941317602",
+      "bunny_id": "415e720c-61fb-4610-8b01-7d015c03fe5f"
     },
     {
       "backdrop_path": "/qZIitOmPDAZiparZKukB0PUHMCh.jpg",
@@ -79,7 +81,8 @@
       "vote_average": 0.0,
       "vote_count": 0,
       "video_id": "1044731417",
-      "trailer_id": "87012207"
+      "trailer_id": "87012207",
+      "bunny_id": "2514d509-ab5e-4a1f-a08b-4cbb0eeb55ae"
     }
   ],
   "name": "Plataforma",

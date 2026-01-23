@@ -41,11 +41,13 @@ onMounted(() => {
 })
 
 const togglePlay = () => {
-  // If movie has a video_id, use it; otherwise use a default
-  const video_id = movie?.video_id || '933381480'
-  
-  // Instead of toggling play state, navigate to watch page
-  navigateTo(`/watch/${video_id}`)
+  // Prioritize Bunny if available, otherwise use Vimeo
+  if (movie?.bunny_id) {
+    navigateTo(`/watch/${movie.bunny_id}?source=bunny`)
+  } else {
+    const video_id = movie?.video_id || '933381480'
+    navigateTo(`/watch/${video_id}?source=vimeo`)
+  }
 }
 
 const goBack = () => {

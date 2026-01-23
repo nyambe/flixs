@@ -1,17 +1,32 @@
 <script setup lang="ts">
+import type { VideoSource } from '~/types'
+
+// Unified display video type
+interface DisplayVideo {
+  name: string
+  description: string | null
+  duration: number
+  created_time: string
+  playerUrl: string
+  playlistUrl?: string  // HLS playlist for Bunny
+  thumbnailUrl?: string
+}
+
 const route = useRoute()
 const token = route.params.token as string
 
 const { t } = useI18n()
 const { loading, error, validateToken, verifyPassword, trackView } = usePressScreener()
-const { getVideo } = useVimeo()
+const { getVideo: getVimeoVideo } = useVimeo()
+const { getVideo: getBunnyVideo } = useBunny()
 
 const validation = ref<any>(null)
 const isPasswordProtected = ref(false)
 const isPasswordVerified = ref(false)
 const passwordInput = ref('')
 const passwordError = ref('')
-const video = ref<any>(null)
+const video = ref<DisplayVideo | null>(null)
+const videoSource = ref<VideoSource>('vimeo')
 const isFullscreen = ref(false)
 const hasTrackedView = ref(false)
 
@@ -29,10 +44,11 @@ onMounted(async () => {
 
   validation.value = result
   isPasswordProtected.value = !!result.requiresPassword
+  videoSource.value = result.videoSource || (result.bunnyId ? 'bunny' : 'vimeo')
 
   // If no password required, load video immediately
-  if (!isPasswordProtected.value && result.videoId) {
-    await loadVideo(result.videoId)
+  if (!isPasswordProtected.value) {
+    await loadVideoFromValidation()
   }
 })
 
@@ -45,20 +61,34 @@ const handlePasswordSubmit = async () => {
   if (isValid) {
     isPasswordVerified.value = true
     // Load video after password verification
-    if (validation.value?.videoId) {
-      await loadVideo(validation.value.videoId)
-    }
+    await loadVideoFromValidation()
   } else {
     passwordError.value = error.value || t('press.invalidPassword')
   }
 }
 
+// Load video based on validation result
+const loadVideoFromValidation = async () => {
+  if (videoSource.value === 'bunny' && validation.value?.bunnyId) {
+    await loadBunnyVideo(validation.value.bunnyId)
+  } else if (validation.value?.videoId) {
+    await loadVimeoVideo(validation.value.videoId)
+  }
+}
+
 // Load video from Vimeo
-const loadVideo = async (videoId: string) => {
+const loadVimeoVideo = async (videoId: string) => {
   try {
-    const response = await getVideo(videoId)
+    const response = await getVimeoVideo(videoId)
     if (response && 'uri' in response) {
-      video.value = response
+      const vimeoVideo = response as any
+      video.value = {
+        name: vimeoVideo.name,
+        description: vimeoVideo.description,
+        duration: vimeoVideo.duration,
+        created_time: vimeoVideo.created_time,
+        playerUrl: getVimeoPlayerUrl(vimeoVideo),
+      }
       // Track view when video is loaded
       if (!hasTrackedView.value) {
         await trackView(token)
@@ -66,17 +96,47 @@ const loadVideo = async (videoId: string) => {
       }
     }
   } catch (err) {
-    console.error('Error loading video:', err)
+    console.error('Error loading Vimeo video:', err)
   }
 }
 
-// Get player URL with autoplay
-const getPlayerUrl = (video: any) => {
+// Load video from Bunny
+const loadBunnyVideo = async (bunnyId: string) => {
+  try {
+    const response = await getBunnyVideo(bunnyId)
+    if (response) {
+      video.value = {
+        name: response.filename,
+        description: response.metadata?.description || null,
+        duration: response.metadata?.duration || 0,
+        created_time: response.createdAt,
+        playerUrl: response.videoUrl,
+        playlistUrl: response.playlistUrl,
+        thumbnailUrl: response.thumbnailUrl,
+      }
+      // Track view when video is loaded
+      if (!hasTrackedView.value) {
+        await trackView(token)
+        hasTrackedView.value = true
+      }
+    }
+  } catch (err) {
+    console.error('Error loading Bunny video:', err)
+  }
+}
+
+// Get Vimeo player URL with autoplay
+const getVimeoPlayerUrl = (video: any) => {
   if (!video?.player_embed_url) return ''
 
   const baseUrl = video.player_embed_url
   const autoplayParam = baseUrl.includes('?') ? '&autoplay=1' : '?autoplay=1'
   return `${baseUrl}${autoplayParam}`
+}
+
+// Get player URL (already computed in DisplayVideo)
+const getPlayerUrl = () => {
+  return video.value?.playerUrl || ''
 }
 
 // Toggle fullscreen
@@ -186,12 +246,22 @@ definePageMeta({
           </button>
         </div>
 
-        <div class="w-full h-full">
+        <!-- Video player wrapper for fullscreen -->
+        <div class="w-full h-full relative">
+          <!-- Bunny HLS Player -->
+          <BunnyPlayer
+            v-if="videoSource === 'bunny' && video?.playlistUrl"
+            :playlist-url="video.playlistUrl"
+            :poster="video.thumbnailUrl"
+            :autoplay="true"
+          />
+          <!-- Vimeo iframe -->
           <iframe
-            :src="getPlayerUrl(video)"
-            class="w-full h-full"
-            frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
+            v-else
+            :src="getPlayerUrl()"
+            loading="lazy"
+            style="border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
             allowfullscreen
           ></iframe>
         </div>
@@ -204,21 +274,25 @@ definePageMeta({
           <p v-if="video.description" class="text-gray-300">{{ video.description }}</p>
         </div>
 
-        <div class="relative aspect-video bg-black mb-4 cursor-pointer rounded-lg overflow-hidden" @click="toggleFullscreen">
+        <!-- Video player - 16:9 aspect ratio -->
+        <div class="relative bg-black mb-4 rounded-lg overflow-hidden" style="padding-top: 56.25%;">
+          <!-- Bunny HLS Player -->
+          <div v-if="videoSource === 'bunny' && video?.playlistUrl" class="absolute inset-0">
+            <BunnyPlayer
+              :playlist-url="video.playlistUrl"
+              :poster="video.thumbnailUrl"
+              :autoplay="true"
+            />
+          </div>
+          <!-- Vimeo iframe -->
           <iframe
-            :src="getPlayerUrl(video)"
-            class="w-full h-full"
-            frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
+            v-else
+            :src="getPlayerUrl()"
+            loading="lazy"
+            style="border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
             allowfullscreen
           ></iframe>
-          <div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-            <button class="bg-white/90 rounded-full p-3 transform hover:scale-110 transition-transform">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
-              </svg>
-            </button>
-          </div>
         </div>
 
         <div class="flex items-center text-sm text-gray-400 mb-6">

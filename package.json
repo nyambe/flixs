@@ -14,19 +14,18 @@
   "dependencies": {
     "@nuxt/eslint": "1.2.0",
     "@nuxt/fonts": "0.11.0",
-    "@nuxt/ui": "3.0.0",
+    "@nuxt/ui": "^3.3.7",
     "@nuxtjs/i18n": "9.4.0",
     "@stripe/stripe-js": "^6.0.0",
     "eslint": "^9.22.0",
     "firebase": "^11.4.0",
     "firebase-admin": "^13.2.0",
+    "hls.js": "^1.6.15",
     "nuxt": "^3.16.1",
     "pnpm": "^10.6.5",
     "resend": "^6.0.2",
     "stripe": "^17.7.0",
     "tailwindcss": "^4.0.14",
-    "vue": "latest",
-    "vue-router": "latest",
     "zod": "^3.24.2"
   },
   "devDependencies": {
