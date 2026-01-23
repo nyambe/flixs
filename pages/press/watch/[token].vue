@@ -1,17 +1,30 @@
 <script setup lang="ts">
+import type { VideoSource } from '~/types'
+
+// Unified display video type
+interface DisplayVideo {
+  name: string
+  description: string | null
+  duration: number
+  created_time: string
+  playerUrl: string
+}
+
 const route = useRoute()
 const token = route.params.token as string
 
 const { t } = useI18n()
 const { loading, error, validateToken, verifyPassword, trackView } = usePressScreener()
-const { getVideo } = useVimeo()
+const { getVideo: getVimeoVideo } = useVimeo()
+const { getVideo: getBunnyVideo } = useBunny()
 
 const validation = ref<any>(null)
 const isPasswordProtected = ref(false)
 const isPasswordVerified = ref(false)
 const passwordInput = ref('')
 const passwordError = ref('')
-const video = ref<any>(null)
+const video = ref<DisplayVideo | null>(null)
+const videoSource = ref<VideoSource>('vimeo')
 const isFullscreen = ref(false)
 const hasTrackedView = ref(false)
 
@@ -29,10 +42,11 @@ onMounted(async () => {
 
   validation.value = result
   isPasswordProtected.value = !!result.requiresPassword
+  videoSource.value = result.videoSource || (result.bunnyId ? 'bunny' : 'vimeo')
 
   // If no password required, load video immediately
-  if (!isPasswordProtected.value && result.videoId) {
-    await loadVideo(result.videoId)
+  if (!isPasswordProtected.value) {
+    await loadVideoFromValidation()
   }
 })
 
@@ -45,20 +59,34 @@ const handlePasswordSubmit = async () => {
   if (isValid) {
     isPasswordVerified.value = true
     // Load video after password verification
-    if (validation.value?.videoId) {
-      await loadVideo(validation.value.videoId)
-    }
+    await loadVideoFromValidation()
   } else {
     passwordError.value = error.value || t('press.invalidPassword')
   }
 }
 
+// Load video based on validation result
+const loadVideoFromValidation = async () => {
+  if (videoSource.value === 'bunny' && validation.value?.bunnyId) {
+    await loadBunnyVideo(validation.value.bunnyId)
+  } else if (validation.value?.videoId) {
+    await loadVimeoVideo(validation.value.videoId)
+  }
+}
+
 // Load video from Vimeo
-const loadVideo = async (videoId: string) => {
+const loadVimeoVideo = async (videoId: string) => {
   try {
-    const response = await getVideo(videoId)
+    const response = await getVimeoVideo(videoId)
     if (response && 'uri' in response) {
-      video.value = response
+      const vimeoVideo = response as any
+      video.value = {
+        name: vimeoVideo.name,
+        description: vimeoVideo.description,
+        duration: vimeoVideo.duration,
+        created_time: vimeoVideo.created_time,
+        playerUrl: getVimeoPlayerUrl(vimeoVideo),
+      }
       // Track view when video is loaded
       if (!hasTrackedView.value) {
         await trackView(token)
@@ -66,17 +94,45 @@ const loadVideo = async (videoId: string) => {
       }
     }
   } catch (err) {
-    console.error('Error loading video:', err)
+    console.error('Error loading Vimeo video:', err)
   }
 }
 
-// Get player URL with autoplay
-const getPlayerUrl = (video: any) => {
+// Load video from Bunny
+const loadBunnyVideo = async (bunnyId: string) => {
+  try {
+    const response = await getBunnyVideo(bunnyId)
+    if (response) {
+      video.value = {
+        name: response.filename,
+        description: response.metadata?.description || null,
+        duration: response.metadata?.duration || 0,
+        created_time: response.createdAt,
+        playerUrl: response.videoUrl,
+      }
+      // Track view when video is loaded
+      if (!hasTrackedView.value) {
+        await trackView(token)
+        hasTrackedView.value = true
+      }
+    }
+  } catch (err) {
+    console.error('Error loading Bunny video:', err)
+  }
+}
+
+// Get Vimeo player URL with autoplay
+const getVimeoPlayerUrl = (video: any) => {
   if (!video?.player_embed_url) return ''
 
   const baseUrl = video.player_embed_url
   const autoplayParam = baseUrl.includes('?') ? '&autoplay=1' : '?autoplay=1'
   return `${baseUrl}${autoplayParam}`
+}
+
+// Get player URL (already computed in DisplayVideo)
+const getPlayerUrl = () => {
+  return video.value?.playerUrl || ''
 }
 
 // Toggle fullscreen
@@ -188,7 +244,7 @@ definePageMeta({
 
         <div class="w-full h-full">
           <iframe
-            :src="getPlayerUrl(video)"
+            :src="getPlayerUrl()"
             class="w-full h-full"
             frameborder="0"
             allow="autoplay; fullscreen; picture-in-picture"
@@ -206,7 +262,7 @@ definePageMeta({
 
         <div class="relative aspect-video bg-black mb-4 cursor-pointer rounded-lg overflow-hidden" @click="toggleFullscreen">
           <iframe
-            :src="getPlayerUrl(video)"
+            :src="getPlayerUrl()"
             class="w-full h-full"
             frameborder="0"
             allow="autoplay; fullscreen; picture-in-picture"

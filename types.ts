@@ -28,6 +28,8 @@ export interface TMDBMovie {
     media_type: string
     video_id?: string
     trailer_id?: string
+    bunny_id?: string           // Bunny media ID for main video
+    bunny_trailer_id?: string   // Bunny media ID for trailer
     runtime?: number
     director?: string
     producer?: string
@@ -43,6 +45,38 @@ export interface TMDBList {
     name: string
   }
 
+// Bunny.net Media Types
+export interface BunnyMedia {
+  id: string
+  filename: string
+  originalFilename: string
+  size: number
+  type: string
+  mimeType: string
+  projectId: string
+  clientId: string
+  path: string
+  status: 'uploading' | 'processing' | 'ready' | 'failed'
+  createdAt: string
+  updatedAt: string
+  bunnyVideoId: string
+  bunnyCollectionId: string
+  metadata: {
+    description?: string
+    duration: number
+    resolution: string
+    bunnyVideoStatus?: string
+    bunnyVideoStatusCode?: number
+  }
+  thumbnailUrl: string
+  previewUrl: string
+  videoUrl: string      // Embeddable iframe player URL
+  playlistUrl: string   // HLS playlist URL for custom players
+}
+
+// Video source type for unified handling
+export type VideoSource = 'vimeo' | 'bunny'
+
 // Press Link Types
 export interface PressLinkView {
   timestamp: number
@@ -57,6 +91,10 @@ export interface PressLink {
   videoId: string
   movieId: number
   movieTitle: string
+
+  // Bunny support
+  bunnyId?: string
+  videoSource?: VideoSource
 
   // Sender info
   createdBy: string
@@ -83,7 +121,9 @@ export interface PressLink {
 }
 
 export interface CreatePressLinkInput {
-  videoId: string
+  videoId?: string         // Vimeo ID (optional if using bunnyId)
+  bunnyId?: string         // Bunny media ID (optional if using videoId)
+  videoSource?: VideoSource
   movieId: number
   movieTitle: string
   recipientEmail: string
@@ -111,6 +151,8 @@ export interface PressLinkValidation {
   movieTitle?: string
   movieId?: number
   videoId?: string
+  bunnyId?: string
+  videoSource?: VideoSource
   message?: string
 }
 

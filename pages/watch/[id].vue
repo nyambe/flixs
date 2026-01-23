@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { BunnyMedia, VideoSource } from '~/types'
+
 interface VimeoVideo {
   uri: string;
   name: string;
@@ -25,24 +27,58 @@ interface VimeoVideo {
   status: string;
 }
 
+// Unified video type for display
+interface DisplayVideo {
+  name: string;
+  description: string | null;
+  duration: number;
+  created_time: string;
+  playerUrl: string;
+}
+
 const route = useRoute();
 const videoId = route.params.id as string
-const { getVideo, loading, error } = useVimeo();
+const videoSource = (route.query.source as VideoSource) || 'vimeo'
+
+const { getVideo: getVimeoVideo, loading: vimeoLoading, error: vimeoError } = useVimeo();
+const { getVideo: getBunnyVideo, loading: bunnyLoading, error: bunnyError } = useBunny();
 const { t } = useI18n();
 
-const video = ref<VimeoVideo | null>(null);
+const video = ref<DisplayVideo | null>(null);
 const isFullscreen = ref(true);
+const loading = computed(() => vimeoLoading.value || bunnyLoading.value);
+const error = computed(() => vimeoError.value || bunnyError.value);
 
 onMounted(async () => {
   try {
-    const response = await getVideo(videoId);
-    if (response && 'uri' in response) {
-      video.value = response as VimeoVideo;
+    if (videoSource === 'bunny') {
+      const response = await getBunnyVideo(videoId);
+      if (response) {
+        video.value = {
+          name: response.filename,
+          description: response.metadata?.description || null,
+          duration: response.metadata?.duration || 0,
+          created_time: response.createdAt,
+          playerUrl: response.videoUrl,
+        };
+      }
+    } else {
+      const response = await getVimeoVideo(videoId);
+      if (response && 'uri' in response) {
+        const vimeoVideo = response as VimeoVideo;
+        video.value = {
+          name: vimeoVideo.name,
+          description: vimeoVideo.description,
+          duration: vimeoVideo.duration,
+          created_time: vimeoVideo.created_time,
+          playerUrl: getVimeoPlayerUrl(vimeoVideo),
+        };
+      }
     }
   } catch (err) {
     console.error('Error fetching video:', err);
   }
-  
+
   // Listen for escape key to exit fullscreen
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -51,20 +87,23 @@ onMounted(async () => {
   });
 });
 
-// Add autoplay parameter to player URL
-const getPlayerUrl = (video: VimeoVideo) => {
+// Add autoplay parameter to Vimeo player URL
+const getVimeoPlayerUrl = (video: VimeoVideo) => {
   if (!video.player_embed_url) return '';
-  
-  // Base URL is already configured for private videos from the API
+
   const baseUrl = video.player_embed_url;
-  
-  // Add autoplay parameter if not already present
+
   if (!baseUrl.includes('autoplay=')) {
     const autoplayParam = baseUrl.includes('?') ? '&autoplay=1' : '?autoplay=1';
     return `${baseUrl}${autoplayParam}`;
   }
-  
+
   return baseUrl;
+};
+
+// Get player URL (already computed for display)
+const getPlayerUrl = () => {
+  return video.value?.playerUrl || '';
 };
 
 // Function to toggle fullscreen
@@ -105,7 +144,7 @@ definePageMeta({
     
     <div class="w-full h-full">
       <iframe
-        :src="getPlayerUrl(video)"
+        :src="getPlayerUrl()"
         class="w-full h-full"
         frameborder="0"
         allow="autoplay; fullscreen; picture-in-picture"
@@ -129,7 +168,7 @@ definePageMeta({
       
       <div class="relative aspect-video bg-black mb-4 cursor-pointer" @click="toggleFullscreen">
         <iframe
-          :src="getPlayerUrl(video)"
+          :src="getPlayerUrl()"
           class="w-full h-full"
           frameborder="0"
           allow="autoplay; fullscreen; picture-in-picture"

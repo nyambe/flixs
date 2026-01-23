@@ -62,6 +62,11 @@ export default defineNuxtConfig({
     resend: {
       apiKey: process.env.RESEND_API_KEY,
     },
+    bunny: {
+      apiUrl: process.env.BUNNY_API_URL,
+      apiKey: process.env.BUNNY_API_KEY,
+      projectId: process.env.BUNNY_PROJECT_ID,
+    },
     public: {
       baseUrl: process.env.BASE_URL || 'http://localhost:3000',
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || process.env.BASE_URL || 'http://localhost:3000',

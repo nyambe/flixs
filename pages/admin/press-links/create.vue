@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TMDBMovie } from '~/types'
+import type { TMDBMovie, VideoSource } from '~/types'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -12,6 +12,7 @@ const movies = getAllMovies()
 // Form data
 const formData = ref({
   movieId: 0,
+  videoSource: 'bunny' as VideoSource,  // Default to Bunny if available
   recipientName: '',
   recipientEmail: '',
   organization: '',
@@ -20,14 +21,45 @@ const formData = ref({
   notes: ''
 })
 
-// Selected movie (for getting video_id)
+// Selected movie (for getting video_id or bunny_id)
 const selectedMovie = computed(() => {
   return movies.find(m => m.id === formData.value.movieId)
+})
+
+// Check if selected movie has the chosen video source
+const hasSelectedVideoSource = computed(() => {
+  if (!selectedMovie.value) return false
+  if (formData.value.videoSource === 'bunny') {
+    return !!selectedMovie.value.bunny_id
+  }
+  return !!selectedMovie.value.video_id
+})
+
+// Available video sources for selected movie
+const availableVideoSources = computed(() => {
+  const sources: { value: VideoSource; label: string }[] = []
+  if (selectedMovie.value?.bunny_id) {
+    sources.push({ value: 'bunny', label: 'Bunny.net' })
+  }
+  if (selectedMovie.value?.video_id) {
+    sources.push({ value: 'vimeo', label: 'Vimeo' })
+  }
+  return sources
+})
+
+// Auto-select video source when movie changes
+watch(() => formData.value.movieId, () => {
+  if (selectedMovie.value?.bunny_id) {
+    formData.value.videoSource = 'bunny'
+  } else if (selectedMovie.value?.video_id) {
+    formData.value.videoSource = 'vimeo'
+  }
 })
 
 // Form validation
 const isValid = computed(() => {
   return formData.value.movieId > 0 &&
+         hasSelectedVideoSource.value &&
          formData.value.recipientName.trim() !== '' &&
          formData.value.recipientEmail.trim() !== '' &&
          formData.value.expirationDays > 0 &&
@@ -43,13 +75,17 @@ const expiresAt = computed(() => {
 
 // Submit form
 const handleSubmit = async () => {
-  if (!isValid.value || !selectedMovie.value?.video_id) {
+  if (!isValid.value || !selectedMovie.value) {
     alert(t('press.invalidForm'))
     return
   }
 
+  const isBunny = formData.value.videoSource === 'bunny'
+
   const result = await createPressLink({
-    videoId: selectedMovie.value.video_id,
+    videoId: isBunny ? undefined : selectedMovie.value.video_id,
+    bunnyId: isBunny ? selectedMovie.value.bunny_id : undefined,
+    videoSource: formData.value.videoSource,
     movieId: formData.value.movieId,
     movieTitle: selectedMovie.value.title,
     recipientName: formData.value.recipientName,
@@ -110,14 +146,43 @@ const handleSubmit = async () => {
               v-for="movie in movies"
               :key="movie.id"
               :value="movie.id"
-              :disabled="!movie.video_id"
+              :disabled="!movie.video_id && !movie.bunny_id"
               class="text-gray-900"
             >
-              {{ movie.title }} {{ movie.video_id ? '' : '(No video)' }}
+              {{ movie.title }}
+              <template v-if="movie.bunny_id && movie.video_id"> (Bunny + Vimeo)</template>
+              <template v-else-if="movie.bunny_id"> (Bunny)</template>
+              <template v-else-if="movie.video_id"> (Vimeo)</template>
+              <template v-else> (No video)</template>
             </option>
           </select>
-          <p v-if="selectedMovie && !selectedMovie.video_id" class="mt-1 text-sm text-red-600">
+          <p v-if="selectedMovie && !selectedMovie.video_id && !selectedMovie.bunny_id" class="mt-1 text-sm text-red-600">
             {{ t('press.noVideoIdError') }}
+          </p>
+        </div>
+
+        <!-- Video Source Selection (only show if movie has multiple sources) -->
+        <div v-if="selectedMovie && availableVideoSources.length > 1">
+          <label for="videoSource" class="block text-sm font-medium text-gray-700 mb-2">
+            Video Source *
+          </label>
+          <select
+            id="videoSource"
+            v-model="formData.videoSource"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
+          >
+            <option
+              v-for="source in availableVideoSources"
+              :key="source.value"
+              :value="source.value"
+              class="text-gray-900"
+            >
+              {{ source.label }}
+            </option>
+          </select>
+          <p class="mt-1 text-sm text-gray-500">
+            Select which video platform to use for this press link
           </p>
         </div>
 
