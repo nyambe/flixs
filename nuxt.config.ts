@@ -32,7 +32,8 @@ export default defineNuxtConfig({
     hydration: false,
   },
   nitro: {
-    preset: 'vercel',
+    // Preset is auto-detected by Vercel - don't hardcode it
+    // This prevents local builds from generating .vercel/output/
     rollupConfig: {
       external: ['crypto', 'node:crypto', 'string_decoder', 'node:string_decoder']
     }
