@@ -76,8 +76,9 @@ export default defineEventHandler(async (event): Promise<BunnyMedia> => {
     })
 
     // Construct playback URLs from bunnyVideoId if not provided by backend
+    // Use /embed/ endpoint with autoplay and preload for proper playback
     const bunnyVideoId = media.bunnyVideoId
-    const videoUrl = media.videoUrl || `https://iframe.mediadelivery.net/play/${BUNNY_LIBRARY_ID}/${bunnyVideoId}`
+    const videoUrl = media.videoUrl || `https://iframe.mediadelivery.net/embed/${BUNNY_LIBRARY_ID}/${bunnyVideoId}?autoplay=true&preload=true`
     const thumbnailUrl = media.thumbnailUrl || `https://${BUNNY_CDN_HOSTNAME}/${bunnyVideoId}/thumbnail.jpg`
     const previewUrl = media.previewUrl || `https://${BUNNY_CDN_HOSTNAME}/${bunnyVideoId}/preview.webp`
     const playlistUrl = media.playlistUrl || `https://${BUNNY_CDN_HOSTNAME}/${bunnyVideoId}/playlist.m3u8`

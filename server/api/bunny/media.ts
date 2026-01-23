@@ -55,7 +55,7 @@ function constructUrls(media: BunnyMediaRaw): BunnyMedia {
   const bunnyVideoId = media.bunnyVideoId
   return {
     ...media,
-    videoUrl: media.videoUrl || `https://iframe.mediadelivery.net/play/${BUNNY_LIBRARY_ID}/${bunnyVideoId}`,
+    videoUrl: media.videoUrl || `https://iframe.mediadelivery.net/embed/${BUNNY_LIBRARY_ID}/${bunnyVideoId}?autoplay=true&preload=true`,
     thumbnailUrl: media.thumbnailUrl || `https://${BUNNY_CDN_HOSTNAME}/${bunnyVideoId}/thumbnail.jpg`,
     previewUrl: media.previewUrl || `https://${BUNNY_CDN_HOSTNAME}/${bunnyVideoId}/preview.webp`,
     playlistUrl: media.playlistUrl || `https://${BUNNY_CDN_HOSTNAME}/${bunnyVideoId}/playlist.m3u8`,

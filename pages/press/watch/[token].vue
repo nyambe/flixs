@@ -8,6 +8,8 @@ interface DisplayVideo {
   duration: number
   created_time: string
   playerUrl: string
+  playlistUrl?: string  // HLS playlist for Bunny
+  thumbnailUrl?: string
 }
 
 const route = useRoute()
@@ -109,6 +111,8 @@ const loadBunnyVideo = async (bunnyId: string) => {
         duration: response.metadata?.duration || 0,
         created_time: response.createdAt,
         playerUrl: response.videoUrl,
+        playlistUrl: response.playlistUrl,
+        thumbnailUrl: response.thumbnailUrl,
       }
       // Track view when video is loaded
       if (!hasTrackedView.value) {
@@ -242,12 +246,22 @@ definePageMeta({
           </button>
         </div>
 
-        <div class="w-full h-full">
+        <!-- Video player wrapper for fullscreen -->
+        <div class="w-full h-full relative">
+          <!-- Bunny HLS Player -->
+          <BunnyPlayer
+            v-if="videoSource === 'bunny' && video?.playlistUrl"
+            :playlist-url="video.playlistUrl"
+            :poster="video.thumbnailUrl"
+            :autoplay="true"
+          />
+          <!-- Vimeo iframe -->
           <iframe
+            v-else
             :src="getPlayerUrl()"
-            class="w-full h-full"
-            frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
+            loading="lazy"
+            style="border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
             allowfullscreen
           ></iframe>
         </div>
@@ -260,21 +274,25 @@ definePageMeta({
           <p v-if="video.description" class="text-gray-300">{{ video.description }}</p>
         </div>
 
-        <div class="relative aspect-video bg-black mb-4 cursor-pointer rounded-lg overflow-hidden" @click="toggleFullscreen">
+        <!-- Video player - 16:9 aspect ratio -->
+        <div class="relative bg-black mb-4 rounded-lg overflow-hidden" style="padding-top: 56.25%;">
+          <!-- Bunny HLS Player -->
+          <div v-if="videoSource === 'bunny' && video?.playlistUrl" class="absolute inset-0">
+            <BunnyPlayer
+              :playlist-url="video.playlistUrl"
+              :poster="video.thumbnailUrl"
+              :autoplay="true"
+            />
+          </div>
+          <!-- Vimeo iframe -->
           <iframe
+            v-else
             :src="getPlayerUrl()"
-            class="w-full h-full"
-            frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
+            loading="lazy"
+            style="border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
             allowfullscreen
           ></iframe>
-          <div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-            <button class="bg-white/90 rounded-full p-3 transform hover:scale-110 transition-transform">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
-              </svg>
-            </button>
-          </div>
         </div>
 
         <div class="flex items-center text-sm text-gray-400 mb-6">
