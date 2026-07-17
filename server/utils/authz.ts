@@ -4,7 +4,7 @@
 
 import type { H3Event } from 'h3'
 import type { DecodedIdToken } from 'firebase-admin/auth'
-import { adminAuth } from './firebase-admin'
+import { adminAuth, adminDb } from './firebase-admin'
 
 // Verifies the Bearer token and returns the decoded Firebase user. Throws 401 otherwise.
 export async function requireUser(event: H3Event): Promise<DecodedIdToken> {
@@ -24,6 +24,26 @@ export async function requireUser(event: H3Event): Promise<DecodedIdToken> {
       message: 'Invalid authorization token',
     })
   }
+}
+
+// Requires a signed-in user that is either an admin or has an active subscription
+// (users/{uid}.subscription.active in Firestore, maintained by the Stripe flow).
+export async function requireSubscriberOrAdmin(event: H3Event): Promise<DecodedIdToken> {
+  const user = await requireUser(event)
+
+  if (user.admin === true) {
+    return user
+  }
+
+  const userDoc = await adminDb.collection('users').doc(user.uid).get()
+  if (userDoc.data()?.subscription?.active === true) {
+    return user
+  }
+
+  throw createError({
+    statusCode: 403,
+    message: 'Active subscription required',
+  })
 }
 
 // Requires a signed-in user with the { admin: true } custom claim. Throws 401/403 otherwise.

@@ -2,16 +2,25 @@
 import type { BunnyMedia } from '~/types'
 
 export const useBunny = () => {
+  const { $firebase } = useNuxtApp()
   const loading = ref(false)
   const error = ref<string | null>(null)
 
-  // Get all videos from Bunny
+  // Bearer token of the signed-in user (subscriber or admin), if any
+  const authHeaders = async (): Promise<Record<string, string>> => {
+    const user = $firebase.auth.currentUser
+    return user ? { Authorization: `Bearer ${await user.getIdToken()}` } : {}
+  }
+
+  // Get all videos from Bunny (admin only)
   const getVideos = async (): Promise<BunnyMedia[]> => {
     loading.value = true
     error.value = null
 
     try {
-      const videos = await $fetch<BunnyMedia[]>('/api/bunny/media')
+      const videos = await $fetch<BunnyMedia[]>('/api/bunny/media', {
+        headers: await authHeaders(),
+      })
       return videos
     } catch (err: Error | unknown) {
       console.error('Bunny API error:', err)
@@ -22,13 +31,18 @@ export const useBunny = () => {
     }
   }
 
-  // Get a single video by ID
-  const getVideo = async (id: string): Promise<BunnyMedia | null> => {
+  // Get a single video by ID.
+  // Auth: session token of a subscriber/admin, or a press link token for this video.
+  const getVideo = async (id: string, pressToken?: string): Promise<BunnyMedia | null> => {
     loading.value = true
     error.value = null
 
     try {
-      const video = await $fetch<BunnyMedia>(`/api/bunny/media/${id}`)
+      const headers = pressToken
+        ? { 'x-press-token': pressToken }
+        : await authHeaders()
+
+      const video = await $fetch<BunnyMedia>(`/api/bunny/media/${id}`, { headers })
       return video
     } catch (err: Error | unknown) {
       console.error('Bunny API error:', err)
