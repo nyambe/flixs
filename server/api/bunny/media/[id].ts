@@ -1,5 +1,9 @@
 // server/api/bunny/media/[id].ts
 // Proxy endpoint to fetch a single media item from Bunny backend API
+import { requireSubscriberOrAdmin } from '~/server/utils/authz'
+import { adminDb } from '~/server/utils/firebase-admin'
+import { isLinkValid } from '~/server/utils/pressLink'
+import type { PressLink } from '~/types'
 
 // Raw response from backend API (may not include computed URLs)
 interface BunnyMediaRaw {
@@ -51,6 +55,27 @@ export default defineEventHandler(async (event): Promise<BunnyMedia> => {
       statusCode: 400,
       message: 'Media ID is required',
     })
+  }
+
+  // Access: a valid press link token for this exact video, or an active subscriber/admin
+  const pressToken = getHeader(event, 'x-press-token')
+  if (pressToken) {
+    const snapshot = await adminDb.collection('pressLinks')
+      .where('token', '==', pressToken)
+      .limit(1)
+      .get()
+
+    const link = snapshot.empty ? null : (snapshot.docs[0].data() as PressLink)
+    const { valid } = isLinkValid(link)
+
+    if (!valid || link?.bunnyId !== mediaId) {
+      throw createError({
+        statusCode: 403,
+        message: 'Invalid press link for this video',
+      })
+    }
+  } else {
+    await requireSubscriberOrAdmin(event)
   }
 
   const apiUrl = config.bunny.apiUrl as string

@@ -1,5 +1,6 @@
 // server/api/bunny/media.ts
 // Proxy endpoint to fetch all media from Bunny backend API
+import { requireAdmin } from '~/server/utils/authz'
 
 interface BunnyMediaResponse {
   data: BunnyMediaRaw[]
@@ -62,7 +63,10 @@ function constructUrls(media: BunnyMediaRaw): BunnyMedia {
   }
 }
 
-export default defineEventHandler(async (): Promise<BunnyMedia[]> => {
+export default defineEventHandler(async (event): Promise<BunnyMedia[]> => {
+  // Full catalog listing is an admin tool (subscribers browse via the movies catalog)
+  await requireAdmin(event)
+
   const config = useRuntimeConfig()
 
   const apiUrl = config.bunny.apiUrl as string

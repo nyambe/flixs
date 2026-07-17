@@ -103,7 +103,7 @@ const loadVimeoVideo = async (videoId: string) => {
 // Load video from Bunny
 const loadBunnyVideo = async (bunnyId: string) => {
   try {
-    const response = await getBunnyVideo(bunnyId)
+    const response = await getBunnyVideo(bunnyId, token)
     if (response) {
       video.value = {
         name: response.filename,
