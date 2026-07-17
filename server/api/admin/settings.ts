@@ -1,4 +1,5 @@
 import { stripe } from '~/server/utils/stripe';
+import { requireAdmin } from '~/server/utils/authz';
 
 interface StripePlan {
   id: string;
@@ -27,15 +28,10 @@ interface SettingsResponse {
 }
 
 export default defineEventHandler(async (event): Promise<SettingsResponse> => {
-  // Verify the user is an admin
-  const { user } = event.context.auth || {};
-  
-  if (!user || !user.email?.includes('developer')) {
-    throw createError({
-      statusCode: 403,
-      message: 'Unauthorized access - admin privileges required',
-    });
-  }
+  // Verify the user is an admin (custom claim { admin: true })
+  // Note: the auth middleware only fills event.context.auth for /api/protected/**,
+  // so this endpoint validates its own Bearer token like the rest of /api/admin.
+  await requireAdmin(event);
   
   try {
     // Get Stripe plans
