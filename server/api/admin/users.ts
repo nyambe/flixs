@@ -1,4 +1,5 @@
 import { adminAuth, adminDb } from '~/server/utils/firebase-admin';
+import { requireAdmin } from '~/server/utils/authz';
 
 interface User {
   id: string;
@@ -21,34 +22,8 @@ interface User {
 }
 
 export default defineEventHandler(async (event): Promise<User[]> => {
-  // Get the authorization header
-  const authHeader = getHeader(event, 'authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    throw createError({
-      statusCode: 401,
-      message: 'Missing or invalid authorization token',
-    });
-  }
-
-  // Extract and verify the Firebase ID token
-  const idToken = authHeader.split('Bearer ')[1];
-  let adminUser;
-  try {
-    adminUser = await adminAuth.verifyIdToken(idToken);
-  } catch (error) {
-    throw createError({
-      statusCode: 401,
-      message: 'Invalid authorization token',
-    });
-  }
-
-  // Verify the user is an admin
-  if (!adminUser.email?.includes('developer')) {
-    throw createError({
-      statusCode: 403,
-      message: 'Unauthorized access - admin privileges required',
-    });
-  }
+  // Verify the user is an admin (custom claim { admin: true })
+  await requireAdmin(event);
 
   try {
     // Get all users from Firebase Auth
