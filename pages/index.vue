@@ -41,7 +41,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="bg-black text-white">
+  <div class="bg-white dark:bg-black text-black dark:text-white">
     <!-- Trailer Modal -->
     <TrailerModal 
       v-model:open="showTrailer" 
@@ -49,7 +49,7 @@ useSeoMeta({
     />
     
     <!-- Hero Section for logged-in users OR when newsletter is disabled -->
-    <section v-if="currentUser || !appConfig.features.newsletter.showOnHomepage" class="relative min-h-[60vh] overflow-hidden">
+    <section v-if="currentUser || !appConfig.features.newsletter.showOnHomepage" class="relative min-h-[60vh] overflow-hidden text-white">
       <div class="absolute inset-0">
         <div :class="backdropAspectRatio" class="w-full ">
           <img 
@@ -111,7 +111,7 @@ useSeoMeta({
     />
 
     <!-- Featured Categories Section -->
-    <section class="py-16 bg-black">
+    <section class="py-16 bg-white dark:bg-black">
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold mb-8">{{ t('Las Joyas de MOABA') }}</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -128,7 +128,7 @@ useSeoMeta({
                 class="w-full h-full object-cover rounded-lg transition transform group-hover:scale-105"
               >
             </div>
-            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-lg">
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-lg text-white">
               <div class="absolute bottom-0 p-4 w-full">
                 <h3 class="text-lg font-semibold">{{ movie.title }}</h3>
                 <div class="flex items-center mt-1">
@@ -143,7 +143,7 @@ useSeoMeta({
     </section>
 
     <!-- Sponsors/Patrocinadores Section -->
-    <section class="py-16 bg-black">
+    <section class="py-16 bg-white dark:bg-black">
       <div class="container mx-auto px-4">
         <h2 class="text-xl font-bold mb-8">{{ t('Patrocinadores') }}</h2>
         <div class="flex justify-center">

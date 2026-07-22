@@ -9,7 +9,7 @@ const shouldShowNotification = computed(() => {
 
 <template>
   <UApp>
-    <div class="min-h-screen bg-black text-white">
+    <div class="min-h-screen bg-white dark:bg-black text-black dark:text-white">
       <SiteNavigation />
       <SiteNotification v-if="shouldShowNotification" />
         

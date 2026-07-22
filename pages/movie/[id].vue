@@ -61,7 +61,7 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="bg-black text-white">
+  <div class="bg-white dark:bg-black text-white">
     <!-- Trailer Modal -->
     <TrailerModal 
       v-model:open="showTrailer" 

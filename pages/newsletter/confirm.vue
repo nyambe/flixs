@@ -50,12 +50,12 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="min-h-screen bg-black text-white flex items-center justify-center p-4">
+  <div class="min-h-screen bg-white dark:bg-black text-black dark:text-white flex items-center justify-center p-4">
     <div class="max-w-md w-full">
       <!-- Loading State -->
       <div v-if="isLoading" class="text-center">
         <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400 mb-4"></div>
-        <p class="text-neutral-300">{{ t('Confirmando tu suscripción...') }}</p>
+        <p class="text-neutral-600 dark:text-neutral-300">{{ t('Confirmando tu suscripción...') }}</p>
       </div>
 
       <!-- Success State -->
@@ -67,7 +67,7 @@ useSeoMeta({
         </div>
         
         <h1 class="text-2xl font-bold mb-4">{{ t('¡Suscripción Confirmada!') }}</h1>
-        <p class="text-neutral-300 mb-6">{{ confirmationResult.message }}</p>
+        <p class="text-neutral-600 dark:text-neutral-300 mb-6">{{ confirmationResult.message }}</p>
         
         <div class="space-y-4">
           <UButton
@@ -98,7 +98,7 @@ useSeoMeta({
         </div>
         
         <h1 class="text-2xl font-bold mb-4">{{ t('Error de Confirmación') }}</h1>
-        <p class="text-neutral-300 mb-6">{{ confirmationResult?.message }}</p>
+        <p class="text-neutral-600 dark:text-neutral-300 mb-6">{{ confirmationResult?.message }}</p>
         
         <div class="space-y-4">
           <UButton

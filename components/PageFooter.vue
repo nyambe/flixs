@@ -76,7 +76,7 @@ const copyright = computed(() => `© ${currentYear} MoabaTV. ${t('All rights res
 </script>
 
 <template>
-  <footer class="bg-black text-neutral-content py-14 mt-auto w-full">
+  <footer class="bg-white dark:bg-black text-black dark:text-white py-14 mt-auto w-full">
     <div class="container mx-auto px-4">
       <div class="flex flex-col md:flex-row justify-between">
         <!-- Brand and Social Media -->
