@@ -38,6 +38,17 @@ export default defineNuxtConfig({
       external: ['crypto', 'node:crypto', 'string_decoder', 'node:string_decoder']
     }
   },
+  hooks: {
+    'pages:extend'(pages) {
+      // /colors is an internal palette showcase; drop it (and its localized
+      // i18n copies) from production builds so it isn't publicly reachable.
+      if (process.env.NODE_ENV === 'production') {
+        for (let i = pages.length - 1; i >= 0; i--) {
+          if (pages[i].path.endsWith('/colors')) pages.splice(i, 1)
+        }
+      }
+    }
+  },
   runtimeConfig: {
     // Server-side environment variables
     tmdbToken: process.env.TMDB_TOKEN,
