@@ -60,7 +60,7 @@ const handleSkip = () => {
 </script>
 
 <template>
-  <section class="relative min-h-[80vh] overflow-hidden">
+  <section class="relative min-h-[80vh] overflow-hidden text-white">
     <!-- Background with overlay -->
     <div class="absolute inset-0">
       <div class="w-full aspect-[16/9]">
