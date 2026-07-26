@@ -1,6 +1,15 @@
 // Test script for newsletter functionality
-const testEmail = 'samuel.ebuka@gmail.com' // Use your verified email for testing
-const testUrl = 'https://flixs.vercel.app/api/newsletter/subscribe'
+// Targets local/staging by default — never production, to avoid writing test data into real systems.
+// Override with TEST_NEWSLETTER_BASE_URL if you need to point at a staging deployment.
+const baseUrl = process.env.TEST_NEWSLETTER_BASE_URL || 'http://localhost:3000'
+
+if (baseUrl.includes('flixs.vercel.app') || baseUrl.includes('flixs-git-main-sebukas-projects.vercel.app')) {
+  console.error('❌ Refusing to run against production. Use TEST_NEWSLETTER_BASE_URL to target local or staging instead.')
+  process.exit(1)
+}
+
+const testEmail = process.env.TEST_NEWSLETTER_EMAIL || 'test@example.com'
+const testUrl = `${baseUrl}/api/newsletter/subscribe`
 
 const testData = {
   email: testEmail,
