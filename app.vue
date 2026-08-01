@@ -20,7 +20,7 @@ const shouldShowNotification = computed(() => {
 </template>
 
 <style>
-div {
+body {
   font-family: 'Montserrat', sans-serif;
 }
 </style>

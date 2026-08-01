@@ -4,6 +4,16 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/tailwind.css'],
   modules: ['@nuxt/ui', '@nuxt/fonts', '@nuxt/eslint', '@nuxtjs/i18n'],
+  fonts: {
+    families: [
+      {
+        name: 'Montserrat',
+        provider: 'google',
+        weights: ['400', '500', '600', '700'],
+        global: true
+      }
+    ]
+  },
   i18n: {
     defaultLocale: 'es',
     locales: [
