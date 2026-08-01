@@ -56,7 +56,7 @@ useSeoMeta({
           <UButton
             size="lg"
             color="primary"
-            class="w-full bg-amber-400 hover:bg-amber-500"
+            class="w-full bg-brand hover:bg-brand-focus"
             :label="t('Volver al Inicio')"
             @click="router.push('/')"
           />
@@ -87,7 +87,7 @@ useSeoMeta({
             :placeholder="t('Tu correo electrónico')"
             :class="[
               'w-full py-4 px-6 rounded-md bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white border transition-colors',
-              emailError ? 'border-red-500 focus:ring-red-400' : 'border-neutral-300 dark:border-neutral-700 focus:ring-amber-400',
+              emailError ? 'border-red-500 focus:ring-red-400' : 'border-neutral-300 dark:border-neutral-700 focus:ring-brand',
               'focus:outline-none focus:ring-2'
             ]"
           />

@@ -20,9 +20,6 @@ const shouldShowNotification = computed(() => {
 </template>
 
 <style>
-.backdrop-blur {
-  backdrop-filter: blur(8px);
-}
 body {
   font-family: 'Montserrat', sans-serif;
 }

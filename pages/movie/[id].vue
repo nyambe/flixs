@@ -102,7 +102,7 @@ definePageMeta({
             </h1>
             <div class="flex items-center gap-4 mb-6">
               <span class="flex items-center text-lg xl:text-xl">
-                <span class="text-yellow-400 mr-1">★</span>
+                <span class="text-brand mr-1">★</span>
                 {{ movie?.vote_average.toFixed(1) }}
               </span>
               <span v-if="movie?.release_date" class="text-lg xl:text-xl">{{ new Date(movie?.release_date).getFullYear() }}</span>
@@ -141,7 +141,7 @@ definePageMeta({
                 color="primary"
                 :label="t('Play')"
                 icon="i-heroicons-play"
-                class="bg-amber-400 hover:bg-amber-500"
+                class="bg-brand hover:bg-brand-focus"
                 @click="togglePlay"
               />
               <UButton
