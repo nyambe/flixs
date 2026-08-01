@@ -27,9 +27,15 @@ export const useMovieData = () => {
       return shuffled.slice(0, 8)
     }
     
+    // Computed once on the server and reused on the client via the Nuxt
+    // payload, so hydration doesn't re-roll Math.random() and mismatch
+    // the server-rendered movie/order.
+    const featuredMovie = useState<TMDBMovie>('featuredMovie', getFeaturedMovie)
+    const popularMovies = useState<TMDBMovie[]>('popularMovies', getPopularMovies)
+
     return {
-        featuredMovie: getFeaturedMovie(),
-        popularMovies: getPopularMovies(),
+        featuredMovie: featuredMovie.value,
+        popularMovies: popularMovies.value,
         getMovieById,
         getAllMovies
     }
