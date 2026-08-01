@@ -76,12 +76,12 @@ const copyright = computed(() => `© ${currentYear} MoabaTV. ${t('All rights res
 </script>
 
 <template>
-  <footer class="bg-white dark:bg-black text-black dark:text-white py-14 mt-auto w-full">
+  <footer class="bg-canvas dark:bg-black text-black dark:text-white py-14 mt-auto w-full">
     <div class="container mx-auto px-4">
       <div class="flex flex-col md:flex-row justify-between">
         <!-- Brand and Social Media -->
         <div class="mb-8 md:mb-0">
-          <div class="text-brand font-bold text-lg md:text-xl mb-6">MOABA CINEMA TV</div>
+          <div class="text-amber-700 dark:text-brand font-bold text-lg md:text-xl mb-6">MOABA CINEMA TV</div>
           <!-- Social Media Links -->
           <div class="flex space-x-6">
             <a 
@@ -90,7 +90,7 @@ const copyright = computed(() => `© ${currentYear} MoabaTV. ${t('All rights res
               :href="social.url" 
               target="_blank" 
               rel="noopener noreferrer"
-              class="hover:text-brand transition text-md"
+              class="hover:text-amber-700 dark:hover:text-brand transition text-md"
               :aria-label="social.name"
             >
               <UIcon :name="social.icon" class="w-6 h-6" />
@@ -101,12 +101,12 @@ const copyright = computed(() => `© ${currentYear} MoabaTV. ${t('All rights res
         <!-- Footer Sections -->
         <div class="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-16">
           <div v-for="section in footerSections" :key="section.title">
-            <h3 class="text-sm font-semibold text-brand mb-4">{{ section.title }}</h3>
+            <h3 class="text-sm font-semibold text-amber-700 dark:text-brand mb-4">{{ section.title }}</h3>
             <ul class="space-y-3">
               <li v-for="link in section.links" :key="link.path">
                 <NuxtLink 
                   :to="link.path" 
-                  class="text-sm hover:text-brand transition"
+                  class="text-sm hover:text-amber-700 dark:hover:text-brand transition"
                 >
                   {{ link.label }}
                 </NuxtLink>
@@ -118,7 +118,7 @@ const copyright = computed(() => `© ${currentYear} MoabaTV. ${t('All rights res
 
       
       <!-- Copyright -->
-      <div class="mt-6 text-sm text-brand-focus">
+      <div class="mt-6 text-sm text-amber-700 dark:text-brand-focus">
         <p>{{ copyright }}</p>
       </div>
     </div>

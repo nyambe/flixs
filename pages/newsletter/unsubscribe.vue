@@ -39,7 +39,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-black text-black dark:text-white flex items-center justify-center p-4">
+  <div class="min-h-screen bg-canvas dark:bg-black text-black dark:text-white flex items-center justify-center p-4">
     <div class="max-w-md w-full">
       <!-- Success State -->
       <div v-if="showSuccess" class="text-center">

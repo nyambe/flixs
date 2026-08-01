@@ -35,10 +35,10 @@ const currentYear = new Date().getFullYear()
         <h2 class="text-2xl font-semibold mb-3">4. ¿CÓMO GESTIONAR Y DESACTIVAR LAS COOKIES?</h2>
         <p class="mb-3">El usuario puede configurar su navegador para aceptar, rechazar o eliminar cookies en cualquier momento. A continuación, se indican enlaces a la configuración de los principales navegadores:</p>
         <ul class="list-disc ml-6 space-y-2">
-          <li><strong>Google Chrome:</strong> <a href="https://support.google.com/chrome/answer/95647" target="_blank" class="text-brand hover:underline">Administrar cookies</a></li>
-          <li><strong>Mozilla Firefox:</strong> <a href="https://support.mozilla.org/es/kb/habilitar-y-deshabilitar-cookies-sitios-web-rastrear-preferencias" target="_blank" class="text-brand hover:underline">Administrar cookies</a></li>
-          <li><strong>Microsoft Edge:</strong> <a href="https://support.microsoft.com/es-es/microsoft-edge/eliminar-las-cookies-en-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" class="text-brand hover:underline">Administrar cookies</a></li>
-          <li><strong>Safari:</strong> <a href="https://support.apple.com/es-es/guide/safari/sfri11471/mac" target="_blank" class="text-brand hover:underline">Administrar cookies</a></li>
+          <li><strong>Google Chrome:</strong> <a href="https://support.google.com/chrome/answer/95647" target="_blank" class="text-amber-700 dark:text-brand hover:underline">Administrar cookies</a></li>
+          <li><strong>Mozilla Firefox:</strong> <a href="https://support.mozilla.org/es/kb/habilitar-y-deshabilitar-cookies-sitios-web-rastrear-preferencias" target="_blank" class="text-amber-700 dark:text-brand hover:underline">Administrar cookies</a></li>
+          <li><strong>Microsoft Edge:</strong> <a href="https://support.microsoft.com/es-es/microsoft-edge/eliminar-las-cookies-en-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" class="text-amber-700 dark:text-brand hover:underline">Administrar cookies</a></li>
+          <li><strong>Safari:</strong> <a href="https://support.apple.com/es-es/guide/safari/sfri11471/mac" target="_blank" class="text-amber-700 dark:text-brand hover:underline">Administrar cookies</a></li>
         </ul>
         <p class="mt-3">La desactivación de ciertas cookies puede afectar el funcionamiento de la Plataforma.</p>
       </section>
@@ -55,7 +55,7 @@ const currentYear = new Date().getFullYear()
       
       <section class="mb-6">
         <h2 class="text-2xl font-semibold mb-3">7. CONTACTO</h2>
-        <p>Para cualquier duda sobre nuestra Política de Cookies, puede contactarnos en <a href="mailto:moabacinematv@gmail.com" class="text-brand hover:underline">moabacinematv@gmail.com</a>.</p>
+        <p>Para cualquier duda sobre nuestra Política de Cookies, puede contactarnos en <a href="mailto:moabacinematv@gmail.com" class="text-amber-700 dark:text-brand hover:underline">moabacinematv@gmail.com</a>.</p>
       </section>
       
       <div class="mt-6 text-right text-sm text-neutral-500">
@@ -64,8 +64,8 @@ const currentYear = new Date().getFullYear()
     </div>
     
     <div class="mt-12 flex justify-center space-x-4">
-      <NuxtLink to="/legal" class="text-brand hover:underline">Aviso Legal</NuxtLink>
-      <NuxtLink to="/privacy" class="text-brand hover:underline">Política de Privacidad</NuxtLink>
+      <NuxtLink to="/legal" class="text-amber-700 dark:text-brand hover:underline">Aviso Legal</NuxtLink>
+      <NuxtLink to="/privacy" class="text-amber-700 dark:text-brand hover:underline">Política de Privacidad</NuxtLink>
     </div>
   </div>
 </template>

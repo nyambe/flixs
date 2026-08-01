@@ -55,7 +55,7 @@ const goToMovies = () => {
 
 <template>
   <div class="max-w-md mx-auto mt-16 mb-20">
-    <h1 v-if="!error" class="text-3xl font-bold text-brand-focus mb-6">{{ t('Payment Successful') }}</h1>
+    <h1 v-if="!error" class="text-3xl font-bold text-amber-700 dark:text-brand-focus mb-6">{{ t('Payment Successful') }}</h1>
 
     <UAlert v-if="error" color="red" class="mb-4" :title="error" />
 
@@ -65,7 +65,7 @@ const goToMovies = () => {
         <p class="text-neutral-content mt-2">{{ t('Verifying your payment...') }}</p>
       </div>
       <div v-else-if="!error" class="space-y-4">
-        <p class="text-brand-focus">
+        <p class="text-amber-700 dark:text-brand-focus">
           {{ t('Thank you for your subscription! Your plan is now active.') }}
         </p>
       </div>

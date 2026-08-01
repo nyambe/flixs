@@ -12,7 +12,7 @@ definePageMeta({
 <template>
   <div>
    <!-- Featured Categories Section -->
-   <section class="py-16 bg-white dark:bg-black">
+   <section class="py-16 bg-canvas dark:bg-black">
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold mb-8">African Film Festival</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">

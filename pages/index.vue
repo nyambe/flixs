@@ -41,7 +41,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="bg-white dark:bg-black text-black dark:text-white">
+  <div class="bg-canvas dark:bg-black text-black dark:text-white">
     <!-- Trailer Modal -->
     <TrailerModal 
       v-model:open="showTrailer" 
@@ -111,7 +111,7 @@ useSeoMeta({
     />
 
     <!-- Featured Categories Section -->
-    <section class="py-16 bg-white dark:bg-black">
+    <section class="py-16 bg-canvas dark:bg-black">
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold mb-8">{{ t('Las Joyas de MOABA') }}</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -143,7 +143,7 @@ useSeoMeta({
     </section>
 
     <!-- Sponsors/Patrocinadores Section -->
-    <section class="py-16 bg-white dark:bg-black">
+    <section class="py-16 bg-amber-50 dark:bg-black">
       <div class="container mx-auto px-4">
         <h2 class="text-xl font-bold mb-8">{{ t('Patrocinadores') }}</h2>
         <div class="flex justify-center">
