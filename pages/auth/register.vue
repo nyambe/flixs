@@ -126,7 +126,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
             />
           </div>
           <template #help>
-            <NuxtLink to="/privacy" class="text-amber-400 hover:text-amber-300 underline text-sm">
+            <NuxtLink to="/privacy" class="text-brand hover:text-brand-focus underline text-sm">
               {{ t('Read our privacy policy') }}
             </NuxtLink>
           </template>

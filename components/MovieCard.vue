@@ -2,6 +2,6 @@
   size="sm"
   color="primary"
   icon="i-heroicons-play"
-  class="bg-amber-400 hover:bg-amber-500 text-black"
+  class="bg-brand hover:bg-brand-focus text-brand-content"
   @click.stop="() => navigateTo(`/movie/${movie.id}`)"
 /> 
