@@ -77,7 +77,7 @@ useSeoMeta({
               color="primary"
               :label="t('Play')"
               icon="i-heroicons-play"
-              class="bg-amber-400 hover:bg-amber-500"
+              class="bg-brand hover:bg-brand-focus"
               @click="navigateTo(`/watch/${featuredMovie.video_id}`)"
             />
             <UButton
@@ -132,7 +132,7 @@ useSeoMeta({
               <div class="absolute bottom-0 p-4 w-full">
                 <h3 class="text-lg font-semibold">{{ movie.title }}</h3>
                 <div class="flex items-center mt-1">
-                  <span class="text-yellow-400">★</span>
+                  <span class="text-brand">★</span>
                   <span class="ml-1">{{ movie.vote_average.toFixed(1) }}</span>
                 </div>
               </div>
@@ -157,9 +157,3 @@ useSeoMeta({
     </section>
   </div>
 </template>
-
-<style>
-.backdrop-blur {
-  backdrop-filter: blur(8px);
-}
-</style>

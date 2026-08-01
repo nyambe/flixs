@@ -76,7 +76,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UButton
           type="submit"
           color="primary"
-          class="bg-amber-400 hover:bg-amber-500 text-black"
+          class="bg-brand hover:bg-brand-focus text-brand-content"
           :loading="loading"
           :disabled="loading"
         >

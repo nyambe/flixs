@@ -62,7 +62,7 @@ const closeNotification = (e: Event) => {
   >
     <div
       v-if="isVisible"
-      class="w-full bg-amber-400 text-black py-3 px-4 cursor-pointer shadow-lg"
+      class="w-full bg-brand text-brand-content py-3 px-4 cursor-pointer shadow-lg"
       @click="handleNotificationClick"
     >
       <div class="container mx-auto flex items-center justify-between">
