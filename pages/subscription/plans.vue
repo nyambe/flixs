@@ -106,7 +106,7 @@ const selectPlan = async (priceId: string) => {
 </script>
 
 <template>
-  <div class="bg-white dark:bg-black min-h-screen py-16 px-4">
+  <div class="bg-canvas dark:bg-black min-h-screen py-16 px-4">
     <div class="max-w-7xl mx-auto">
       <h1 class="text-4xl font-bold text-center text-black dark:text-white mb-4">{{ t('Choose Your Plan') }}</h1>
       <p class="text-lg text-center text-neutral-600 dark:text-neutral-300 mb-12 max-w-2xl mx-auto">

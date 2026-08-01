@@ -74,9 +74,9 @@
     </div>
     
     <div class="mt-12 flex justify-center space-x-4">
-      <NuxtLink to="/privacy" class="text-brand hover:underline">Política de Privacidad</NuxtLink>
-      <NuxtLink to="/legal" class="text-brand hover:underline">Aviso Legal</NuxtLink>
-      <NuxtLink to="/cookies" class="text-brand hover:underline">Política de Cookies</NuxtLink>
+      <NuxtLink to="/privacy" class="text-amber-700 dark:text-brand hover:underline">Política de Privacidad</NuxtLink>
+      <NuxtLink to="/legal" class="text-amber-700 dark:text-brand hover:underline">Aviso Legal</NuxtLink>
+      <NuxtLink to="/cookies" class="text-amber-700 dark:text-brand hover:underline">Política de Cookies</NuxtLink>
     </div>
   </div>
 </template>

@@ -47,7 +47,7 @@ const features = computed(() => [
             <!-- Placeholder for an image or icon - replace with your actual image -->
             <UIcon 
               name="i-heroicons-film" 
-              class="w-32 h-32 text-brand"
+              class="w-32 h-32 text-amber-700 dark:text-brand"
             />
           </div>
         </div>
@@ -63,7 +63,7 @@ const features = computed(() => [
           <div class="flex items-start gap-4">
             <UIcon 
               :name="feature.icon" 
-              class="w-8 h-8 text-brand"
+              class="w-8 h-8 text-amber-700 dark:text-brand"
             />
             <div>
               <h3 class="text-xl font-semibold mb-2">{{ feature.title }}</h3>
