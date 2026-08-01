@@ -54,7 +54,7 @@ useSeoMeta({
     <div class="max-w-md w-full">
       <!-- Loading State -->
       <div v-if="isLoading" class="text-center">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400 mb-4"></div>
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-brand mb-4"></div>
         <p class="text-neutral-600 dark:text-neutral-300">{{ t('Confirmando tu suscripción...') }}</p>
       </div>
 
@@ -73,7 +73,7 @@ useSeoMeta({
           <UButton
             size="lg"
             color="primary"
-            class="w-full bg-amber-400 hover:bg-amber-500"
+            class="w-full bg-brand hover:bg-brand-focus"
             :label="t('Completar Registro')"
             @click="router.push(`/auth/register?email=${encodeURIComponent(confirmationResult.email || '')}`)"
           />
@@ -104,7 +104,7 @@ useSeoMeta({
           <UButton
             size="lg"
             color="primary"
-            class="w-full bg-amber-400 hover:bg-amber-500"
+            class="w-full bg-brand hover:bg-brand-focus"
             :label="t('Volver al Inicio')"
             @click="router.push('/')"
           />
