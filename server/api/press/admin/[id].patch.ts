@@ -39,7 +39,7 @@ export default defineEventHandler(async (event): Promise<{ success: boolean; lin
     }
 
     if (body.password !== undefined && body.password) {
-      updateData.password = hashPassword(body.password)
+      updateData.password = await hashPassword(body.password)
     }
 
     if (body.active !== undefined) {
