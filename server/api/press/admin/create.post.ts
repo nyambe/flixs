@@ -23,7 +23,7 @@ export default defineEventHandler(async (event): Promise<{ success: boolean; lin
     const token = generatePressToken()
 
     // Hash password if provided
-    const hashedPassword = body.password ? hashPassword(body.password) : undefined
+    const hashedPassword = body.password ? await hashPassword(body.password) : undefined
 
     // Ensure expiration date is within safe limits (max 90 days)
     const safeExpiresAt = getSafeExpirationDate(body.expiresAt)
