@@ -1,10 +1,15 @@
 <script setup lang="ts">
+// Bunny embed player for trailers. `trailerId` is a Bunny video GUID
+// (movies.json `trailer_bunny_id`) — Vimeo trailers were retired in #20.
 const props = defineProps<{
   open: boolean;
   trailerId: string | null;
 }>();
 
 const emit = defineEmits(['update:open']);
+
+// Same Bunny Stream library as the server-side proxy (server/api/bunny/*)
+const BUNNY_LIBRARY_ID = '425878';
 
 const isOpen = computed({
   get: () => props.open,
@@ -13,8 +18,7 @@ const isOpen = computed({
 
 const getPlayerUrl = (trailerId: string) => {
   if (!trailerId) return '';
-  const baseUrl = `https://player.vimeo.com/video/${trailerId}`;
-  return `${baseUrl}?autoplay=1&title=0&byline=0&portrait=0`;
+  return `https://iframe.mediadelivery.net/embed/${BUNNY_LIBRARY_ID}/${trailerId}?autoplay=true&preload=true`;
 };
 </script>
 
@@ -43,4 +47,4 @@ const getPlayerUrl = (trailerId: string) => {
       </div>
     </template>
   </UModal>
-</template> 
+</template>
