@@ -29,20 +29,14 @@ const selectedMovie = computed(() => {
 // Check if selected movie has the chosen video source
 const hasSelectedVideoSource = computed(() => {
   if (!selectedMovie.value) return false
-  if (formData.value.videoSource === 'bunny') {
-    return !!selectedMovie.value.bunny_id
-  }
-  return !!selectedMovie.value.video_id
+  return !!selectedMovie.value.bunny_id
 })
 
-// Available video sources for selected movie
+// Bunny-only since #20 (Vimeo retired)
 const availableVideoSources = computed(() => {
   const sources: { value: VideoSource; label: string }[] = []
   if (selectedMovie.value?.bunny_id) {
     sources.push({ value: 'bunny', label: 'Bunny.net' })
-  }
-  if (selectedMovie.value?.video_id) {
-    sources.push({ value: 'vimeo', label: 'Vimeo' })
   }
   return sources
 })
@@ -51,8 +45,6 @@ const availableVideoSources = computed(() => {
 watch(() => formData.value.movieId, () => {
   if (selectedMovie.value?.bunny_id) {
     formData.value.videoSource = 'bunny'
-  } else if (selectedMovie.value?.video_id) {
-    formData.value.videoSource = 'vimeo'
   }
 })
 
@@ -146,17 +138,15 @@ const handleSubmit = async () => {
               v-for="movie in movies"
               :key="movie.id"
               :value="movie.id"
-              :disabled="!movie.video_id && !movie.bunny_id"
+              :disabled="!movie.bunny_id"
               class="text-gray-900"
             >
               {{ movie.title }}
-              <template v-if="movie.bunny_id && movie.video_id"> (Bunny + Vimeo)</template>
-              <template v-else-if="movie.bunny_id"> (Bunny)</template>
-              <template v-else-if="movie.video_id"> (Vimeo)</template>
+              <template v-if="movie.bunny_id"> (Bunny)</template>
               <template v-else> (No video)</template>
             </option>
           </select>
-          <p v-if="selectedMovie && !selectedMovie.video_id && !selectedMovie.bunny_id" class="mt-1 text-sm text-red-600">
+          <p v-if="selectedMovie && !selectedMovie.bunny_id" class="mt-1 text-sm text-red-600">
             {{ t('press.noVideoIdError') }}
           </p>
         </div>

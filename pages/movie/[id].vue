@@ -40,13 +40,10 @@ onMounted(() => {
   fetchAdditionalData()
 })
 
+// Bunny-only playback (#20): movies without bunny_id have no Play button
 const togglePlay = () => {
-  // Prioritize Bunny if available, otherwise use Vimeo
   if (movie?.bunny_id) {
-    navigateTo(`/watch/${movie.bunny_id}?source=bunny`)
-  } else {
-    const video_id = movie?.video_id || '933381480'
-    navigateTo(`/watch/${video_id}?source=vimeo`)
+    navigateTo(`/watch/${movie.bunny_id}`)
   }
 }
 
@@ -65,7 +62,7 @@ definePageMeta({
     <!-- Trailer Modal -->
     <TrailerModal 
       v-model:open="showTrailer" 
-      :trailer-id="movie?.trailer_id || null"
+      :trailer-id="movie?.bunny_trailer_id || null"
     />
 
 
@@ -137,6 +134,7 @@ definePageMeta({
             
             <div class="flex gap-4">
               <UButton
+                v-if="movie?.bunny_id"
                 size="xl"
                 color="primary"
                 :label="t('Play')"
@@ -145,7 +143,7 @@ definePageMeta({
                 @click="togglePlay"
               />
               <UButton
-                v-if="movie?.trailer_id"
+                v-if="movie?.bunny_trailer_id"
                 size="xl"
                 color="warning"
                 variant="outline"

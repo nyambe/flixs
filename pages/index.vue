@@ -45,7 +45,7 @@ useSeoMeta({
     <!-- Trailer Modal -->
     <TrailerModal 
       v-model:open="showTrailer" 
-      :trailer-id="featuredMovie.trailer_id || null"
+      :trailer-id="featuredMovie.bunny_trailer_id || null"
     />
     
     <!-- Hero Section for logged-in users OR when newsletter is disabled -->
@@ -72,16 +72,16 @@ useSeoMeta({
           </p>
           <div class="flex space-x-4">
             <UButton
-              v-if="featuredMovie.video_id"
+              v-if="featuredMovie.bunny_id"
               size="xl"
               color="primary"
               :label="t('Play')"
               icon="i-heroicons-play"
               class="bg-brand hover:bg-brand-focus"
-              @click="navigateTo(`/watch/${featuredMovie.video_id}`)"
+              @click="navigateTo(`/watch/${featuredMovie.bunny_id}`)"
             />
             <UButton
-              v-if="featuredMovie.trailer_id"
+              v-if="featuredMovie.bunny_trailer_id"
               size="xl"
               color="warning"
               variant="outline"

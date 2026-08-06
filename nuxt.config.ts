@@ -75,12 +75,6 @@ export default defineNuxtConfig({
       webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
       productId: process.env.STRIPE_PRODUCT_ID,
     },
-    vimeo: {
-      accessToken: process.env.VIMEO_ACCESS_TOKEN,
-      clientId: process.env.VIMEO_CLIENT_ID,
-      userId: process.env.VIMEO_USER_ID,
-      clientSecret: process.env.VIMEO_CLIENT_SECRET,
-    },
     resend: {
       apiKey: process.env.RESEND_API_KEY,
     },

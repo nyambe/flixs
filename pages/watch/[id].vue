@@ -1,83 +1,39 @@
 <script setup lang="ts">
-import type { BunnyMedia, VideoSource } from '~/types'
+// Bunny-only playback: the route param is the Bunny media id.
+// (Vimeo was retired in #20 — old /watch/<vimeoId>?source=vimeo links show "Video not found".)
 
-interface VimeoVideo {
-  uri: string;
-  name: string;
-  description: string | null;
-  duration: number;
-  pictures: {
-    sizes: { width: number; height: number; link: string }[];
-  };
-  created_time: string;
-  link: string;
-  player_embed_url: string;
-  id: string;
-  thumbnail: string;
-  privacy: {
-    view: string;
-    embed: string;
-    download: boolean;
-    add: boolean;
-    comments: string;
-  };
-  embed?: {
-    html: string;
-  };
-  status: string;
-}
-
-// Unified video type for display
 interface DisplayVideo {
   name: string;
   description: string | null;
   duration: number;
   created_time: string;
   playerUrl: string;
-  playlistUrl?: string;  // HLS playlist for Bunny
+  playlistUrl?: string;  // HLS playlist
   thumbnailUrl?: string;
 }
 
 const route = useRoute();
 const videoId = route.params.id as string
-const videoSource = (route.query.source as VideoSource) || 'vimeo'
 
-const { getVideo: getVimeoVideo, loading: vimeoLoading, error: vimeoError } = useVimeo();
-const { getVideo: getBunnyVideo, loading: bunnyLoading, error: bunnyError } = useBunny();
+const { getVideo: getBunnyVideo, loading, error } = useBunny();
 const { t } = useI18n();
 
 const video = ref<DisplayVideo | null>(null);
 const isFullscreen = ref(true);
-const loading = computed(() => vimeoLoading.value || bunnyLoading.value);
-const error = computed(() => vimeoError.value || bunnyError.value);
 
 onMounted(async () => {
   try {
-    if (videoSource === 'bunny') {
-      const response = await getBunnyVideo(videoId);
-      if (response) {
-        video.value = {
-          name: response.filename,
-          description: response.metadata?.description || null,
-          duration: response.metadata?.duration || 0,
-          created_time: response.createdAt,
-          playerUrl: response.videoUrl,
-          playlistUrl: response.playlistUrl,
-          thumbnailUrl: response.thumbnailUrl,
-        };
-      }
-    } else {
-      const response = await getVimeoVideo(videoId);
-      if (response && 'uri' in response) {
-        const vimeoVideo = response as VimeoVideo;
-        video.value = {
-          name: vimeoVideo.name,
-          description: vimeoVideo.description,
-          duration: vimeoVideo.duration,
-          created_time: vimeoVideo.created_time,
-          playerUrl: getVimeoPlayerUrl(vimeoVideo),
-        };
-      }
+    const response = await getBunnyVideo(videoId);
+    if (response) {
+      video.value = {
+        name: response.filename,
+        description: response.metadata?.description || null,
+        duration: response.metadata?.duration || 0,
+        created_time: response.createdAt,
+        playerUrl: response.videoUrl,
+        playlistUrl: response.playlistUrl,
+        thumbnailUrl: response.thumbnailUrl,
+      };
     }
   } catch (err) {
     console.error('Error fetching video:', err);
@@ -90,25 +46,6 @@ onMounted(async () => {
     }
   });
 });
-
-// Add autoplay parameter to Vimeo player URL
-const getVimeoPlayerUrl = (video: VimeoVideo) => {
-  if (!video.player_embed_url) return '';
-
-  const baseUrl = video.player_embed_url;
-
-  if (!baseUrl.includes('autoplay=')) {
-    const autoplayParam = baseUrl.includes('?') ? '&autoplay=1' : '?autoplay=1';
-    return `${baseUrl}${autoplayParam}`;
-  }
-
-  return baseUrl;
-};
-
-// Get player URL (already computed for display)
-const getPlayerUrl = () => {
-  return video.value?.playerUrl || '';
-};
 
 // Function to toggle fullscreen
 const toggleFullscreen = () => {
@@ -130,8 +67,8 @@ definePageMeta({
 
 <template>
   <!-- Fullscreen Modal -->
-  <div 
-    v-if="video && isFullscreen" 
+  <div
+    v-if="video && isFullscreen"
     class="fixed inset-0 z-50 bg-black flex items-center justify-center"
   >
     <div class="absolute top-4 right-4 z-10">
@@ -145,25 +82,15 @@ definePageMeta({
         </svg>
       </button>
     </div>
-    
+
     <!-- Video player wrapper for fullscreen -->
     <div class="w-full h-full relative">
-      <!-- Bunny HLS Player -->
       <BunnyPlayer
-        v-if="videoSource === 'bunny' && video?.playlistUrl"
+        v-if="video?.playlistUrl"
         :playlist-url="video.playlistUrl"
         :poster="video.thumbnailUrl"
         :autoplay="true"
       />
-      <!-- Vimeo iframe -->
-      <iframe
-        v-else
-        :src="getPlayerUrl()"
-        loading="lazy"
-        style="border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;"
-        allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
-        allowfullscreen
-      ></iframe>
     </div>
   </div>
 
@@ -182,36 +109,26 @@ definePageMeta({
 
       <!-- Video player - 16:9 aspect ratio -->
       <div class="relative bg-black mb-4 rounded-lg overflow-hidden" style="padding-top: 56.25%;">
-        <!-- Bunny HLS Player -->
-        <div v-if="videoSource === 'bunny' && video?.playlistUrl" class="absolute inset-0">
+        <div v-if="video?.playlistUrl" class="absolute inset-0">
           <BunnyPlayer
             :playlist-url="video.playlistUrl"
             :poster="video.thumbnailUrl"
             :autoplay="true"
           />
         </div>
-        <!-- Vimeo iframe -->
-        <iframe
-          v-else
-          :src="getPlayerUrl()"
-          loading="lazy"
-          style="border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;"
-          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
-          allowfullscreen
-        ></iframe>
       </div>
-      
+
       <div class="mb-4">
         <p v-if="video.description" class="text-gray-300">{{ video.description }}</p>
         <p v-else class="text-gray-500 italic">{{ t('No description available') }}</p>
       </div>
-      
+
       <div class="flex items-center text-sm text-gray-400">
         <span>{{ t('Duration') }}: {{ Math.floor(video.duration / 60) }}:{{ String(video.duration % 60).padStart(2, '0') }}</span>
         <span class="mx-2">•</span>
         <span>{{ t('Uploaded') }}: {{ new Date(video.created_time).toLocaleDateString() }}</span>
       </div>
-      
+
       <div class="mt-6">
         <NuxtLink to="/movies" class="text-blue-400 hover:underline">
           {{ t('Back to all videos') }}
@@ -229,4 +146,4 @@ definePageMeta({
 html, body {
   overflow: hidden;
 }
-</style> 
+</style>

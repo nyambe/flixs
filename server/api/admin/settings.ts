@@ -12,10 +12,6 @@ interface StripePlan {
 }
 
 interface APISettings {
-  vimeo: {
-    accessTokenMasked: string;
-    userId: string;
-  };
   stripe: {
     publicKeyMasked: string;
     webhookUrl: string;
@@ -71,10 +67,6 @@ export default defineEventHandler(async (event): Promise<SettingsResponse> => {
     
     // Construct API settings object with masked tokens
     const apiSettings: APISettings = {
-      vimeo: {
-        accessTokenMasked: maskToken(runtimeConfig.vimeo.accessToken as string),
-        userId: runtimeConfig.vimeo.userId as string,
-      },
       stripe: {
         publicKeyMasked: maskToken(runtimeConfig.public.stripePublicKey as string),
         webhookUrl: `${baseUrl}/api/webhooks/stripe`,
