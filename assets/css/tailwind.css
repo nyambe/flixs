@@ -26,6 +26,12 @@
 
   /* Canvas: warm off-white for light mode backgrounds (issue #26) */
   --color-canvas: #FAF8F5;
+
+  /* Obsidian: casi-negro para fondos en modo oscuro (rebrand Heritage Stream) */
+  --color-obsidian: #131313;
+
+  --font-heading: 'Syne', sans-serif;
+  --font-sans: 'Hanken Grotesk', sans-serif;
 }
 
 /*
@@ -48,20 +54,20 @@
 
 @layer base {
   :root {
-    /* Primary (Amber/Golden Yellow #fbbf24) */
-    --p: 55deg;
-    --ps: 93%;
+    /* Terracota #ea6b1e — CTA principal / marca (antes Amber #fbbf24) */
+    --p: 23deg;
+    --ps: 83%;
     --pl: 52%;
-    
-    /* Secondary (Orange-Yellow #f59e0b) */
-    --s: 33deg;
-    --ss: 93%;
-    --sl: 50%;
-    
-    /* Accent (Yellow-Green #84cc16) */
-    --a: 84deg;
-    --as: 81%;
-    --al: 44%;
+
+    /* Amarillo Solar #f2c02d — CTA secundario (antes Orange-Yellow #f59e0b) */
+    --s: 45deg;
+    --ss: 88%;
+    --sl: 56%;
+
+    /* Verde Tierra #7e9a4b — accent (antes Yellow-Green #84cc16) */
+    --a: 81deg;
+    --as: 35%;
+    --al: 45%;
     
     /* Neutral (Dark Gray) */
     --n: 220deg;
@@ -75,10 +81,9 @@
   }
   
   .dark {
-    /* Dark mode adjustments */
     --pl: 60%;
-    --sl: 55%;
-    --al: 50%;
+    --sl: 62%;
+    --al: 52%;
     --nl: 90%; /* Much lighter for good contrast in dark mode */
     --cl: 65%;
   }
