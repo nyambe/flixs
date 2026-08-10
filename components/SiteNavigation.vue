@@ -11,6 +11,14 @@ const localePath = useLocalePath();
 // Initialize color mode
 const colorMode = useColorMode();
 
+// Logo según modo de color: amarillo sobre fondo oscuro (alto contraste),
+// naranja/terracota sobre fondo claro (el amarillo pierde contraste en claro)
+const logoSrc = computed(() =>
+  colorMode.value === 'dark'
+    ? '/logos/LOGO_MOABA_AMARILLO_TRANSPARENTE.png'
+    : '/logos/LOGO_MOABA_NARANJA_TRANSPARENTE.png'
+);
+
 // Navigation items with i18n
 const navigationItems = [
   { label: () => t('Home'), path: '/' },
@@ -66,7 +74,7 @@ const languageItems = computed(() => [
   <header class="sticky top-0 w-full z-50 bg-canvas/70 dark:bg-black/50 backdrop-blur">
     <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
       <NuxtLink :to="localePath('/')" class="text-2xl font-bold text-amber-700 dark:text-brand">
-        <img src="/logo.png" :alt="t('Moaba Cinema TV')" class="h-12">
+        <img :src="logoSrc" :alt="t('Moaba Cinema TV')" class="h-12">
       </NuxtLink>
 
       <div class="hidden md:flex items-center space-x-6">
