@@ -105,9 +105,9 @@ const languageItems = computed(() => [
 
 <template>
   <header class="sticky top-0 w-full z-50 bg-canvas/70 dark:bg-obsidian/70 backdrop-blur-md">
-    <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
-      <NuxtLink :to="localePath('/')" class="text-2xl font-bold text-brand">
-        <img :src="logoSrc" :alt="t('Moaba Cinema TV')" class="h-12">
+    <nav class="container mx-auto px-4 py-2 flex items-center justify-between">
+      <NuxtLink :to="localePath('/')" class="shrink-0 text-2xl font-bold text-brand">
+        <img :src="logoSrc" :alt="t('Moaba Cinema TV')" class="h-16 w-auto">
       </NuxtLink>
 
       <UNavigationMenu
