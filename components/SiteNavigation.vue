@@ -114,7 +114,10 @@ const languageItems = computed(() => [
         :items="navigationItems"
         orientation="horizontal"
         content-orientation="vertical"
+        color="primary"
+        highlight
         class="hidden md:flex"
+        :ui="{ linkLabel: 'uppercase tracking-wide text-xs font-semibold' }"
       />
 
       <div class="flex items-center space-x-4">
