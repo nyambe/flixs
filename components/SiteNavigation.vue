@@ -118,6 +118,22 @@ const languageItems = computed(() => [
       />
 
       <div class="flex items-center space-x-4">
+        <!-- Buscador y notificaciones: visuales por ahora (issues #40 y #42) -->
+        <UButton
+          color="neutral"
+          variant="ghost"
+          icon="i-heroicons-magnifying-glass"
+          class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+          :aria-label="t('Search')"
+        />
+        <UButton
+          color="neutral"
+          variant="ghost"
+          icon="i-heroicons-bell"
+          class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+          :aria-label="t('Notifications')"
+        />
+
         <!-- Color Mode Toggle -->
         <UButton
           color="neutral"
