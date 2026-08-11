@@ -105,7 +105,7 @@ const languageItems = computed(() => [
 
 <template>
   <header class="sticky top-0 w-full z-50 bg-canvas/70 dark:bg-obsidian/70 backdrop-blur-md">
-    <nav class="container mx-auto px-4 py-2 flex items-center justify-between">
+    <nav class="w-full max-w-7xl mx-auto px-2 flex items-center justify-between gap-0">
       <NuxtLink :to="localePath('/')" class="shrink-0 text-2xl font-bold text-brand">
         <img :src="logoSrc" :alt="t('Moaba Cinema TV')" class="h-16 w-auto">
       </NuxtLink>
@@ -116,39 +116,42 @@ const languageItems = computed(() => [
         content-orientation="vertical"
         color="primary"
         highlight
-        class="hidden md:flex"
-        :ui="{ linkLabel: 'uppercase tracking-wide text-xs font-semibold' }"
+        class="hidden md:flex shrink-0"
+        :ui="{ root: 'gap-0', link: 'px-1', linkLabel: 'uppercase tracking-wide text-xs font-semibold' }"
       />
 
-      <div class="flex items-center space-x-4">
-        <!-- Buscador y notificaciones: visuales por ahora (issues #40 y #42) -->
-        <UButton
-          color="neutral"
-          variant="ghost"
-          icon="i-heroicons-magnifying-glass"
-          class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
-          :aria-label="t('Search')"
-        />
-        <UButton
-          color="neutral"
-          variant="ghost"
-          icon="i-heroicons-bell"
-          class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
-          :aria-label="t('Notifications')"
-        />
-
-        <!-- Color Mode Toggle -->
-        <UButton
-          color="neutral"
-          variant="ghost"
-          class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
-          :icon="colorMode.value === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'"
-          @click="toggleColorMode"
-          :aria-label="t('Toggle color mode')"
-        />
+      <div class="flex items-center gap-1 shrink-0">
+        <!-- Buscador, notificaciones (visuales por ahora, issues #40 y #42) y modo de color: agrupados -->
+        <div class="flex items-center gap-0.5">
+          <UButton
+            color="neutral"
+            variant="ghost"
+            size="sm"
+            icon="i-heroicons-magnifying-glass"
+            class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+            :aria-label="t('Search')"
+          />
+          <UButton
+            color="neutral"
+            variant="ghost"
+            size="sm"
+            icon="i-heroicons-bell"
+            class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+            :aria-label="t('Notifications')"
+          />
+          <UButton
+            color="neutral"
+            variant="ghost"
+            size="sm"
+            class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+            :icon="colorMode.value === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'"
+            @click="toggleColorMode"
+            :aria-label="t('Toggle color mode')"
+          />
+        </div>
 
         <!-- Simple Language Switcher - Debug with buttons -->
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-0.5">
           <UButton
             v-for="loc in locales"
             :key="loc.code"
@@ -156,20 +159,21 @@ const languageItems = computed(() => [
             color="white"
             :variant="locale === loc.code ? 'solid' : 'ghost'"
             size="sm"
-            class="text-black dark:text-white"
+            class="px-0.5 text-black dark:text-white"
           >
             {{ loc.code.toUpperCase() }}
           </UButton>
         </div>
-        
+
         <UButton
           v-if="!isSubscribed"
           color="primary"
+          size="sm"
           :label="t('Subscribe')"
-          class="bg-brand text-brand-content hover:bg-brand-focus"
+          class="bg-brand text-brand-content hover:bg-brand-focus px-2.5"
           :to="localePath('/subscription/plans')"
         />
-        <div v-if="currentUser" class="flex items-center space-x-4">
+        <div v-if="currentUser" class="flex items-center gap-2">
           <span class="text-black dark:text-white">{{ userDisplayName }}</span>
           <UButton
             color="neutral"
@@ -190,6 +194,8 @@ const languageItems = computed(() => [
           v-else
           color="neutral"
           variant="outline"
+          size="sm"
+          class="px-2.5"
           :label="t('Sign In')"
           :to="localePath('/auth/login')"
         />
