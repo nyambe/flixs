@@ -48,6 +48,18 @@ const navigationItems = computed(() => [
   },
   { label: t('TV Series'), to: localePath('/tv-series') },
   { label: t('TV Show'), to: localePath('/tv-show') },
+  {
+    label: t('Cinema Colonial'),
+    to: localePath('/cinema-colonial'),
+    children: [
+      { label: 'Cine Etnográfico', to: localePath('/cinema-colonial') },
+      { label: 'Cine Antropológico', to: localePath('/cinema-colonial') },
+      { label: 'Cine de Explotación', to: localePath('/cinema-colonial') },
+      { label: 'Cine de Independencia', to: localePath('/cinema-colonial') },
+    ]
+  },
+  { label: t('Festivales'), to: localePath('/festivales') },
+  { label: t('Otros Eventos'), to: localePath('/otros-eventos') },
 ]);
 
 // Toggle color mode
