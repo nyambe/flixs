@@ -19,15 +19,36 @@ const logoSrc = computed(() =>
     : '/logos/LOGO_MOABA_NARANJA_TRANSPARENTE.png'
 );
 
-// Navigation items with i18n
-const navigationItems = [
-  { label: () => t('Home'), path: '/' },
-  { label: () => t('Movies'), path: '/movies' },
-  // Uncomment these as needed
-  // { label: () => t('TV Shows'), path: '/shows' },
-  // { label: () => t('New & Popular'), path: '/new' },
-  // { label: () => t('My List'), path: '/my-list' },
-];
+// Navigation items con estructura de Nuxt UI (UNavigationMenu) — mega-menú
+// para Cine y Cinema Colonial, resto como links simples.
+const navigationItems = computed(() => [
+  { label: t('Home'), to: localePath('/') },
+  {
+    label: t('Movies'),
+    to: localePath('/movies'),
+    children: [
+      { label: 'Ficción', type: 'label' as const },
+      { label: 'Drama', to: localePath('/movies') },
+      { label: 'Comedia', to: localePath('/movies') },
+      { label: 'Misterio', to: localePath('/movies') },
+      { label: 'Historia', to: localePath('/movies') },
+      { label: 'Romance', to: localePath('/movies') },
+      { label: 'Musical', to: localePath('/movies') },
+      { label: 'Infantil', to: localePath('/movies') },
+      { label: 'Guerras', to: localePath('/movies') },
+      { label: 'Documental', type: 'label' as const },
+      { label: 'Docu drama', to: localePath('/movies') },
+      { label: 'Docu ficción', to: localePath('/movies') },
+      { label: 'Histórico', to: localePath('/movies') },
+      { label: 'Antropológico', to: localePath('/movies') },
+      { label: 'Lo Real/Clásico', to: localePath('/movies') },
+      { label: 'Doc. Musical', to: localePath('/movies') },
+    ],
+    ui: { childList: 'grid grid-cols-2 grid-flow-col grid-rows-9 gap-x-6' }
+  },
+  { label: t('TV Series'), to: localePath('/tv-series') },
+  { label: t('TV Show'), to: localePath('/tv-show') },
+]);
 
 // Toggle color mode
 const toggleColorMode = () => {
@@ -77,16 +98,12 @@ const languageItems = computed(() => [
         <img :src="logoSrc" :alt="t('Moaba Cinema TV')" class="h-12">
       </NuxtLink>
 
-      <div class="hidden md:flex items-center space-x-6">
-        <NuxtLink
-          v-for="item in navigationItems"
-          :key="item.path"
-          :to="localePath(item.path)"
-          class="text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white transition"
-        >
-          {{ item.label() }}
-        </NuxtLink>
-      </div>
+      <UNavigationMenu
+        :items="navigationItems"
+        orientation="horizontal"
+        content-orientation="vertical"
+        class="hidden md:flex"
+      />
 
       <div class="flex items-center space-x-4">
         <!-- Color Mode Toggle -->
