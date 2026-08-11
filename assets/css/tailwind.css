@@ -54,6 +54,12 @@
 
 @layer base {
   :root {
+    /* Alinea el sistema de color interno de Nuxt UI (botones, rings, estados)
+       con nuestro token --color-brand, en vez de dejarlo en la paleta 'orange'
+       de fábrica declarada en app.config.ts (esa paleta solo se usa para
+       generar los pasos de sombra intermedios que Nuxt UI necesita). */
+    --ui-primary: var(--color-brand);
+
     /* Terracota #ea6b1e — CTA principal / marca (antes Amber #fbbf24) */
     --p: 23deg;
     --ps: 83%;
