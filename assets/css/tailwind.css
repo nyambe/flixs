@@ -87,7 +87,13 @@
   }
   
   .dark {
-    --pl: 60%;
+    /* Acento de marca en dark = Amarillo Solar (antes terracota, misma hue que --s).
+       Decisión de Marga: prioriza legibilidad/personalidad sobre fidelidad estricta
+       al mockup de Stitch (que usa terracota como CTA incluso en oscuro). */
+    --p: 45deg;
+    --ps: 88%;
+    --pl: 62%;
+
     --sl: 62%;
     --al: 52%;
     --nl: 90%; /* Much lighter for good contrast in dark mode */
