@@ -13,6 +13,7 @@ const heroSentinel = ref<HTMLElement | null>(null)
 let heroObserver: IntersectionObserver | null = null
 
 onMounted(() => {
+  heroVisible.value = true
   if (!heroSentinel.value) return
   heroObserver = new IntersectionObserver(
     ([entry]) => {
@@ -71,11 +72,11 @@ useSeoMeta({
     <!-- Hero Section for logged-in users OR when newsletter is disabled -->
     <section v-if="currentUser || !appConfig.features.newsletter.showOnHomepage" class="relative min-h-[100dvh] overflow-hidden text-white">
       <div class="absolute inset-0">
-        <div :class="backdropAspectRatio" class="w-full ">
+        <div class="w-full h-full">
           <img
             :src="imagePath.backdrop(featuredMovie.backdrop_path)"
             :alt="featuredMovie.title"
-            class="w-full aspect-[16/9] object-cover"
+            class="w-full h-full object-cover"
           >
         </div>
         <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
