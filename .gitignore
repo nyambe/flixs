@@ -24,6 +24,10 @@ logs
 !.env.example
 
 .wrangler
+
+# Subagent-driven-development scratch workspace (ledgers, briefs, review packages)
+.superpowers/
+
 # Documentation with sensitive data
 docs/
 CLAUDE.md
