@@ -11,13 +11,68 @@ const localePath = useLocalePath();
 // Initialize color mode
 const colorMode = useColorMode();
 
-// Logo según modo de color: amarillo sobre fondo oscuro (alto contraste),
-// naranja/terracota sobre fondo claro (el amarillo pierde contraste en claro)
-const logoSrc = computed(() =>
-  colorMode.value === 'dark'
-    ? '/logos/LOGO_MOABA_AMARILLO_TRANSPARENTE.png'
-    : '/logos/LOGO_MOABA_NARANJA_TRANSPARENTE.png'
+// Overlay transparente sobre el hero del home (ver docs/superpowers/specs/2026-08-12-home-hero-100vh-header-transparente-design.md)
+const route = useRoute();
+const headerRef = ref<HTMLElement | null>(null);
+const headerHeight = useHeaderHeight();
+const heroVisible = useHeroVisible();
+
+const isHomePage = computed(() => isHomeRouteName(route.name));
+const headerMode = computed<'transparent' | 'solid'>(() =>
+  isHomePage.value && heroVisible.value ? 'transparent' : 'solid'
 );
+
+const headerBgClass = computed(() =>
+  headerMode.value === 'transparent'
+    ? 'bg-transparent'
+    : 'bg-canvas/70 dark:bg-obsidian/70 backdrop-blur-md'
+);
+// Texto/labels que hoy hardcodean "text-black dark:text-white": en modo
+// transparente el header flota sobre una foto oscura, así que se fuerza
+// blanco sin importar el theme claro/oscuro.
+const headerTextClass = computed(() =>
+  headerMode.value === 'transparent' ? 'text-white' : 'text-black dark:text-white'
+);
+// Botones ghost (color="neutral"): su clase por defecto es "text-default"
+// (token de Nuxt UI, no hereda color del ancestro), hay que sobreescribirla.
+const headerGhostClass = computed(() =>
+  headerMode.value === 'transparent'
+    ? 'text-white hover:bg-white/20'
+    : 'hover:bg-neutral-200 dark:hover:bg-neutral-800'
+);
+// Botones outline (color="neutral"): su clase por defecto incluye
+// "bg-default" (opaco) y "ring-accented" — en transparente se vuelven
+// una caja sólida flotando si no se sobreescribe el fondo también.
+const headerOutlineClass = computed(() =>
+  headerMode.value === 'transparent'
+    ? 'text-white bg-transparent ring-white/60 hover:bg-white/10'
+    : ''
+);
+
+// Logo según modo: amarillo si el header está transparente sobre el hero
+// (siempre hay foto oscura debajo, sin importar el theme) o si el theme es
+// oscuro; naranja/terracota solo cuando el header es sólido y el theme es claro.
+const logoSrc = computed(() => {
+  if (headerMode.value === 'transparent') return '/logos/LOGO_MOABA_AMARILLO_TRANSPARENTE.png';
+  return colorMode.value === 'dark'
+    ? '/logos/LOGO_MOABA_AMARILLO_TRANSPARENTE.png'
+    : '/logos/LOGO_MOABA_NARANJA_TRANSPARENTE.png';
+});
+
+let headerResizeObserver: ResizeObserver | null = null;
+
+onMounted(() => {
+  if (!headerRef.value) return;
+  headerResizeObserver = new ResizeObserver((entries) => {
+    const entry = entries[0];
+    if (entry) headerHeight.value = entry.contentRect.height;
+  });
+  headerResizeObserver.observe(headerRef.value);
+});
+
+onUnmounted(() => {
+  headerResizeObserver?.disconnect();
+});
 
 // Navigation items con estructura de Nuxt UI (UNavigationMenu) — mega-menú
 // para Cine y Cinema Colonial, resto como links simples.
@@ -104,7 +159,10 @@ const languageItems = computed(() => [
 </script>
 
 <template>
-  <header class="sticky top-0 w-full z-50 bg-canvas/70 dark:bg-obsidian/70 backdrop-blur-md">
+  <header
+    ref="headerRef"
+    :class="['fixed top-0 w-full z-50 transition-colors duration-300', headerBgClass, headerTextClass]"
+  >
     <nav class="w-full max-w-7xl mx-auto px-2 flex items-center justify-between gap-0">
       <NuxtLink :to="localePath('/')" class="shrink-0 text-2xl font-bold text-brand">
         <img :src="logoSrc" :alt="t('Moaba Cinema TV')" class="h-16 w-auto">
@@ -128,7 +186,7 @@ const languageItems = computed(() => [
             variant="ghost"
             size="sm"
             icon="i-heroicons-magnifying-glass"
-            class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+            :class="headerGhostClass"
             :aria-label="t('Search')"
           />
           <UButton
@@ -136,14 +194,14 @@ const languageItems = computed(() => [
             variant="ghost"
             size="sm"
             icon="i-heroicons-bell"
-            class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+            :class="headerGhostClass"
             :aria-label="t('Notifications')"
           />
           <UButton
             color="neutral"
             variant="ghost"
             size="sm"
-            class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+            :class="headerGhostClass"
             :icon="colorMode.value === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'"
             @click="toggleColorMode"
             :aria-label="t('Toggle color mode')"
@@ -159,7 +217,7 @@ const languageItems = computed(() => [
             color="white"
             :variant="locale === loc.code ? 'solid' : 'ghost'"
             size="sm"
-            class="px-0.5 text-black dark:text-white"
+            :class="['px-0.5', headerTextClass]"
           >
             {{ loc.code.toUpperCase() }}
           </UButton>
@@ -174,19 +232,20 @@ const languageItems = computed(() => [
           :to="localePath('/subscription/plans')"
         />
         <div v-if="currentUser" class="flex items-center gap-2">
-          <span class="text-black dark:text-white">{{ userDisplayName }}</span>
+          <span :class="headerTextClass">{{ userDisplayName }}</span>
           <UButton
             color="neutral"
             variant="ghost"
             icon="i-heroicons-user-circle"
             :to="localePath('/auth/profile')"
-            class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+            :class="headerGhostClass"
           />
           <UButton
             color="neutral"
             variant="outline"
             icon="i-heroicons-arrow-right-on-rectangle"
             :label="t('Sign Out')"
+            :class="headerOutlineClass"
             @click="() => { signOut(); }"
           />
         </div>
@@ -196,6 +255,7 @@ const languageItems = computed(() => [
           variant="outline"
           size="sm"
           class="px-2.5"
+          :class="headerOutlineClass"
           :label="t('Sign In')"
           :to="localePath('/auth/login')"
         />
