@@ -81,7 +81,7 @@ export default defineEventHandler(async (event): Promise<{ valid: boolean; messa
     }
 
     // Verify password
-    const isPasswordValid = verifyPassword(body.password, link.password)
+    const isPasswordValid = await verifyPassword(body.password, link.password)
 
     if (!isPasswordValid) {
       return {

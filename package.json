@@ -8,7 +8,6 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "no-build": "npx nuxthub deploy --no-build",
     "build:mem": "node --max-old-space-size=4096 ./node_modules/.bin/nuxt build"
   },
   "dependencies": {
@@ -17,6 +16,7 @@
     "@nuxt/ui": "^3.3.7",
     "@nuxtjs/i18n": "9.4.0",
     "@stripe/stripe-js": "^6.0.0",
+    "bcryptjs": "^3.0.3",
     "eslint": "^9.22.0",
     "firebase": "^11.4.0",
     "firebase-admin": "^13.2.0",

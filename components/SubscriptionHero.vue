@@ -60,7 +60,7 @@ const handleSkip = () => {
 </script>
 
 <template>
-  <section class="relative min-h-[80vh] overflow-hidden">
+  <section class="relative min-h-[80vh] overflow-hidden text-white">
     <!-- Background with overlay -->
     <div class="absolute inset-0">
       <div class="w-full aspect-[16/9]">
@@ -105,7 +105,7 @@ const handleSkip = () => {
               :placeholder="t('Tu correo electrónico')"
               :class="[
                 'flex-1 py-4 px-6 rounded-md bg-neutral-800 text-white border transition-colors',
-                emailError ? 'border-red-500 focus:ring-red-400' : 'border-neutral-700 focus:ring-amber-400',
+                emailError ? 'border-red-500 focus:ring-red-400' : 'border-neutral-700 focus:ring-brand',
                 'focus:outline-none focus:ring-2'
               ]"
             />
@@ -116,7 +116,7 @@ const handleSkip = () => {
                 'py-4 px-8 font-bold rounded-md transition-colors',
                 isSubscribing 
                   ? 'bg-neutral-600 text-neutral-400 cursor-not-allowed' 
-                  : 'bg-amber-400 hover:bg-amber-500 text-black'
+                  : 'bg-brand hover:bg-brand-focus text-brand-content'
               ]"
             >
               <span v-if="isSubscribing" class="flex items-center">
@@ -136,11 +136,11 @@ const handleSkip = () => {
               id="privacy-consent"
               v-model="privacyConsent"
               type="checkbox"
-              class="mt-1 h-4 w-4 text-amber-400 bg-neutral-800 border-neutral-600 rounded focus:ring-amber-400 focus:ring-2"
+              class="mt-1 h-4 w-4 text-brand bg-neutral-800 border-neutral-600 rounded focus:ring-brand focus:ring-2"
             />
             <label for="privacy-consent" class="text-sm text-neutral-300 leading-relaxed">
               {{ t('Acepto recibir correos electrónicos de MOABA Cinema TV y he leído la') }}
-              <NuxtLink to="/privacy" class="text-amber-400 hover:text-amber-300 underline">
+              <NuxtLink to="/privacy" class="text-brand hover:text-brand-focus underline">
                 {{ t('política de privacidad') }}
               </NuxtLink>.
             </label>

@@ -41,15 +41,15 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="bg-black text-white">
+  <div class="bg-canvas dark:bg-black text-black dark:text-white">
     <!-- Trailer Modal -->
     <TrailerModal 
       v-model:open="showTrailer" 
-      :trailer-id="featuredMovie.trailer_id || null"
+      :trailer-id="featuredMovie.bunny_trailer_id || null"
     />
     
     <!-- Hero Section for logged-in users OR when newsletter is disabled -->
-    <section v-if="currentUser || !appConfig.features.newsletter.showOnHomepage" class="relative min-h-[60vh] overflow-hidden">
+    <section v-if="currentUser || !appConfig.features.newsletter.showOnHomepage" class="relative min-h-[60vh] overflow-hidden text-white">
       <div class="absolute inset-0">
         <div :class="backdropAspectRatio" class="w-full ">
           <img 
@@ -72,16 +72,16 @@ useSeoMeta({
           </p>
           <div class="flex space-x-4">
             <UButton
-              v-if="featuredMovie.video_id"
+              v-if="featuredMovie.bunny_id"
               size="xl"
               color="primary"
               :label="t('Play')"
               icon="i-heroicons-play"
-              class="bg-amber-400 hover:bg-amber-500"
-              @click="navigateTo(`/watch/${featuredMovie.video_id}`)"
+              class="bg-brand hover:bg-brand-focus"
+              @click="navigateTo(`/watch/${featuredMovie.bunny_id}`)"
             />
             <UButton
-              v-if="featuredMovie.trailer_id"
+              v-if="featuredMovie.bunny_trailer_id"
               size="xl"
               color="warning"
               variant="outline"
@@ -111,7 +111,7 @@ useSeoMeta({
     />
 
     <!-- Featured Categories Section -->
-    <section class="py-16 bg-black">
+    <section class="py-16 bg-canvas dark:bg-black">
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold mb-8">{{ t('Las Joyas de MOABA') }}</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -128,11 +128,11 @@ useSeoMeta({
                 class="w-full h-full object-cover rounded-lg transition transform group-hover:scale-105"
               >
             </div>
-            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-lg">
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-lg text-white">
               <div class="absolute bottom-0 p-4 w-full">
                 <h3 class="text-lg font-semibold">{{ movie.title }}</h3>
                 <div class="flex items-center mt-1">
-                  <span class="text-yellow-400">★</span>
+                  <span class="text-brand">★</span>
                   <span class="ml-1">{{ movie.vote_average.toFixed(1) }}</span>
                 </div>
               </div>
@@ -143,7 +143,7 @@ useSeoMeta({
     </section>
 
     <!-- Sponsors/Patrocinadores Section -->
-    <section class="py-16 bg-black">
+    <section class="py-16 bg-amber-50 dark:bg-black">
       <div class="container mx-auto px-4">
         <h2 class="text-xl font-bold mb-8">{{ t('Patrocinadores') }}</h2>
         <div class="flex justify-center">
@@ -157,9 +157,3 @@ useSeoMeta({
     </section>
   </div>
 </template>
-
-<style>
-.backdrop-blur {
-  backdrop-filter: blur(8px);
-}
-</style>

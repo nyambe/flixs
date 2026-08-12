@@ -1,4 +1,5 @@
-import { randomBytes, createHash } from 'node:crypto'
+import { randomBytes, createHash, timingSafeEqual } from 'node:crypto'
+import bcrypt from 'bcryptjs'
 import type { PressLink } from '~/types'
 
 /**
@@ -10,20 +11,30 @@ export function generatePressToken(): string {
   return `${randomString}-${timestamp}`
 }
 
+const BCRYPT_ROUNDS = 12
+
 /**
- * Hash a password using SHA-256
- * Note: For production, consider using bcrypt or argon2 for stronger hashing
+ * Hash a password using bcrypt
  */
-export function hashPassword(password: string): string {
-  return createHash('sha256').update(password).digest('hex')
+export function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, BCRYPT_ROUNDS)
 }
 
 /**
- * Verify a password against a hash
+ * Verify a password against a hash.
+ * Supports the legacy unsalted SHA-256 hashes (64 hex chars) of press links
+ * created before the bcrypt migration; new hashes are always bcrypt ($2…).
  */
-export function verifyPassword(password: string, hash: string): boolean {
-  const passwordHash = hashPassword(password)
-  return passwordHash === hash
+export function verifyPassword(password: string, hash: string): Promise<boolean> {
+  if (hash.startsWith('$2')) {
+    return bcrypt.compare(password, hash)
+  }
+
+  // Legacy SHA-256 fallback
+  const legacyHash = createHash('sha256').update(password).digest('hex')
+  const a = Buffer.from(legacyHash)
+  const b = Buffer.from(hash)
+  return Promise.resolve(a.length === b.length && timingSafeEqual(a, b))
 }
 
 /**

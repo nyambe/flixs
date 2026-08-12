@@ -4,6 +4,16 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/tailwind.css'],
   modules: ['@nuxt/ui', '@nuxt/fonts', '@nuxt/eslint', '@nuxtjs/i18n'],
+  fonts: {
+    families: [
+      {
+        name: 'Montserrat',
+        provider: 'google',
+        weights: ['400', '500', '600', '700'],
+        global: true
+      }
+    ]
+  },
   i18n: {
     defaultLocale: 'es',
     locales: [
@@ -38,6 +48,17 @@ export default defineNuxtConfig({
       external: ['crypto', 'node:crypto', 'string_decoder', 'node:string_decoder']
     }
   },
+  hooks: {
+    'pages:extend'(pages) {
+      // /colors is an internal palette showcase; drop it (and its localized
+      // i18n copies) from production builds so it isn't publicly reachable.
+      if (process.env.NODE_ENV === 'production') {
+        for (let i = pages.length - 1; i >= 0; i--) {
+          if (pages[i].path.endsWith('/colors')) pages.splice(i, 1)
+        }
+      }
+    }
+  },
   runtimeConfig: {
     // Server-side environment variables
     tmdbToken: process.env.TMDB_TOKEN,
@@ -53,12 +74,6 @@ export default defineNuxtConfig({
       secretKey: process.env.STRIPE_SECRET_KEY,
       webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
       productId: process.env.STRIPE_PRODUCT_ID,
-    },
-    vimeo: {
-      accessToken: process.env.VIMEO_ACCESS_TOKEN,
-      clientId: process.env.VIMEO_CLIENT_ID,
-      userId: process.env.VIMEO_USER_ID,
-      clientSecret: process.env.VIMEO_CLIENT_SECRET,
     },
     resend: {
       apiKey: process.env.RESEND_API_KEY,

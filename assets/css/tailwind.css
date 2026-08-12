@@ -23,6 +23,9 @@
   --color-support: hsl(var(--c) var(--cs) var(--cl));
   --color-support-focus: hsl(var(--c) var(--cs) calc(var(--cl) - 10%));
   --color-support-content: hsl(var(--c) var(--cs) 95%);
+
+  /* Canvas: warm off-white for light mode backgrounds (issue #26) */
+  --color-canvas: #FAF8F5;
 }
 
 /*

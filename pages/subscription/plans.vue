@@ -106,10 +106,10 @@ const selectPlan = async (priceId: string) => {
 </script>
 
 <template>
-  <div class="bg-black min-h-screen py-16 px-4">
+  <div class="bg-canvas dark:bg-black min-h-screen py-16 px-4">
     <div class="max-w-7xl mx-auto">
-      <h1 class="text-4xl font-bold text-center text-white mb-4">{{ t('Choose Your Plan') }}</h1>
-      <p class="text-lg text-center text-neutral-300 mb-12 max-w-2xl mx-auto">
+      <h1 class="text-4xl font-bold text-center text-black dark:text-white mb-4">{{ t('Choose Your Plan') }}</h1>
+      <p class="text-lg text-center text-neutral-600 dark:text-neutral-300 mb-12 max-w-2xl mx-auto">
         {{ t('Get unlimited access to African cinema and support local filmmakers.') }}
         {{ t('Switch or cancel anytime.') }}
       </p>
@@ -121,8 +121,8 @@ const selectPlan = async (priceId: string) => {
           :class="[
             'rounded-2xl p-6 flex flex-col',
             plan.recommended 
-              ? 'bg-black bg-opacity-10 border border-yellow-600' 
-              : 'bg-neutral-900 border border-neutral-800'
+              ? 'bg-black bg-opacity-10 border border-brand'
+              : 'bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800'
           ]"
         >
           <div 
@@ -132,12 +132,12 @@ const selectPlan = async (priceId: string) => {
             {{ t('Most Popular') }}
           </div>
           
-          <h2 class="text-2xl font-bold mb-2 text-white">{{ plan.name }}</h2>
-          <p class="text-neutral-400 mb-4">{{ plan.description }}</p>
-          
+          <h2 class="text-2xl font-bold mb-2 text-black dark:text-white">{{ plan.name }}</h2>
+          <p class="text-neutral-600 dark:text-neutral-400 mb-4">{{ plan.description }}</p>
+
           <div class="mb-4">
-            <span class="text-4xl font-bold text-white">€{{ plan.price }}</span>
-            <span class="text-neutral-400">/{{ plan.interval }}</span>
+            <span class="text-4xl font-bold text-black dark:text-white">€{{ plan.price }}</span>
+            <span class="text-neutral-600 dark:text-neutral-400">/{{ plan.interval }}</span>
             <div v-if="plan.savings" class="text-brand-hover mt-1 font-medium">
               {{ plan.savings }}
             </div>
@@ -147,7 +147,7 @@ const selectPlan = async (priceId: string) => {
             <li 
               v-for="feature in plan.features" 
               :key="feature" 
-              class="flex items-start mb-3 text-neutral-300"
+              class="flex items-start mb-3 text-neutral-600 dark:text-neutral-300"
             >
               <span class="text-brand mr-2">✓</span>
               <span>{{ feature }}</span>
@@ -155,7 +155,7 @@ const selectPlan = async (priceId: string) => {
           </ul>
           
           <UButton
-            :class="!plan.recommended ? 'bg-brand text-brand-content hover:bg-brand-hover' : 'bg-neutral-900 text-neutral-300 hover:bg-neutral-800'"
+            :class="!plan.recommended ? 'bg-brand text-brand-content hover:bg-brand-hover' : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-800'"
             :variant="plan.recommended ? 'solid' : 'outline'"
             class="w-full"
             size="lg"

@@ -80,7 +80,7 @@
       
       <section class="mb-6">
         <h2 class="text-2xl font-semibold mb-3">9. Contacto</h2>
-        <p>Para consultas sobre privacidad, contáctanos en: <a href="mailto:moabacinematv@gmail.com" class="text-brand hover:underline">moabacinematv@gmail.com</a>.</p>
+        <p>Para consultas sobre privacidad, contáctanos en: <a href="mailto:moabacinematv@gmail.com" class="text-amber-700 dark:text-brand hover:underline">moabacinematv@gmail.com</a>.</p>
       </section>
       
       <section class="mb-6">
@@ -100,9 +100,9 @@
     </div>
     
     <div class="mt-12 flex justify-center space-x-4">
-      <NuxtLink to="/legal" class="text-brand hover:underline">Aviso Legal</NuxtLink>
-      <NuxtLink to="/cookies" class="text-brand hover:underline">Política de Cookies</NuxtLink>
-      <NuxtLink to="/terms" class="text-brand hover:underline">Términos y Condiciones</NuxtLink>
+      <NuxtLink to="/legal" class="text-amber-700 dark:text-brand hover:underline">Aviso Legal</NuxtLink>
+      <NuxtLink to="/cookies" class="text-amber-700 dark:text-brand hover:underline">Política de Cookies</NuxtLink>
+      <NuxtLink to="/terms" class="text-amber-700 dark:text-brand hover:underline">Términos y Condiciones</NuxtLink>
     </div>
   </div>
 </template>

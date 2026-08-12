@@ -40,13 +40,10 @@ onMounted(() => {
   fetchAdditionalData()
 })
 
+// Bunny-only playback (#20): movies without bunny_id have no Play button
 const togglePlay = () => {
-  // Prioritize Bunny if available, otherwise use Vimeo
   if (movie?.bunny_id) {
-    navigateTo(`/watch/${movie.bunny_id}?source=bunny`)
-  } else {
-    const video_id = movie?.video_id || '933381480'
-    navigateTo(`/watch/${video_id}?source=vimeo`)
+    navigateTo(`/watch/${movie.bunny_id}`)
   }
 }
 
@@ -61,11 +58,11 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="bg-black text-white">
+  <div class="bg-canvas dark:bg-black text-white">
     <!-- Trailer Modal -->
     <TrailerModal 
       v-model:open="showTrailer" 
-      :trailer-id="movie?.trailer_id || null"
+      :trailer-id="movie?.bunny_trailer_id || null"
     />
 
 
@@ -102,7 +99,7 @@ definePageMeta({
             </h1>
             <div class="flex items-center gap-4 mb-6">
               <span class="flex items-center text-lg xl:text-xl">
-                <span class="text-yellow-400 mr-1">★</span>
+                <span class="text-brand mr-1">★</span>
                 {{ movie?.vote_average.toFixed(1) }}
               </span>
               <span v-if="movie?.release_date" class="text-lg xl:text-xl">{{ new Date(movie?.release_date).getFullYear() }}</span>
@@ -137,15 +134,16 @@ definePageMeta({
             
             <div class="flex gap-4">
               <UButton
+                v-if="movie?.bunny_id"
                 size="xl"
                 color="primary"
                 :label="t('Play')"
                 icon="i-heroicons-play"
-                class="bg-amber-400 hover:bg-amber-500"
+                class="bg-brand hover:bg-brand-focus"
                 @click="togglePlay"
               />
               <UButton
-                v-if="movie?.trailer_id"
+                v-if="movie?.bunny_trailer_id"
                 size="xl"
                 color="warning"
                 variant="outline"

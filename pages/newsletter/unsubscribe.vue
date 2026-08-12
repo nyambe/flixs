@@ -39,7 +39,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="min-h-screen bg-black text-white flex items-center justify-center p-4">
+  <div class="min-h-screen bg-canvas dark:bg-black text-black dark:text-white flex items-center justify-center p-4">
     <div class="max-w-md w-full">
       <!-- Success State -->
       <div v-if="showSuccess" class="text-center">
@@ -50,19 +50,19 @@ useSeoMeta({
         </div>
         
         <h1 class="text-2xl font-bold mb-4">{{ t('Suscripción Cancelada') }}</h1>
-        <p class="text-neutral-300 mb-6">{{ unsubscribeMessage }}</p>
+        <p class="text-neutral-600 dark:text-neutral-300 mb-6">{{ unsubscribeMessage }}</p>
         
         <div class="space-y-4">
           <UButton
             size="lg"
             color="primary"
-            class="w-full bg-amber-400 hover:bg-amber-500"
+            class="w-full bg-brand hover:bg-brand-focus"
             :label="t('Volver al Inicio')"
             @click="router.push('/')"
           />
         </div>
         
-        <p class="text-sm text-neutral-400 mt-6">
+        <p class="text-sm text-neutral-500 dark:text-neutral-400 mt-6">
           {{ t('Si cambias de opinión, siempre puedes volver a suscribirte desde nuestra página principal.') }}
         </p>
       </div>
@@ -76,7 +76,7 @@ useSeoMeta({
         </div>
         
         <h1 class="text-2xl font-bold mb-4">{{ t('Cancelar Suscripción') }}</h1>
-        <p class="text-neutral-300 mb-8">
+        <p class="text-neutral-600 dark:text-neutral-300 mb-8">
           {{ t('Lamentamos verte partir. Ingresa tu correo electrónico para cancelar tu suscripción al newsletter.') }}
         </p>
         
@@ -86,8 +86,8 @@ useSeoMeta({
             type="email"
             :placeholder="t('Tu correo electrónico')"
             :class="[
-              'w-full py-4 px-6 rounded-md bg-neutral-800 text-white border transition-colors',
-              emailError ? 'border-red-500 focus:ring-red-400' : 'border-neutral-700 focus:ring-amber-400',
+              'w-full py-4 px-6 rounded-md bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white border transition-colors',
+              emailError ? 'border-red-500 focus:ring-red-400' : 'border-neutral-300 dark:border-neutral-700 focus:ring-brand',
               'focus:outline-none focus:ring-2'
             ]"
           />
@@ -106,8 +106,8 @@ useSeoMeta({
           </div>
         </div>
         
-        <div class="mt-8 pt-6 border-t border-neutral-800">
-          <p class="text-sm text-neutral-400 mb-4">
+        <div class="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-800">
+          <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-4">
             {{ t('¿No querías cancelar tu suscripción?') }}
           </p>
           <UButton

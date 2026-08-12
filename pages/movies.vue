@@ -12,7 +12,7 @@ definePageMeta({
 <template>
   <div>
    <!-- Featured Categories Section -->
-   <section class="py-16 bg-black">
+   <section class="py-16 bg-canvas dark:bg-black">
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold mb-8">African Film Festival</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -29,11 +29,11 @@ definePageMeta({
                 class="w-full h-full object-cover rounded-lg transition transform group-hover:scale-105"
               >
             </div>
-            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-lg">
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-lg text-white">
               <div class="absolute bottom-0 p-4 w-full">
                 <h3 class="text-lg font-semibold">{{ movie.title }}</h3>
                 <div class="flex items-center mt-1">
-                  <span class="text-yellow-400">★</span>
+                  <span class="text-brand">★</span>
                   <span class="ml-1">{{ movie.vote_average.toFixed(1) }}</span>
                 </div>
               </div>

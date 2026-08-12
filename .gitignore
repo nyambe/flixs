@@ -26,3 +26,9 @@ logs
 .wrangler
 # Documentation with sensitive data
 docs/
+CLAUDE.md
+docs-informe-flixs.md
+CLAUDE.local.md
+CLAUDE.Marga.md
+*:Zone.Identifier
+env.dev.zip

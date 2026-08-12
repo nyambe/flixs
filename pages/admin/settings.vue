@@ -10,10 +10,6 @@ interface StripePlan {
 }
 
 interface APISettings {
-  vimeo: {
-    accessTokenMasked: string;
-    userId: string;
-  };
   stripe: {
     publicKeyMasked: string;
     webhookUrl: string;
@@ -110,46 +106,8 @@ onMounted(() => {
           </div>
           
           <div class="p-6 space-y-6">
-            <!-- Vimeo Settings -->
-            <div class="space-y-4">
-              <h3 class="text-lg font-medium">Vimeo Integration</h3>
-              
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">API Token</label>
-                  <div class="flex items-center">
-                    <input
-                      type="text"
-                      readonly
-                      :value="apiSettings.vimeo.accessTokenMasked"
-                      class="bg-gray-100 rounded-md py-2 px-3 text-gray-700 w-full"
-                    />
-                    <a
-                      href="https://developer.vimeo.com/apps"
-                      target="_blank"
-                      class="ml-3 text-blue-600 hover:text-blue-800"
-                    >
-                      Manage
-                    </a>
-                  </div>
-                </div>
-                
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">User ID</label>
-                  <div class="flex items-center">
-                    <input
-                      type="text"
-                      readonly
-                      :value="apiSettings.vimeo.userId"
-                      class="bg-gray-100 rounded-md py-2 px-3 text-gray-700 w-full"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            
             <!-- Stripe Settings -->
-            <div class="space-y-4 pt-4 border-t border-gray-200">
+            <div class="space-y-4">
               <h3 class="text-lg font-medium">Stripe Integration</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

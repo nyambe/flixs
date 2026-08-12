@@ -9,7 +9,7 @@ const shouldShowNotification = computed(() => {
 
 <template>
   <UApp>
-    <div class="min-h-screen bg-black text-white">
+    <div class="min-h-screen bg-canvas dark:bg-black text-black dark:text-white">
       <SiteNavigation />
       <SiteNotification v-if="shouldShowNotification" />
         
@@ -20,10 +20,7 @@ const shouldShowNotification = computed(() => {
 </template>
 
 <style>
-.backdrop-blur {
-  backdrop-filter: blur(8px);
-}
-div {
+body {
   font-family: 'Montserrat', sans-serif;
 }
 </style>

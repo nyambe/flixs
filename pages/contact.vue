@@ -143,7 +143,7 @@ async function handleSubmit() {
           <div>
             <a 
               href="mailto:info@moabacinematv.cc" 
-              class="text-lg hover:text-brand transition"
+              class="text-lg hover:text-amber-700 dark:hover:text-brand transition"
             >
               info@moabacinematv.com
             </a>
@@ -155,7 +155,7 @@ async function handleSubmit() {
           <div>
             <a 
               href="tel:+34631163686" 
-              class="text-lg hover:text-brand transition"
+              class="text-lg hover:text-amber-700 dark:hover:text-brand transition"
             >
               +34 631 16 36 86
             </a>

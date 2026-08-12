@@ -1,34 +1,10 @@
-import { adminAuth, adminDb } from '~/server/utils/firebase-admin'
+import { adminDb } from '~/server/utils/firebase-admin'
+import { requireAdmin } from '~/server/utils/authz'
 import type { PressLink } from '~/types'
 
 export default defineEventHandler(async (event): Promise<PressLink> => {
-  // Verify admin authentication
-  const authHeader = getHeader(event, 'authorization')
-  if (!authHeader?.startsWith('Bearer ')) {
-    throw createError({
-      statusCode: 401,
-      message: 'Missing or invalid authorization token',
-    })
-  }
-
-  const idToken = authHeader.split('Bearer ')[1]
-  let adminUser
-  try {
-    adminUser = await adminAuth.verifyIdToken(idToken)
-  } catch (error) {
-    throw createError({
-      statusCode: 401,
-      message: 'Invalid authorization token',
-    })
-  }
-
-  // Verify admin privileges
-  if (!adminUser.email?.includes('developer')) {
-    throw createError({
-      statusCode: 403,
-      message: 'Unauthorized access - admin privileges required',
-    })
-  }
+  // Verify admin authentication (custom claim { admin: true })
+  await requireAdmin(event)
 
   try {
     const id = event.context.params?.id

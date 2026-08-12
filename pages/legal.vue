@@ -47,7 +47,7 @@
       
       <section class="mb-6">
         <h2 class="text-2xl font-semibold mb-3">7. PROTECCIÓN DE DATOS PERSONALES</h2>
-        <p>El tratamiento de los datos personales de los usuarios se regirá por la <NuxtLink to="/privacy" class="text-brand hover:underline">Política de Privacidad</NuxtLink> de la Plataforma.</p>
+        <p>El tratamiento de los datos personales de los usuarios se regirá por la <NuxtLink to="/privacy" class="text-amber-700 dark:text-brand hover:underline">Política de Privacidad</NuxtLink> de la Plataforma.</p>
       </section>
       
       <section class="mb-6">
@@ -57,14 +57,14 @@
       
       <section class="mb-6">
         <h2 class="text-2xl font-semibold mb-3">9. CONTACTO</h2>
-        <p>Para cualquier consulta sobre este Aviso Legal, puede contactarnos en <a href="mailto:moabacinematv@gmail.com" class="text-brand hover:underline">moabacinematv@gmail.com</a>.</p>
+        <p>Para cualquier consulta sobre este Aviso Legal, puede contactarnos en <a href="mailto:moabacinematv@gmail.com" class="text-amber-700 dark:text-brand hover:underline">moabacinematv@gmail.com</a>.</p>
       </section>
     </div>
     
     <div class="mt-12 flex justify-center space-x-4">
-      <NuxtLink to="/privacy" class="text-brand hover:underline">Política de Privacidad</NuxtLink>
-      <NuxtLink to="/cookies" class="text-brand hover:underline">Política de Cookies</NuxtLink>
-      <NuxtLink to="/terms" class="text-brand hover:underline">Términos y Condiciones</NuxtLink>
+      <NuxtLink to="/privacy" class="text-amber-700 dark:text-brand hover:underline">Política de Privacidad</NuxtLink>
+      <NuxtLink to="/cookies" class="text-amber-700 dark:text-brand hover:underline">Política de Cookies</NuxtLink>
+      <NuxtLink to="/terms" class="text-amber-700 dark:text-brand hover:underline">Términos y Condiciones</NuxtLink>
     </div>
   </div>
 </template>

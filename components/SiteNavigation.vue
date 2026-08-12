@@ -63,9 +63,9 @@ const languageItems = computed(() => [
 </script>
 
 <template>
-  <header class="sticky top-0 w-full z-50 bg-black/50 backdrop-blur">
+  <header class="sticky top-0 w-full z-50 bg-canvas/70 dark:bg-black/50 backdrop-blur">
     <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
-      <NuxtLink :to="localePath('/')" class="text-2xl font-bold text-brand">
+      <NuxtLink :to="localePath('/')" class="text-2xl font-bold text-amber-700 dark:text-brand">
         <img src="/logo.png" :alt="t('Moaba Cinema TV')" class="h-12">
       </NuxtLink>
 
@@ -74,7 +74,7 @@ const languageItems = computed(() => [
           v-for="item in navigationItems"
           :key="item.path"
           :to="localePath(item.path)"
-          class="text-neutral-300 hover:text-white transition"
+          class="text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white transition"
         >
           {{ item.label() }}
         </NuxtLink>
@@ -85,7 +85,7 @@ const languageItems = computed(() => [
         <UButton
           color="neutral"
           variant="ghost"
-          class="hover:bg-neutral-800"
+          class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
           :icon="colorMode.value === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'"
           @click="toggleColorMode"
           :aria-label="t('Toggle color mode')"
@@ -100,7 +100,7 @@ const languageItems = computed(() => [
             color="white"
             :variant="locale === loc.code ? 'solid' : 'ghost'"
             size="sm"
-            class="text-white"
+            class="text-black dark:text-white"
           >
             {{ loc.code.toUpperCase() }}
           </UButton>
@@ -114,13 +114,13 @@ const languageItems = computed(() => [
           :to="localePath('/subscription/plans')"
         />
         <div v-if="currentUser" class="flex items-center space-x-4">
-          <span class="text-white">{{ userDisplayName }}</span>
+          <span class="text-black dark:text-white">{{ userDisplayName }}</span>
           <UButton
             color="neutral"
             variant="ghost"
             icon="i-heroicons-user-circle"
             :to="localePath('/auth/profile')"
-            class="hover:bg-neutral-800"
+            class="hover:bg-neutral-200 dark:hover:bg-neutral-800"
           />
           <UButton
             color="neutral"
