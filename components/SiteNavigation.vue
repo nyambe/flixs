@@ -48,16 +48,31 @@ const headerOutlineClass = computed(() =>
     ? 'text-white bg-transparent ring-white/60 hover:bg-white/10'
     : ''
 );
+// Enlaces del menú sin marcar (no la página actual): Nuxt UI les pone
+// "text-muted", que apunta al token --ui-text-muted — no hereda color del
+// header como el resto de elementos, así que en modo transparente quedan
+// oscuros sobre la foto del hero. Se sobreescribe la variable CSS solo
+// mientras el header está transparente; el color del enlace activo
+// (--ui-primary, el acento que ya combina con el logo) no se toca.
+// La barra de oferta (SiteNotification) es fixed top-0 por encima del
+// header — el header se desplaza hacia abajo su altura exacta mientras
+// esté visible, para no quedar tapado ni solapado.
+const notificationHeight = useNotificationHeight();
+const headerCssVars = computed(() => ({
+  top: `${notificationHeight.value}px`,
+  ...(headerMode.value === 'transparent'
+    ? { '--ui-text-muted': '#ffffff', '--ui-text-dimmed': 'rgba(255,255,255,0.7)' }
+    : {}),
+}));
 
-// Logo según modo: amarillo si el header está transparente sobre el hero
-// (siempre hay foto oscura debajo, sin importar el theme) o si el theme es
-// oscuro; naranja/terracota solo cuando el header es sólido y el theme es claro.
-const logoSrc = computed(() => {
-  if (headerMode.value === 'transparent') return '/logos/LOGO_MOABA_AMARILLO_TRANSPARENTE.png';
-  return colorMode.value === 'dark'
+// Logo según modo de color, siempre — independiente de si el header está
+// transparente sobre el hero: amarillo en modo oscuro, naranja/terracota en
+// modo claro (nunca cambia por estar sobre el hero, aunque el texto sí).
+const logoSrc = computed(() =>
+  colorMode.value === 'dark'
     ? '/logos/LOGO_MOABA_AMARILLO_TRANSPARENTE.png'
-    : '/logos/LOGO_MOABA_NARANJA_TRANSPARENTE.png';
-});
+    : '/logos/LOGO_MOABA_NARANJA_TRANSPARENTE.png'
+);
 
 let headerResizeObserver: ResizeObserver | null = null;
 
@@ -65,7 +80,10 @@ onMounted(() => {
   if (!headerRef.value) return;
   headerResizeObserver = new ResizeObserver((entries) => {
     const entry = entries[0];
-    if (entry) headerHeight.value = entry.contentRect.height;
+    // contentRect excluye padding/border — usamos el alto visual completo
+    // (hoy da igual, el header no tiene padding vertical, pero así es correcto
+    // si algún día se le agrega).
+    if (entry) headerHeight.value = entry.target.getBoundingClientRect().height;
   });
   headerResizeObserver.observe(headerRef.value);
 });
@@ -74,6 +92,16 @@ onUnmounted(() => {
   headerResizeObserver?.disconnect();
 });
 
+// Una sola foto de fondo por panel del mega-menú (no una por enlace) — con
+// degradado oscuro encima, mismo tratamiento que el hero y los carteles de
+// Conócenos. Nuxt UI no soporta este layout con su lista automática de
+// `children`, así que el contenido de estos dos dropdowns se renderiza a
+// mano vía los slots #movies-content y #cinema-content (ver template).
+const imagePath = useImagePath();
+const { getMovieById } = useMovieData();
+const moviesMenuBackdrop = imagePath.backdrop(getMovieById(284952)?.backdrop_path ?? null, 'w780'); // Ureka
+const cinemaMenuBackdrop = imagePath.backdrop(getMovieById(1438351)?.backdrop_path ?? null, 'w780'); // Orígenes
+
 // Navigation items con estructura de Nuxt UI (UNavigationMenu) — mega-menú
 // para Cine y Cinema Colonial, resto como links simples.
 const navigationItems = computed(() => [
@@ -81,40 +109,42 @@ const navigationItems = computed(() => [
   {
     label: t('Movies'),
     to: localePath('/movies'),
+    slot: 'movies',
     children: [
       { label: 'Ficción', type: 'label' as const },
-      { label: 'Drama', to: localePath('/movies') },
-      { label: 'Comedia', to: localePath('/movies') },
-      { label: 'Misterio', to: localePath('/movies') },
-      { label: 'Historia', to: localePath('/movies') },
-      { label: 'Romance', to: localePath('/movies') },
-      { label: 'Musical', to: localePath('/movies') },
-      { label: 'Infantil', to: localePath('/movies') },
-      { label: 'Guerras', to: localePath('/movies') },
+      { label: 'Drama', to: localePath('/proximamente') },
+      { label: 'Comedia', to: localePath('/proximamente') },
+      { label: 'Misterio', to: localePath('/proximamente') },
+      { label: 'Historia', to: localePath('/proximamente') },
+      { label: 'Romance', to: localePath('/proximamente') },
+      { label: 'Musical', to: localePath('/proximamente') },
+      { label: 'Infantil', to: localePath('/proximamente') },
+      { label: 'Guerras', to: localePath('/proximamente') },
       { label: 'Documental', type: 'label' as const },
-      { label: 'Docu drama', to: localePath('/movies') },
-      { label: 'Docu ficción', to: localePath('/movies') },
-      { label: 'Histórico', to: localePath('/movies') },
-      { label: 'Antropológico', to: localePath('/movies') },
-      { label: 'Lo Real/Clásico', to: localePath('/movies') },
-      { label: 'Doc. Musical', to: localePath('/movies') },
+      { label: 'Docu drama', to: localePath('/proximamente') },
+      { label: 'Docu ficción', to: localePath('/proximamente') },
+      { label: 'Histórico', to: localePath('/proximamente') },
+      { label: 'Antropológico', to: localePath('/proximamente') },
+      { label: 'Lo Real/Clásico', to: localePath('/proximamente') },
+      { label: 'Doc. Musical', to: localePath('/proximamente') },
     ],
-    ui: { childList: 'grid grid-cols-2 grid-flow-col grid-rows-9 gap-x-6' }
   },
   { label: t('TV Series'), to: localePath('/tv-series') },
   { label: t('TV Show'), to: localePath('/tv-show') },
   {
     label: t('Cinema Colonial'),
     to: localePath('/cinema-colonial'),
+    slot: 'cinema',
     children: [
-      { label: 'Cine Etnográfico', to: localePath('/cinema-colonial') },
-      { label: 'Cine Antropológico', to: localePath('/cinema-colonial') },
-      { label: 'Cine de Explotación', to: localePath('/cinema-colonial') },
-      { label: 'Cine de Independencia', to: localePath('/cinema-colonial') },
-    ]
+      { label: 'Cine Etnográfico', to: localePath('/proximamente') },
+      { label: 'Cine Antropológico', to: localePath('/proximamente') },
+      { label: 'Cine de Explotación', to: localePath('/proximamente') },
+      { label: 'Cine de Independencia', to: localePath('/proximamente') },
+    ],
   },
   { label: t('Festivales'), to: localePath('/festivales') },
   { label: t('Otros Eventos'), to: localePath('/otros-eventos') },
+  { label: t('Paquetes'), to: localePath('/paquetes') },
 ]);
 
 // Toggle color mode
@@ -161,9 +191,10 @@ const languageItems = computed(() => [
 <template>
   <header
     ref="headerRef"
-    :class="['fixed top-0 w-full z-50 transition-colors duration-300', headerBgClass, headerTextClass]"
+    :class="['fixed w-full z-50 transition-[top,background-color,color] duration-300', headerBgClass, headerTextClass]"
+    :style="headerCssVars"
   >
-    <nav class="w-full max-w-7xl mx-auto px-2 flex items-center justify-between gap-0">
+    <nav class="w-full max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between gap-0">
       <NuxtLink :to="localePath('/')" class="shrink-0 text-2xl font-bold text-brand">
         <img :src="logoSrc" :alt="t('Moaba Cinema TV')" class="h-16 w-auto">
       </NuxtLink>
@@ -175,8 +206,55 @@ const languageItems = computed(() => [
         color="primary"
         highlight
         class="hidden md:flex shrink-0"
-        :ui="{ root: 'gap-0', link: 'px-1', linkLabel: 'uppercase tracking-wide text-xs font-semibold' }"
-      />
+        :ui="{
+          root: 'gap-0',
+          link: 'px-1',
+          linkLabel: 'uppercase tracking-wide text-xs font-semibold',
+          viewport: 'ring-brand/20 shadow-xl',
+          content: 'w-auto',
+        }"
+      >
+        <template #movies-content="{ item }">
+          <div class="relative w-[36rem] overflow-hidden rounded-md">
+            <img :src="moviesMenuBackdrop" alt="" class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-canvas/75 dark:from-obsidian/80 via-canvas/60 dark:via-obsidian/60 to-canvas/40 dark:to-obsidian/40" />
+            <div class="relative p-3 grid grid-cols-2 gap-x-6">
+              <template v-for="child in item.children" :key="child.label">
+                <p
+                  v-if="child.type === 'label'"
+                  class="col-span-full text-xs font-semibold uppercase tracking-wide text-brand mt-2 pt-2 mb-0.5 border-t border-current/10 first:mt-0 first:pt-0 first:border-t-0"
+                >
+                  {{ child.label }}
+                </p>
+                <NuxtLink
+                  v-else
+                  :to="child.to"
+                  class="py-1 px-2 leading-tight rounded-md text-sm text-black/80 dark:text-white/90 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition"
+                >
+                  {{ child.label }}
+                </NuxtLink>
+              </template>
+            </div>
+          </div>
+        </template>
+
+        <template #cinema-content="{ item }">
+          <div class="relative w-72 overflow-hidden rounded-md">
+            <img :src="cinemaMenuBackdrop" alt="" class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-canvas/75 dark:from-obsidian/80 via-canvas/60 dark:via-obsidian/60 to-canvas/40 dark:to-obsidian/40" />
+            <div class="relative p-3 space-y-0.5">
+              <NuxtLink
+                v-for="child in item.children"
+                :key="child.label"
+                :to="child.to"
+                class="block py-1 px-2 leading-tight rounded-md text-sm text-black/80 dark:text-white/90 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition"
+              >
+                {{ child.label }}
+              </NuxtLink>
+            </div>
+          </div>
+        </template>
+      </UNavigationMenu>
 
       <div class="flex items-center gap-1 shrink-0">
         <!-- Buscador, notificaciones (visuales por ahora, issues #40 y #42) y modo de color: agrupados -->
@@ -208,20 +286,20 @@ const languageItems = computed(() => [
           />
         </div>
 
-        <!-- Simple Language Switcher - Debug with buttons -->
-        <div class="flex items-center gap-0.5">
+        <!-- Selector de idioma: agrupado en un único dropdown -->
+        <UDropdownMenu
+          :items="languageItems"
+          :ui="{ content: 'ring-1 ring-brand/20 shadow-xl bg-canvas dark:bg-obsidian' }"
+        >
           <UButton
-            v-for="loc in locales"
-            :key="loc.code"
-            :to="switchLocalePath(loc.code)"
-            color="white"
-            :variant="locale === loc.code ? 'solid' : 'ghost'"
+            color="neutral"
+            variant="ghost"
             size="sm"
-            :class="['px-0.5', headerTextClass]"
-          >
-            {{ loc.code.toUpperCase() }}
-          </UButton>
-        </div>
+            icon="i-heroicons-language"
+            :class="headerGhostClass"
+            :aria-label="t('Change language')"
+          />
+        </UDropdownMenu>
 
         <UButton
           v-if="!isSubscribed"

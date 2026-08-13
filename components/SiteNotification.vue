@@ -24,19 +24,49 @@ const shouldShow = computed(() => {
   return !isExcluded && !notificationDismissed.value
 })
 
+// Barra fija encima del header: se mide su propia altura (como el header
+// mide la suya) para empujar el header hacia abajo justo lo necesario.
+const notificationRef = ref<HTMLElement | null>(null)
+const notificationHeight = useNotificationHeight()
+let notificationResizeObserver: ResizeObserver | null = null
+
+const observeHeight = () => {
+  if (!notificationRef.value) return
+  notificationResizeObserver = new ResizeObserver((entries) => {
+    const entry = entries[0]
+    // contentRect excluye el padding (py-3) — necesitamos el alto visual
+    // completo para empujar el header exactamente lo necesario.
+    if (entry) notificationHeight.value = entry.target.getBoundingClientRect().height
+  })
+  notificationResizeObserver.observe(notificationRef.value)
+}
+
 // Show notification after delay
 onMounted(() => {
   if (shouldShow.value) {
     setTimeout(() => {
       isVisible.value = true
+      nextTick(observeHeight)
     }, showDelay)
   }
+})
+
+onUnmounted(() => {
+  notificationResizeObserver?.disconnect()
+  notificationHeight.value = 0
 })
 
 // Watch route changes
 watch(() => route.path, () => {
   if (!shouldShow.value) {
     isVisible.value = false
+  }
+})
+
+watch(isVisible, (visible) => {
+  if (!visible) {
+    notificationResizeObserver?.disconnect()
+    notificationHeight.value = 0
   }
 })
 
@@ -62,7 +92,8 @@ const closeNotification = (e: Event) => {
   >
     <div
       v-if="isVisible"
-      class="w-full bg-brand text-brand-content py-3 px-4 cursor-pointer shadow-lg"
+      ref="notificationRef"
+      class="fixed top-0 left-0 w-full z-[60] bg-brand text-brand-content py-3 px-4 cursor-pointer shadow-lg"
       @click="handleNotificationClick"
     >
       <div class="container mx-auto flex items-center justify-between">

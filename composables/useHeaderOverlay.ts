@@ -7,6 +7,12 @@ const HEADER_HEIGHT_FALLBACK = 64
 export const useHeaderHeight = () =>
   useState<number>('header-height', () => HEADER_HEIGHT_FALLBACK)
 
+// Altura de la barra de oferta (SiteNotification) cuando está visible — 0
+// si no está montada/visible. El header (fixed) se desplaza hacia abajo
+// este alto exacto para que la barra quede encima de él, no debajo.
+export const useNotificationHeight = () =>
+  useState<number>('notification-height', () => 0)
+
 // Por defecto true: al cargar o navegar a una página nueva, el scroll
 // arranca en 0, así que el hero (si existe) está visible.
 export const useHeroVisible = () =>
@@ -21,3 +27,4 @@ export const isHomeRouteName = (
   if (!name) return false
   return String(name).split('___')[0] === 'index'
 }
+
