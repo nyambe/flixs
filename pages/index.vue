@@ -82,16 +82,15 @@ useSeoMeta({
         <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
       </div>
 
-      <div class="flex items-center w-full max-w-7xl mx-auto px-4 relative min-h-[100dvh]">
+      <div class="flex items-center w-full max-w-7xl mx-auto px-8 md:px-16 relative min-h-[100dvh]">
         <div class="max-w-2xl">
-          <h1 class="text-5xl md:text-7xl font-bold mb-4">
+          <h1 class="text-5xl md:text-7xl font-bold mb-3">
             {{ featuredMovie.title }}
           </h1>
-          <p class="text-md text-neutral-300 mb-8 max-h-48 overflow-hidden relative">
+          <p class="text-md text-neutral-300 mb-5 line-clamp-4">
             {{ featuredMovie.overview }}
-            <span class="absolute bottom-0 right-0 bg-gradient-to-l from-black to-transparent px-4">&hellip;</span>
           </p>
-          <div class="flex space-x-4">
+          <div class="flex gap-3">
             <UButton
               v-if="featuredMovie.bunny_id"
               size="xl"
@@ -108,6 +107,7 @@ useSeoMeta({
               variant="outline"
               :label="t('Trailer')"
               icon="i-heroicons-film"
+              class="bg-black/30 backdrop-blur-sm"
               @click="showTrailer = true"
             />
             <UButton
@@ -116,6 +116,7 @@ useSeoMeta({
               variant="ghost"
               :label="t('More Info')"
               icon="i-heroicons-information-circle"
+              class="text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm"
               :to="`/movie/${featuredMovie.id}`"
             />
           </div>
@@ -169,12 +170,9 @@ useSeoMeta({
     <section class="py-16 bg-amber-50 dark:bg-black">
       <div class="container mx-auto px-4">
         <h2 class="text-xl font-bold mb-8">{{ t('Patrocinadores') }}</h2>
-        <div class="flex justify-center">
-          <img 
-            src="/patrocinadores.png" 
-:alt="t('Nuestros Patrocinadores')" 
-            class="max-w-[80%] md:max-w-[70%] lg:max-w-[60%]"
-          >
+        <div class="flex flex-col items-center gap-3 py-8 text-neutral-500 dark:text-neutral-400">
+          <UIcon name="i-heroicons-sparkles" class="h-8 w-8" />
+          <p class="text-lg font-medium italic">{{ t('Coming soon') }}</p>
         </div>
       </div>
     </section>
