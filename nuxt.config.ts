@@ -4,6 +4,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/tailwind.css'],
   modules: ['@nuxt/ui', '@nuxt/fonts', '@nuxt/eslint', '@nuxtjs/i18n'],
+  colorMode: {
+    preference: 'dark',
+    fallback: 'dark',
+  },
   fonts: {
     families: [
       { name: 'Syne', provider: 'google' },
