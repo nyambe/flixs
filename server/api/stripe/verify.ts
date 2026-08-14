@@ -1,6 +1,10 @@
-// server/api/stripe-verify.ts
-import Stripe from 'stripe';
+// server/api/stripe/verify.ts
+// Confirms a Checkout Session after the success redirect and activates the
+// subscription in Firestore. Requires the signed-in user to be the same one
+// that started the checkout (#57) — the webhook remains the other writer.
+import { stripe } from '~/server/utils/stripe';
 import { adminDb } from '~/server/utils/firebase-admin';
+import { requireUser } from '~/server/utils/authz';
 
 interface VerifyRequestBody {
   sessionId: string;
@@ -11,12 +15,7 @@ interface VerifyResponse {
 }
 
 export default defineEventHandler(async (event): Promise<VerifyResponse> => {
-  const runtimeConfig = useRuntimeConfig();
-  const stripe = new Stripe(runtimeConfig.stripe.secretKey as string, {
-    apiVersion: '2025-02-24.acacia', // Updated to latest version
-    typescript: true,
-  });
- 
+  const user = await requireUser(event);
 
   const body = await readBody<VerifyRequestBody>(event);
   const { sessionId } = body;
@@ -37,6 +36,14 @@ export default defineEventHandler(async (event): Promise<VerifyResponse> => {
       throw createError({
         statusCode: 400,
         message: 'Invalid session: Missing Firebase UID',
+      });
+    }
+
+    // The session must belong to the caller
+    if (firebaseUid !== user.uid) {
+      throw createError({
+        statusCode: 403,
+        message: 'Session does not belong to the authenticated user',
       });
     }
 
@@ -61,11 +68,14 @@ export default defineEventHandler(async (event): Promise<VerifyResponse> => {
 
     return { success: true };
   } catch (error) {
+    // Re-throw our own createError responses untouched
+    if (error && typeof error === 'object' && 'statusCode' in error) {
+      throw error;
+    }
     console.error('Stripe verify error:', error);
     throw createError({
       statusCode: 500,
       message: 'Failed to verify payment',
-      data: error,
     });
   }
 });

@@ -1,18 +1,8 @@
 // server/api/stripe/checkout.ts
-import Stripe from 'stripe';
-import { getAuth } from 'firebase-admin/auth';
-import { initializeApp, cert, getApps } from 'firebase-admin/app';
-
-// Initialize Firebase Admin (only once)
-if (!getApps().length) {
-  initializeApp({
-    credential: cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    }),
-  });
-}
+// Creates a Stripe Checkout Session for one of the known subscription plans.
+// priceId is validated against the configured plans (#57).
+import { stripe } from '~/server/utils/stripe';
+import { requireUser } from '~/server/utils/authz';
 
 interface CheckoutRequestBody {
   priceId: string; // The Stripe Price ID selected by the user
@@ -24,31 +14,8 @@ interface CheckoutResponse {
 
 export default defineEventHandler(async (event): Promise<CheckoutResponse> => {
   const runtimeConfig = useRuntimeConfig();
-  const stripe = new Stripe(runtimeConfig.stripe.secretKey as string, {
-    apiVersion: '2024-04-10',
-    typescript: true,
-  });
 
-  // Get the Firebase ID token from the Authorization header
-  const authHeader = getRequestHeader(event, 'Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw createError({
-      statusCode: 401,
-      message: 'Unauthorized: Missing or invalid Authorization header',
-    });
-  }
-  const idToken = authHeader.split('Bearer ')[1];
-
-  // Verify the Firebase ID token
-  let user;
-  try {
-    user = await getAuth().verifyIdToken(idToken);
-  } catch (error) {
-    throw createError({
-      statusCode: 401,
-      message: 'Unauthorized: Invalid Firebase ID token',
-    });
-  }
+  const user = await requireUser(event);
 
   // Parse the request body to get the priceId
   const body = await readBody<CheckoutRequestBody>(event);
@@ -57,6 +24,21 @@ export default defineEventHandler(async (event): Promise<CheckoutResponse> => {
     throw createError({
       statusCode: 400,
       message: 'Missing priceId in request body',
+    });
+  }
+
+  // Only the configured plans can be purchased
+  const stripePublic = runtimeConfig.public.stripe as Record<string, string>;
+  const allowedPriceIds = [
+    stripePublic.basicPriceId,
+    stripePublic.premiumPriceId,
+    stripePublic.educationPriceId,
+  ].filter(Boolean);
+
+  if (!allowedPriceIds.includes(priceId)) {
+    throw createError({
+      statusCode: 400,
+      message: 'Invalid priceId',
     });
   }
 
@@ -88,11 +70,13 @@ export default defineEventHandler(async (event): Promise<CheckoutResponse> => {
 
     return { url: session.url };
   } catch (error) {
+    if (error && typeof error === 'object' && 'statusCode' in error) {
+      throw error;
+    }
     console.error('Stripe error:', error);
     throw createError({
       statusCode: 500,
       message: 'Failed to create checkout session',
-      data: error,
     });
   }
 });
