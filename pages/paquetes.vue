@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // pages/paquetes.vue
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 interface SponsorTier {
   id: string
@@ -54,7 +55,7 @@ const tiers = computed<SponsorTier[]>(() => [
 ])
 
 useSeoMeta({
-  title: 'Paquetes de Patrocinio - MOABA Cinema TV',
+  title: () => `${t('Paquetes de Patrocinio')} - MOABA Cinema TV`,
 })
 </script>
 
@@ -105,7 +106,7 @@ useSeoMeta({
         </ul>
 
         <UButton
-          to="/contact"
+          :to="localePath('/contact')"
           size="lg"
           class="w-full justify-center font-medium"
           :class="tier.recommended

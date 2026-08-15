@@ -1,6 +1,7 @@
 <!-- pages/conocenos.vue -->
 <script setup lang="ts">
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 const features = computed(() => [
   {
@@ -173,7 +174,7 @@ onUnmounted(() => {
           {{ t('If you are interested in African cinema, want to distribute your film or have an idea for an audiovisual project related to Africa, we would love to hear from you.') }}
         </p>
         <UButton
-          to="/contact"
+          :to="localePath('/contact')"
           color="primary"
           size="lg"
           class="font-medium text-lg px-8 bg-brand hover:bg-brand-focus text-brand-content"

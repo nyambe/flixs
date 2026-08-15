@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { getAllMovies } = useMovieData()
 const imagePath = useImagePath()
+const localePath = useLocalePath()
 
 const posterAspectRatio = 'aspect-[2/3]'
 
@@ -18,8 +19,8 @@ definePageMeta({
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <NuxtLink 
             v-for="movie in getAllMovies()" 
-            :key="movie.id" 
-            :to="`/movie/${movie.id}`"
+            :key="movie.id"
+            :to="localePath(`/movie/${movie.id}`)"
             class="relative group cursor-pointer"
           >
             <div :class="posterAspectRatio" class="w-full">

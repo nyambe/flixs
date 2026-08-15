@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // app.vue
 const { t } = useI18n()
+const localePath = useLocalePath()
 const { featuredMovie, popularMovies } = useMovieData()
 const imagePath = useImagePath()
 const showTrailer = ref(false)
@@ -31,7 +32,7 @@ onUnmounted(() => {
 // Add email handling for subscription
 const handleSubscribe = async (email: string) => {
   try {
-    await navigateTo('/auth/register?email=' + encodeURIComponent(email))
+    await navigateTo(localePath('/auth/register') + '?email=' + encodeURIComponent(email))
   } catch (error) {
     console.error('Error during subscription:', error)
   }
@@ -40,7 +41,7 @@ const handleSubscribe = async (email: string) => {
 // Handle skip newsletter
 const handleSkip = async () => {
   try {
-    await navigateTo('/auth/register')
+    await navigateTo(localePath('/auth/register'))
   } catch (error) {
     console.error('Error during navigation:', error)
   }
@@ -98,7 +99,7 @@ useSeoMeta({
               :label="t('Play')"
               icon="i-heroicons-play"
               class="bg-brand hover:bg-brand-focus"
-              @click="navigateTo(`/watch/${featuredMovie.bunny_id}`)"
+              @click="navigateTo(localePath(`/watch/${featuredMovie.bunny_id}`))"
             />
             <UButton
               v-if="featuredMovie.bunny_trailer_id"
@@ -117,7 +118,7 @@ useSeoMeta({
               :label="t('More Info')"
               icon="i-heroicons-information-circle"
               class="text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm"
-              :to="`/movie/${featuredMovie.id}`"
+              :to="localePath(`/movie/${featuredMovie.id}`)"
             />
           </div>
         </div>
@@ -141,8 +142,8 @@ useSeoMeta({
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <NuxtLink 
             v-for="movie in popularMovies" 
-            :key="movie.id" 
-            :to="`/movie/${movie.id}`"
+            :key="movie.id"
+            :to="localePath(`/movie/${movie.id}`)"
             class="relative group cursor-pointer"
           >
             <div :class="posterAspectRatio" class="w-full">
