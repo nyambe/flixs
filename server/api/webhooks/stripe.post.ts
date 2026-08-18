@@ -75,6 +75,13 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // Only customer.subscription.* events carry a Subscription payload — ignore
+  // anything else cleanly instead of casting blind and crashing (#57)
+  if (!stripeEvent.type.startsWith('customer.subscription.')) {
+    console.log(`Unhandled event type ${stripeEvent.type}`)
+    return { received: true }
+  }
+
   const subscription = stripeEvent.data.object as Stripe.Subscription
   const customerId = subscription.customer as string
 

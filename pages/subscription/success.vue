@@ -14,6 +14,8 @@ const sessionId = route.query.session_id as string;
 const error = ref<string>('');
 const loading = ref<boolean>(true);
 
+const { $firebase } = useNuxtApp();
+
 onMounted(async () => {
   if (!sessionId) {
     error.value = t('Missing session ID.');
@@ -21,7 +23,13 @@ onMounted(async () => {
     return;
   }
 
-  if (!currentUser.value && !sessionId) {
+  // After the Stripe redirect, Firebase may not have restored the session yet —
+  // wait for the first auth state before calling verify (which now requires auth, #57)
+  const user = $firebase.auth.currentUser ?? await new Promise<typeof $firebase.auth.currentUser>((resolve) => {
+    const unsubscribe = $firebase.auth.onAuthStateChanged((u) => { unsubscribe(); resolve(u); });
+  });
+
+  if (!user) {
     error.value = t('You must be signed in to view this page.');
     loading.value = false;
     return;
@@ -31,6 +39,7 @@ onMounted(async () => {
     // Verify the session and update Firestore
     const response = await $fetch<{ success: boolean }>('/api/stripe/verify', {
       method: 'POST',
+      headers: { Authorization: `Bearer ${await user.getIdToken()}` },
       body: { sessionId },
     });
 
