@@ -1,17 +1,12 @@
 // server/api/stripe/products.ts
-import Stripe from 'stripe';
+import type Stripe from 'stripe';
+import { stripe } from '~/server/utils/stripe';
 // Define the shape of a Product with Prices
 interface ProductWithPrices extends Stripe.Product {
   prices: Stripe.Price[];
 }
 
 export default defineEventHandler(async (event): Promise<ProductWithPrices[]> => {
-  const runtimeConfig = useRuntimeConfig();
-  const stripe = new Stripe(runtimeConfig.stripe.secretKey as string, {
-    apiVersion: '2024-04-10',
-    typescript: true, // Ensures TypeScript compatibility
-  });
-
   try {
     // Fetch products
     const products = await stripe.products.list({
