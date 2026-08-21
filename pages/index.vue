@@ -1,16 +1,38 @@
 <script setup lang="ts">
 // app.vue
 const { t } = useI18n()
+const localePath = useLocalePath()
 const { featuredMovie, popularMovies } = useMovieData()
 const imagePath = useImagePath()
 const showTrailer = ref(false)
 const { currentUser } = useAuth()
 const appConfig = useAppConfig()
 
+// Overlay transparente del header sobre este hero (ver Task 1 / composables/useHeaderOverlay.ts)
+const heroVisible = useHeroVisible()
+const heroSentinel = ref<HTMLElement | null>(null)
+let heroObserver: IntersectionObserver | null = null
+
+onMounted(() => {
+  heroVisible.value = true
+  if (!heroSentinel.value) return
+  heroObserver = new IntersectionObserver(
+    ([entry]) => {
+      heroVisible.value = entry.isIntersecting
+    },
+    { threshold: 0 }
+  )
+  heroObserver.observe(heroSentinel.value)
+})
+
+onUnmounted(() => {
+  heroObserver?.disconnect()
+})
+
 // Add email handling for subscription
 const handleSubscribe = async (email: string) => {
   try {
-    await navigateTo('/auth/register?email=' + encodeURIComponent(email))
+    await navigateTo(localePath('/auth/register') + '?email=' + encodeURIComponent(email))
   } catch (error) {
     console.error('Error during subscription:', error)
   }
@@ -19,7 +41,7 @@ const handleSubscribe = async (email: string) => {
 // Handle skip newsletter
 const handleSkip = async () => {
   try {
-    await navigateTo('/auth/register')
+    await navigateTo(localePath('/auth/register'))
   } catch (error) {
     console.error('Error during navigation:', error)
   }
@@ -49,28 +71,27 @@ useSeoMeta({
     />
     
     <!-- Hero Section for logged-in users OR when newsletter is disabled -->
-    <section v-if="currentUser || !appConfig.features.newsletter.showOnHomepage" class="relative min-h-[60vh] overflow-hidden text-white">
+    <section v-if="currentUser || !appConfig.features.newsletter.showOnHomepage" class="relative min-h-[100dvh] overflow-hidden text-white">
       <div class="absolute inset-0">
-        <div :class="backdropAspectRatio" class="w-full ">
-          <img 
+        <div class="w-full h-full">
+          <img
             :src="imagePath.backdrop(featuredMovie.backdrop_path)"
             :alt="featuredMovie.title"
-            class="w-full aspect-[16/9] object-cover"
+            class="w-full h-full object-cover"
           >
         </div>
         <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
       </div>
 
-      <div class="flex container mx-auto px-4 relative pt-48 h-full">
+      <div class="flex items-center w-full max-w-7xl mx-auto px-8 md:px-16 relative min-h-[100dvh]">
         <div class="max-w-2xl">
-          <h1 class="text-5xl md:text-7xl font-bold mb-4">
+          <h1 class="text-5xl md:text-7xl font-bold mb-3">
             {{ featuredMovie.title }}
           </h1>
-          <p class="text-md text-neutral-300 mb-8 max-h-48 overflow-hidden relative">
+          <p class="text-md text-neutral-300 mb-5 line-clamp-4">
             {{ featuredMovie.overview }}
-            <span class="absolute bottom-0 right-0 bg-gradient-to-l from-black to-transparent px-4">&hellip;</span>
           </p>
-          <div class="flex space-x-4">
+          <div class="flex gap-3">
             <UButton
               v-if="featuredMovie.bunny_id"
               size="xl"
@@ -78,7 +99,7 @@ useSeoMeta({
               :label="t('Play')"
               icon="i-heroicons-play"
               class="bg-brand hover:bg-brand-focus"
-              @click="navigateTo(`/watch/${featuredMovie.bunny_id}`)"
+              @click="navigateTo(localePath(`/watch/${featuredMovie.bunny_id}`))"
             />
             <UButton
               v-if="featuredMovie.bunny_trailer_id"
@@ -87,6 +108,7 @@ useSeoMeta({
               variant="outline"
               :label="t('Trailer')"
               icon="i-heroicons-film"
+              class="bg-black/30 backdrop-blur-sm"
               @click="showTrailer = true"
             />
             <UButton
@@ -95,11 +117,14 @@ useSeoMeta({
               variant="ghost"
               :label="t('More Info')"
               icon="i-heroicons-information-circle"
-              :to="`/movie/${featuredMovie.id}`"
+              class="text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+              :to="localePath(`/movie/${featuredMovie.id}`)"
             />
           </div>
         </div>
       </div>
+
+      <div ref="heroSentinel" class="absolute bottom-0 left-0 h-px w-full" />
     </section>
     
     <!-- Subscription Hero for non-logged-in users (only if newsletter enabled) -->
@@ -117,8 +142,8 @@ useSeoMeta({
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <NuxtLink 
             v-for="movie in popularMovies" 
-            :key="movie.id" 
-            :to="`/movie/${movie.id}`"
+            :key="movie.id"
+            :to="localePath(`/movie/${movie.id}`)"
             class="relative group cursor-pointer"
           >
             <div :class="posterAspectRatio" class="w-full">
@@ -146,12 +171,9 @@ useSeoMeta({
     <section class="py-16 bg-amber-50 dark:bg-black">
       <div class="container mx-auto px-4">
         <h2 class="text-xl font-bold mb-8">{{ t('Patrocinadores') }}</h2>
-        <div class="flex justify-center">
-          <img 
-            src="/patrocinadores.png" 
-:alt="t('Nuestros Patrocinadores')" 
-            class="max-w-[80%] md:max-w-[70%] lg:max-w-[60%]"
-          >
+        <div class="flex flex-col items-center gap-3 py-8 text-neutral-500 dark:text-neutral-400">
+          <UIcon name="i-heroicons-sparkles" class="h-8 w-8" />
+          <p class="text-lg font-medium italic">{{ t('Coming soon') }}</p>
         </div>
       </div>
     </section>

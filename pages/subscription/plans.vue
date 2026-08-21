@@ -120,8 +120,8 @@ const selectPlan = async (priceId: string) => {
           :key="plan.id"
           :class="[
             'rounded-2xl p-6 flex flex-col',
-            plan.recommended 
-              ? 'bg-black bg-opacity-10 border border-brand'
+            plan.recommended
+              ? 'bg-white dark:bg-neutral-900 border-2 border-brand'
               : 'bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800'
           ]"
         >
