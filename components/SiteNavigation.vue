@@ -186,6 +186,14 @@ const languageItems = computed(() => [
     to: switchLocalePath(loc.code)
   }))
 ]);
+
+// Menú móvil (#39, versión mínima para poder publicar el rebrand): hamburguesa
+// como trigger del USlideover (estado interno del componente; el cierre usa la
+// función `close` que expone el slot #content). El refinado queda para #39.
+// Enlaces de primer nivel para el panel móvil (sin children)
+const mobileNavigationItems = computed(() =>
+  navigationItems.value.map(({ label, to }) => ({ label, to }))
+);
 </script>
 
 <template>
@@ -264,6 +272,7 @@ const languageItems = computed(() => [
             variant="ghost"
             size="sm"
             icon="i-heroicons-magnifying-glass"
+            class="hidden sm:inline-flex"
             :class="headerGhostClass"
             :aria-label="t('Search')"
           />
@@ -272,6 +281,7 @@ const languageItems = computed(() => [
             variant="ghost"
             size="sm"
             icon="i-heroicons-bell"
+            class="hidden sm:inline-flex"
             :class="headerGhostClass"
             :aria-label="t('Notifications')"
           />
@@ -306,10 +316,10 @@ const languageItems = computed(() => [
           color="primary"
           size="sm"
           :label="t('Subscribe')"
-          class="bg-brand text-brand-content hover:bg-brand-focus px-2.5"
+          class="hidden md:inline-flex bg-brand text-brand-content hover:bg-brand-focus px-2.5"
           :to="localePath('/subscription/plans')"
         />
-        <div v-if="currentUser" class="flex items-center gap-2">
+        <div v-if="currentUser" class="hidden md:flex items-center gap-2">
           <span :class="headerTextClass">{{ userDisplayName }}</span>
           <UButton
             color="neutral"
@@ -332,11 +342,93 @@ const languageItems = computed(() => [
           color="neutral"
           variant="outline"
           size="sm"
-          class="px-2.5"
+          class="hidden md:inline-flex px-2.5"
           :class="headerOutlineClass"
           :label="t('Sign In')"
           :to="localePath('/auth/login')"
         />
+
+        <!-- Menú móvil (#39): el botón es el trigger del slideover (si se separa,
+             el clic de apertura burbujea al document y la capa de click-fuera
+             lo cierra en el acto) -->
+        <USlideover side="right">
+          <UButton
+            color="neutral"
+            variant="ghost"
+            size="sm"
+            icon="i-heroicons-bars-3"
+            class="md:hidden"
+            :class="headerGhostClass"
+            :aria-label="t('Open menu')"
+          />
+          <template #content="{ close }">
+        <div class="h-full overflow-y-auto bg-canvas dark:bg-obsidian text-black dark:text-white p-6 flex flex-col">
+          <div class="flex items-center justify-between mb-6">
+            <img :src="logoSrc" :alt="t('Moaba Cinema TV')" class="h-10 w-auto">
+            <UButton
+              color="neutral"
+              variant="ghost"
+              icon="i-heroicons-x-mark"
+              :aria-label="t('Close menu')"
+              @click="close()"
+            />
+          </div>
+
+          <nav class="flex flex-col gap-1">
+            <NuxtLink
+              v-for="item in mobileNavigationItems"
+              :key="item.to"
+              :to="item.to"
+              class="py-3 px-2 text-lg font-medium rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800"
+              @click="close()"
+            >
+              {{ item.label }}
+            </NuxtLink>
+          </nav>
+
+          <div class="mt-auto pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-col gap-2">
+            <UButton
+              v-if="!isSubscribed"
+              color="primary"
+              size="lg"
+              block
+              :label="t('Subscribe')"
+              class="bg-brand text-brand-content hover:bg-brand-focus"
+              :to="localePath('/subscription/plans')"
+            />
+            <template v-if="currentUser">
+              <UButton
+                color="neutral"
+                variant="outline"
+                size="lg"
+                block
+                icon="i-heroicons-user-circle"
+                :label="userDisplayName"
+                :to="localePath('/auth/profile')"
+              />
+              <UButton
+                color="neutral"
+                variant="ghost"
+                size="lg"
+                block
+                icon="i-heroicons-arrow-right-on-rectangle"
+                :label="t('Sign Out')"
+                @click="() => { signOut(); close(); }"
+              />
+            </template>
+            <UButton
+              v-else
+              color="neutral"
+              variant="outline"
+              size="lg"
+              block
+              :label="t('Sign In')"
+              :to="localePath('/auth/login')"
+            />
+          </div>
+        </div>
+        </template>
+        </USlideover>
       </div>
     </nav>
   </header>
