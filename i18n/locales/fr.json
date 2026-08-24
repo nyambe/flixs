@@ -98,7 +98,6 @@
   "Dedicated support": "Support dédié",
   "20% yearly discount": "20% de réduction annuelle",
   "Save 20%": "Économisez 20%",
-  "Las Joyas de MOABA": "Les Joyaux de MOABA",
   "Patrocinadores": "Sponsors",
   "Nuestros Patrocinadores": "Nos Sponsors",
   "Descubre la esencia del cine africano": "Découvrez l'essence du cinéma africain",
@@ -143,7 +142,6 @@
   "Si cambias de opinión, siempre puedes volver a suscribirte desde nuestra página principal.": "Si vous changez d'avis, vous pouvez toujours vous réabonner depuis notre page principale.",
   "Por favor, complete todos los campos.": "Veuillez remplir tous les champs.",
   "Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.": "Une erreur s'est produite. Veuillez réessayer plus tard.",
-  "Contact": "Contact",
   "First name": "Prénom",
   "Last name": "Nom de famille",
   "Email address": "Adresse e-mail",
@@ -362,5 +360,7 @@
   "common": {
     "yes": "Oui",
     "no": "Non"
-  }
+  },
+  "Open menu": "Ouvrir le menu",
+  "Close menu": "Fermer le menu"
 }

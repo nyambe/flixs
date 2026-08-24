@@ -98,7 +98,6 @@
   "Dedicated support": "Dedicated support",
   "20% yearly discount": "20% yearly discount",
   "Save 20%": "Save 20%",
-  "Las Joyas de MOABA": "MOABA Jewels",
   "Patrocinadores": "Sponsors",
   "Nuestros Patrocinadores": "Our Sponsors",
   "Descubre la esencia del cine africano": "Discover the essence of African cinema",
@@ -143,7 +142,6 @@
   "Si cambias de opinión, siempre puedes volver a suscribirte desde nuestra página principal.": "If you change your mind, you can always resubscribe from our main page.",
   "Por favor, complete todos los campos.": "Please fill in all fields.",
   "Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.": "An error occurred. Please try again later.",
-  "Contact": "Contact",
   "First name": "First name",
   "Last name": "Last name",
   "Email address": "Email address",
@@ -237,8 +235,7 @@
   "Public (embed anywhere)": "Public (embed anywhere)",
   "Private (no embedding)": "Private (no embedding)",
   "Whitelist (specific domains only)": "Whitelist (specific domains only)",
-  "Enter domain names separated by commas (no http:// or www needed)": "Enter domain names separated by commas (no http:// or www needed)"
-,
+  "Enter domain names separated by commas (no http:// or www needed)": "Enter domain names separated by commas (no http:// or www needed)",
   "Limited time offer: Stream premium African movies for just 4.95€/month!": "Limited time offer: Stream premium African movies for just 4.95€/month!",
   "Close notification": "Close notification",
   "press": {
@@ -363,5 +360,7 @@
   "common": {
     "yes": "Yes",
     "no": "No"
-  }
+  },
+  "Open menu": "Open menu",
+  "Close menu": "Close menu"
 }
