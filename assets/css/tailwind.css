@@ -26,6 +26,12 @@
 
   /* Canvas: warm off-white for light mode backgrounds (issue #26) */
   --color-canvas: #FAF8F5;
+
+  /* Obsidian: casi-negro para fondos en modo oscuro (rebrand Heritage Stream) */
+  --color-obsidian: #131313;
+
+  --font-heading: 'Syne', sans-serif;
+  --font-sans: 'Hanken Grotesk', sans-serif;
 }
 
 /*
@@ -48,20 +54,26 @@
 
 @layer base {
   :root {
-    /* Primary (Amber/Golden Yellow #fbbf24) */
-    --p: 55deg;
-    --ps: 93%;
+    /* Alinea el sistema de color interno de Nuxt UI (botones, rings, estados)
+       con nuestro token --color-brand, en vez de dejarlo en la paleta 'orange'
+       de fábrica declarada en app.config.ts (esa paleta solo se usa para
+       generar los pasos de sombra intermedios que Nuxt UI necesita). */
+    --ui-primary: var(--color-brand);
+
+    /* Terracota #ea6b1e — CTA principal / marca (antes Amber #fbbf24) */
+    --p: 23deg;
+    --ps: 83%;
     --pl: 52%;
-    
-    /* Secondary (Orange-Yellow #f59e0b) */
-    --s: 33deg;
-    --ss: 93%;
-    --sl: 50%;
-    
-    /* Accent (Yellow-Green #84cc16) */
-    --a: 84deg;
-    --as: 81%;
-    --al: 44%;
+
+    /* Amarillo Solar #f2c02d — CTA secundario (antes Orange-Yellow #f59e0b) */
+    --s: 45deg;
+    --ss: 88%;
+    --sl: 56%;
+
+    /* Verde Tierra #7e9a4b — accent (antes Yellow-Green #84cc16) */
+    --a: 81deg;
+    --as: 35%;
+    --al: 45%;
     
     /* Neutral (Dark Gray) */
     --n: 220deg;
@@ -75,11 +87,60 @@
   }
   
   .dark {
-    /* Dark mode adjustments */
-    --pl: 60%;
-    --sl: 55%;
-    --al: 50%;
+    /* Acento de marca en dark = Amarillo Solar (antes terracota, misma hue que --s).
+       Decisión de Marga: prioriza legibilidad/personalidad sobre fidelidad estricta
+       al mockup de Stitch (que usa terracota como CTA incluso en oscuro). */
+    --p: 45deg;
+    --ps: 88%;
+    --pl: 62%;
+
+    --sl: 62%;
+    --al: 52%;
     --nl: 90%; /* Much lighter for good contrast in dark mode */
     --cl: 65%;
+  }
+}
+
+/* Scrollbar integrada al theme (canvas/obsidian + acento de marca) en vez
+   del gris nativo del sistema. El pulgar usa --color-brand: naranja/
+   terracota en claro, amarillo solar en oscuro — el mismo tono que el logo
+   en cada modo, porque --p ya cambia de hue dentro de .dark más arriba.
+   Firefox usa scrollbar-color; el resto de navegadores, los
+   pseudo-elementos webkit. */
+@layer base {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-brand) var(--color-canvas);
+  }
+
+  html.dark {
+    scrollbar-color: var(--color-brand) var(--color-obsidian);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-canvas);
+  }
+
+  .dark ::-webkit-scrollbar-track {
+    background: var(--color-obsidian);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-brand);
+    border-radius: 9999px;
+    border: 2px solid var(--color-canvas);
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    border-color: var(--color-obsidian);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-brand-focus);
   }
 }

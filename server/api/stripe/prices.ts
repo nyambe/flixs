@@ -1,14 +1,11 @@
-// server/api/stripe-products.ts
-import Stripe from 'stripe';
+// server/api/stripe/prices.ts
+import type Stripe from 'stripe';
+import { stripe } from '~/server/utils/stripe';
 // Define the shape of the response (just prices for now)
 type PriceResponse = Stripe.Price[];
 
 export default defineEventHandler(async (event): Promise<PriceResponse> => {
   const runtimeConfig = useRuntimeConfig();
-  const stripe = new Stripe(runtimeConfig.stripe.secretKey as string, {
-    apiVersion: '2024-04-10',
-    typescript: true,
-  });
 
   // Get the product ID from runtimeConfig (loaded from .env)
   const productId = runtimeConfig.stripe.productId as string;

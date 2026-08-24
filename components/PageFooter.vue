@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 
 const { t } = useI18n();
+const localePath = useLocalePath();
 
 interface FooterLink {
   label: string;
@@ -104,8 +105,8 @@ const copyright = computed(() => `© ${currentYear} MoabaTV. ${t('All rights res
             <h3 class="text-sm font-semibold text-amber-700 dark:text-brand mb-4">{{ section.title }}</h3>
             <ul class="space-y-3">
               <li v-for="link in section.links" :key="link.path">
-                <NuxtLink 
-                  :to="link.path" 
+                <NuxtLink
+                  :to="localePath(link.path)"
                   class="text-sm hover:text-amber-700 dark:hover:text-brand transition"
                 >
                   {{ link.label }}

@@ -4,14 +4,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/tailwind.css'],
   modules: ['@nuxt/ui', '@nuxt/fonts', '@nuxt/eslint', '@nuxtjs/i18n'],
+  colorMode: {
+    preference: 'dark',
+    fallback: 'dark',
+  },
   fonts: {
     families: [
-      {
-        name: 'Montserrat',
-        provider: 'google',
-        weights: ['400', '500', '600', '700'],
-        global: true
-      }
+      { name: 'Syne', provider: 'google' },
+      { name: 'Hanken Grotesk', provider: 'google' }
     ]
   },
   i18n: {
