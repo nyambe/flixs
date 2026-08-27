@@ -28,6 +28,9 @@ logs
 # Subagent-driven-development scratch workspace (ledgers, briefs, review packages)
 .superpowers/
 
+# Git worktrees for isolated feature work
+.worktrees/
+
 # Documentation with sensitive data
 docs/
 CLAUDE.md
