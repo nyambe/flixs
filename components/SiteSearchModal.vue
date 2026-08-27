@@ -27,6 +27,12 @@ const results = computed(() => {
   return allMovies.filter(m => normalize(m.title).includes(normalizedQuery))
 })
 
+const activeIndex = ref(-1)
+
+watch(query, () => {
+  activeIndex.value = -1
+})
+
 function movieYear(movie: { release_date: string }) {
   return movie.release_date?.slice(0, 4) ?? ''
 }
@@ -37,6 +43,7 @@ function movieYear(movie: { release_date: string }) {
 watch(open, async (isOpen) => {
   if (!isOpen) {
     query.value = ''
+    activeIndex.value = -1
     return
   }
   await nextTick()
@@ -46,7 +53,35 @@ watch(open, async (isOpen) => {
 function onKeydown(e: KeyboardEvent) {
   if (e.key === 'Escape') {
     close()
+    return
   }
+  if (!results.value.length) return
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault()
+    activeIndex.value = Math.min(activeIndex.value + 1, results.value.length - 1)
+    scrollActiveIntoView()
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault()
+    activeIndex.value = Math.max(activeIndex.value - 1, 0)
+    scrollActiveIntoView()
+  } else if (e.key === 'Enter') {
+    e.preventDefault()
+    const index = activeIndex.value === -1 ? 0 : activeIndex.value
+    const movie = results.value[index]
+    if (movie) {
+      close()
+      navigateTo(localePath(`/movie/${movie.id}`))
+    }
+  }
+}
+
+function scrollActiveIntoView() {
+  nextTick(() => {
+    panelRef.value
+      ?.querySelector(`[data-result-index="${activeIndex.value}"]`)
+      ?.scrollIntoView({ block: 'nearest' })
+  })
 }
 </script>
 
@@ -83,10 +118,12 @@ function onKeydown(e: KeyboardEvent) {
 
       <div v-if="query.trim()" class="max-h-80 overflow-y-auto">
         <NuxtLink
-          v-for="movie in results"
+          v-for="(movie, index) in results"
           :key="movie.id"
           :to="localePath(`/movie/${movie.id}`)"
+          :data-result-index="index"
           class="flex items-center gap-3 p-3 hover:bg-black/5 dark:hover:bg-white/10 transition"
+          :class="{ 'bg-brand/10': index === activeIndex }"
           @click="close"
         >
           <img
