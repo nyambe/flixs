@@ -27,7 +27,7 @@ function onKeydown(e: KeyboardEvent) {
 <template>
   <div
     v-if="open"
-    class="fixed inset-0 z-[60] flex items-start justify-center pt-24 sm:pt-32 bg-black/60 backdrop-blur-sm"
+    class="fixed inset-0 z-[70] flex items-start justify-center pt-24 sm:pt-32 bg-black/60 backdrop-blur-sm"
     @click="close"
     @keydown="onKeydown"
   >

@@ -605,6 +605,6 @@ const isSearchOpen = ref(false);
         </USlideover>
       </div>
     </nav>
-    <SiteSearchModal v-model:open="isSearchOpen" />
   </header>
+  <SiteSearchModal v-model:open="isSearchOpen" />
 </template>
