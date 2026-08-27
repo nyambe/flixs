@@ -73,10 +73,12 @@ const festivals = computed<FestivalCard[]>(() => [
 // no existen.
 const featuredFestival = computed(() => festivals.value.find(f => f.id === 'fespaco')!)
 
-// Emblema oficial real de FESPACO (30ª edición, fespaco.bf) — representa al
-// festival en sí, no a una película asociada; por eso el hero usa esta imagen
-// en vez del cartel de Ashkal que sí tiene sentido en la tarjeta del grid.
-const fespacoEmblem = '/images/festivals/fespaco-emblem.jpg'
+// Sede real de FESPACO en Uagadugú — foto de Sputniktilt, Wikimedia Commons,
+// CC BY-SA 3.0 (https://commons.wikimedia.org/wiki/File:Siege_FESPACO_Ouaga.jpg).
+// Sustituye al cartel oficial de la 30ª edición que había antes: llevaba la
+// fecha "20-27 MARS 2027" y texto en francés incrustados, incoherente fuera
+// de esa edición concreta y del idioma fr.
+const fespacoEmblem = '/images/festivals/fespaco-hq.jpg'
 
 // Mismos tokens de marca que Paquetes Solidarios (pages/paquetes.vue) — ya
 // cambian de tono solo con .dark, sin lógica extra aquí.
@@ -140,6 +142,8 @@ useSeoMeta({
 
         <div class="relative min-h-[280px] order-1 md:order-2">
           <img :src="fespacoEmblem" :alt="featuredFestival.name" class="absolute inset-0 w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent" />
+          <div class="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-l from-transparent via-transparent to-black/25" />
         </div>
       </div>
     </div>
