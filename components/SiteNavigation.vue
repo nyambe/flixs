@@ -68,11 +68,14 @@ const headerCssVars = computed(() => ({
 // Logo según modo de color, siempre — independiente de si el header está
 // transparente sobre el hero: amarillo en modo oscuro, naranja/terracota en
 // modo claro (nunca cambia por estar sobre el hero, aunque el texto sí).
-const logoSrc = computed(() =>
-  colorMode.value === 'dark'
-    ? '/logos/LOGO_MOABA_AMARILLO_TRANSPARENTE.png'
-    : '/logos/LOGO_MOABA_NARANJA_TRANSPARENTE.png'
-);
+// Se renderizan ambas imágenes y se alternan con las clases `dark:` de
+// Tailwind (en vez de un computed sobre colorMode.value) porque el módulo
+// de color-mode marca <html> con la clase .dark/.light de forma síncrona
+// antes del primer paint; ligar el logo a esa clase evita el parpadeo que
+// había al depender de colorMode.value, que solo se resuelve tras la
+// hidratación.
+const logoLight = '/logos/LOGO_MOABA_NARANJA_TRANSPARENTE.png';
+const logoDark = '/logos/LOGO_MOABA_AMARILLO_TRANSPARENTE.png';
 
 let headerResizeObserver: ResizeObserver | null = null;
 
@@ -101,6 +104,8 @@ const imagePath = useImagePath();
 const { getMovieById } = useMovieData();
 const moviesMenuBackdrop = imagePath.backdrop(getMovieById(284952)?.backdrop_path ?? null, 'w780'); // Ureka
 const cinemaMenuBackdrop = imagePath.backdrop(getMovieById(1438351)?.backdrop_path ?? null, 'w780'); // Orígenes
+const tvSeriesMenuBackdrop = imagePath.backdrop(getMovieById(1438361)?.backdrop_path ?? null, 'w780'); // MAMADÍ
+const tvShowMenuBackdrop = imagePath.backdrop(getMovieById(444272)?.backdrop_path ?? null, 'w780'); // Feguibox
 
 // Navigation items con estructura de Nuxt UI (UNavigationMenu) — mega-menú
 // para Cine y Cinema Colonial, resto como links simples.
@@ -110,6 +115,7 @@ const navigationItems = computed(() => [
     label: t('Movies'),
     to: localePath('/movies'),
     slot: 'movies',
+    backdrop: moviesMenuBackdrop,
     children: [
       { label: 'Ficción', type: 'label' as const },
       { label: 'Drama', to: localePath('/proximamente') },
@@ -129,12 +135,43 @@ const navigationItems = computed(() => [
       { label: 'Doc. Musical', to: localePath('/proximamente') },
     ],
   },
-  { label: t('TV Series'), to: localePath('/tv-series') },
-  { label: t('TV Show'), to: localePath('/tv-show') },
+  {
+    label: t('TV Series'),
+    to: localePath('/tv-series'),
+    slot: 'category',
+    backdrop: tvSeriesMenuBackdrop,
+    children: [
+      { label: 'Aventura', to: localePath('/proximamente') },
+      { label: 'Investigación', to: localePath('/proximamente') },
+      { label: 'Historia', to: localePath('/proximamente') },
+      { label: 'Infantil', to: localePath('/proximamente') },
+      { label: 'Comedia', to: localePath('/proximamente') },
+      { label: 'Terror', to: localePath('/proximamente') },
+      { label: 'Thriller', to: localePath('/proximamente') },
+      { label: 'Reportajes', to: localePath('/proximamente') },
+    ],
+  },
+  {
+    label: t('TV Show'),
+    to: localePath('/tv-show'),
+    slot: 'category',
+    backdrop: tvShowMenuBackdrop,
+    children: [
+      { label: 'Reality shows', to: localePath('/proximamente') },
+      { label: 'Conciertos', to: localePath('/proximamente') },
+      { label: 'Monólogos', to: localePath('/proximamente') },
+      { label: 'Magacines', to: localePath('/proximamente') },
+      { label: 'Concurso', to: localePath('/proximamente') },
+      { label: 'Encuestas', to: localePath('/proximamente') },
+      { label: 'Podcast', to: localePath('/proximamente') },
+      { label: 'Cuentos/oralidad', to: localePath('/proximamente') },
+    ],
+  },
   {
     label: t('Cinema Colonial'),
     to: localePath('/cinema-colonial'),
     slot: 'cinema',
+    backdrop: cinemaMenuBackdrop,
     children: [
       { label: 'Cine Etnográfico', to: localePath('/proximamente') },
       { label: 'Cine Antropológico', to: localePath('/proximamente') },
@@ -142,8 +179,36 @@ const navigationItems = computed(() => [
       { label: 'Cine de Independencia', to: localePath('/proximamente') },
     ],
   },
-  { label: t('Festivales'), to: localePath('/festivales') },
-  { label: t('Otros Eventos'), to: localePath('/otros-eventos') },
+  {
+    label: t('Festivales'),
+    to: localePath('/festivales'),
+    slot: 'category',
+    backdrop: moviesMenuBackdrop,
+    children: [
+      { label: 'FESPACO', to: localePath('/proximamente') },
+      { label: 'FCAT', to: localePath('/proximamente') },
+      { label: 'Durban FilmArt', to: localePath('/proximamente') },
+      { label: 'Miradas Doc', to: localePath('/proximamente') },
+      { label: 'Yaoundé FilmLab', to: localePath('/proximamente') },
+      { label: 'Cartago Film', to: localePath('/proximamente') },
+      { label: 'MCTV. Cinema', to: localePath('/proximamente') },
+    ],
+  },
+  {
+    label: t('Otros Eventos'),
+    to: localePath('/otros-eventos'),
+    slot: 'category',
+    backdrop: cinemaMenuBackdrop,
+    children: [
+      { label: 'Estrenos', to: localePath('/proximamente') },
+      { label: 'Lanzamientos', to: localePath('/proximamente') },
+      { label: 'Recaudación de fondo', to: localePath('/proximamente') },
+      { label: 'Conferencias/Charlas', to: localePath('/proximamente') },
+      { label: 'Intercambio', to: localePath('/proximamente') },
+      { label: 'Promoción de Marca', to: localePath('/proximamente') },
+      { label: 'Conciertos', to: localePath('/proximamente') },
+    ],
+  },
   { label: t('Paquetes'), to: localePath('/paquetes') },
 ]);
 
@@ -187,13 +252,33 @@ const languageItems = computed(() => [
   }))
 ]);
 
-// Menú móvil (#39, versión mínima para poder publicar el rebrand): hamburguesa
-// como trigger del USlideover (estado interno del componente; el cierre usa la
-// función `close` que expone el slot #content). El refinado queda para #39.
-// Enlaces de primer nivel para el panel móvil (sin children)
-const mobileNavigationItems = computed(() =>
-  navigationItems.value.map(({ label, to }) => ({ label, to }))
-);
+// Entre 1024 y 1280px la fila no tiene sitio para Subscribe + Sign In (o
+// Perfil + Cerrar sesión) como botones de texto sin apretar el resto del
+// header — se agrupan en este único dropdown de cuenta (mismo patrón que
+// el selector de idioma). A partir de xl (1280px) se muestran expandidos.
+const accountMenuItems = computed(() => {
+  const items: { label: string; icon: string; to?: string; onSelect?: () => void }[] = [];
+  if (!isSubscribed.value) {
+    items.push({ label: t('Subscribe'), icon: 'i-heroicons-sparkles', to: localePath('/subscription/plans') });
+  }
+  if (currentUser.value) {
+    items.push({ label: t('Profile'), icon: 'i-heroicons-user-circle', to: localePath('/auth/profile') });
+    items.push({ label: t('Sign Out'), icon: 'i-heroicons-arrow-right-on-rectangle', onSelect: () => signOut() });
+  } else {
+    items.push({ label: t('Sign In'), icon: 'i-heroicons-arrow-right-on-rectangle', to: localePath('/auth/login') });
+  }
+  return [items];
+});
+
+// Menú móvil (#39): hamburguesa como trigger del USlideover (estado interno
+// del componente; el cierre usa la función `close` que expone el slot
+// #content). Reutiliza navigationItems tal cual (mismos children/backdrop
+// que los mega-menús de escritorio) en un acordeón — solo una sección
+// abierta a la vez, para que el panel no crezca sin control con 6 grupos.
+const expandedMobileItem = ref<string | null>(null);
+const toggleMobileSubmenu = (label: string) => {
+  expandedMobileItem.value = expandedMobileItem.value === label ? null : label;
+};
 </script>
 
 <template>
@@ -202,9 +287,10 @@ const mobileNavigationItems = computed(() =>
     :class="['fixed w-full z-50 transition-[top,background-color,color] duration-300', headerBgClass, headerTextClass]"
     :style="headerCssVars"
   >
-    <nav class="w-full max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between gap-0">
+    <nav class="w-full max-w-7xl mx-auto px-4 flex items-center justify-between gap-0">
       <NuxtLink :to="localePath('/')" class="shrink-0 text-2xl font-bold text-brand">
-        <img :src="logoSrc" :alt="t('Moaba Cinema TV')" class="h-16 w-auto">
+        <img :src="logoLight" :alt="t('Moaba Cinema TV')" class="h-16 w-auto block dark:hidden">
+        <img :src="logoDark" :alt="t('Moaba Cinema TV')" class="h-16 w-auto hidden dark:block">
       </NuxtLink>
 
       <UNavigationMenu
@@ -213,9 +299,10 @@ const mobileNavigationItems = computed(() =>
         content-orientation="vertical"
         color="primary"
         highlight
-        class="hidden md:flex shrink-0"
+        class="hidden min-[1150px]:flex shrink-0"
         :ui="{
           root: 'gap-0',
+          list: 'gap-1',
           link: 'px-1',
           linkLabel: 'uppercase tracking-wide text-xs font-semibold',
           viewport: 'ring-brand/20 shadow-xl',
@@ -262,6 +349,23 @@ const mobileNavigationItems = computed(() =>
             </div>
           </div>
         </template>
+
+        <template #category-content="{ item }">
+          <div class="relative w-72 overflow-hidden rounded-md">
+            <img :src="item.backdrop" alt="" class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-canvas/75 dark:from-obsidian/80 via-canvas/60 dark:via-obsidian/60 to-canvas/40 dark:to-obsidian/40" />
+            <div class="relative p-3 space-y-0.5">
+              <NuxtLink
+                v-for="child in item.children"
+                :key="child.label"
+                :to="child.to"
+                class="block py-1 px-2 leading-tight rounded-md text-sm text-black/80 dark:text-white/90 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition"
+              >
+                {{ child.label }}
+              </NuxtLink>
+            </div>
+          </div>
+        </template>
       </UNavigationMenu>
 
       <div class="flex items-center gap-1 shrink-0">
@@ -272,7 +376,6 @@ const mobileNavigationItems = computed(() =>
             variant="ghost"
             size="sm"
             icon="i-heroicons-magnifying-glass"
-            class="hidden sm:inline-flex"
             :class="headerGhostClass"
             :aria-label="t('Search')"
           />
@@ -311,15 +414,33 @@ const mobileNavigationItems = computed(() =>
           />
         </UDropdownMenu>
 
+        <!-- Entre lg y xl no cabe Subscribe + Sign In (o Perfil + Cerrar
+             sesión) como botones de texto sin apretar el resto del header:
+             un único dropdown de cuenta cubre ese hueco (ver accountMenuItems). -->
+        <UDropdownMenu
+          :items="accountMenuItems"
+          :ui="{ content: 'ring-1 ring-brand/20 shadow-xl bg-canvas dark:bg-obsidian' }"
+        >
+          <UButton
+            color="neutral"
+            variant="ghost"
+            size="sm"
+            icon="i-heroicons-user-circle"
+            class="hidden min-[1150px]:inline-flex xl:hidden"
+            :class="headerGhostClass"
+            :aria-label="t('Account')"
+          />
+        </UDropdownMenu>
+
         <UButton
           v-if="!isSubscribed"
           color="primary"
           size="sm"
           :label="t('Subscribe')"
-          class="hidden md:inline-flex bg-brand text-brand-content hover:bg-brand-focus px-2.5"
+          class="hidden xl:inline-flex bg-brand text-brand-content hover:bg-brand-focus px-2.5"
           :to="localePath('/subscription/plans')"
         />
-        <div v-if="currentUser" class="hidden md:flex items-center gap-2">
+        <div v-if="currentUser" class="hidden xl:flex items-center gap-2">
           <span :class="headerTextClass">{{ userDisplayName }}</span>
           <UButton
             color="neutral"
@@ -342,7 +463,7 @@ const mobileNavigationItems = computed(() =>
           color="neutral"
           variant="outline"
           size="sm"
-          class="hidden md:inline-flex px-2.5"
+          class="hidden xl:inline-flex px-2.5"
           :class="headerOutlineClass"
           :label="t('Sign In')"
           :to="localePath('/auth/login')"
@@ -357,14 +478,15 @@ const mobileNavigationItems = computed(() =>
             variant="ghost"
             size="sm"
             icon="i-heroicons-bars-3"
-            class="md:hidden"
+            class="min-[1150px]:hidden"
             :class="headerGhostClass"
             :aria-label="t('Open menu')"
           />
           <template #content="{ close }">
-        <div class="h-full overflow-y-auto bg-canvas dark:bg-obsidian text-black dark:text-white p-6 flex flex-col">
-          <div class="flex items-center justify-between mb-6">
-            <img :src="logoSrc" :alt="t('Moaba Cinema TV')" class="h-10 w-auto">
+        <div class="h-full bg-canvas dark:bg-obsidian text-black dark:text-white flex flex-col">
+          <div class="flex items-center justify-between p-6 pb-0 mb-6 shrink-0">
+            <img :src="logoLight" :alt="t('Moaba Cinema TV')" class="h-10 w-auto block dark:hidden">
+            <img :src="logoDark" :alt="t('Moaba Cinema TV')" class="h-10 w-auto hidden dark:block">
             <UButton
               color="neutral"
               variant="ghost"
@@ -374,19 +496,67 @@ const mobileNavigationItems = computed(() =>
             />
           </div>
 
-          <nav class="flex flex-col gap-1">
-            <NuxtLink
-              v-for="item in mobileNavigationItems"
-              :key="item.to"
-              :to="item.to"
-              class="py-3 px-2 text-lg font-medium rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800"
-              @click="close()"
-            >
-              {{ item.label }}
-            </NuxtLink>
+          <nav class="flex-1 min-h-0 overflow-y-auto px-6 pb-4 flex flex-col gap-1">
+            <div v-for="item in navigationItems" :key="item.label">
+              <div class="flex items-center rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800">
+                <NuxtLink
+                  :to="item.to"
+                  class="flex-1 py-3 px-2 text-lg font-medium active:scale-[0.98] transition-transform motion-reduce:transition-none"
+                  @click="close()"
+                >
+                  {{ item.label }}
+                </NuxtLink>
+                <button
+                  v-if="item.children"
+                  type="button"
+                  class="p-3 active:scale-90 transition-transform motion-reduce:transition-none"
+                  :aria-label="expandedMobileItem === item.label ? t('Collapse') : t('Expand')"
+                  :aria-expanded="expandedMobileItem === item.label"
+                  @click="toggleMobileSubmenu(item.label)"
+                >
+                  <UIcon
+                    name="i-heroicons-chevron-down"
+                    class="size-5 transition-transform duration-200 ease-out motion-reduce:transition-none"
+                    :class="{ 'rotate-180': expandedMobileItem === item.label }"
+                  />
+                </button>
+              </div>
+
+              <div
+                v-if="item.children"
+                class="grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none"
+                :style="{ gridTemplateRows: expandedMobileItem === item.label ? '1fr' : '0fr' }"
+              >
+                <div class="overflow-hidden">
+                  <div class="relative mt-1 mb-2 rounded-md overflow-hidden ring-1 ring-black/5 dark:ring-white/10">
+                    <div
+                      class="bg-canvas dark:bg-obsidian py-2"
+                      :class="item.slot === 'movies' ? 'grid grid-cols-2 gap-x-2 px-2' : 'px-1'"
+                    >
+                      <template v-for="child in item.children" :key="child.label">
+                        <p
+                          v-if="child.type === 'label'"
+                          :class="['text-xs font-semibold uppercase tracking-wide text-brand pt-3 pb-1 first:pt-2', item.slot === 'movies' ? 'col-span-full px-2' : 'px-3']"
+                        >
+                          {{ child.label }}
+                        </p>
+                        <NuxtLink
+                          v-else
+                          :to="child.to"
+                          class="block py-2.5 px-3 text-base leading-tight rounded-md hover:bg-black/5 dark:hover:bg-white/10 active:scale-[0.98] transition-[background-color,transform] motion-reduce:transition-none"
+                          @click="close()"
+                        >
+                          {{ child.label }}
+                        </NuxtLink>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </nav>
 
-          <div class="mt-auto pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-col gap-2">
+          <div class="shrink-0 p-6 pt-4 border-t border-neutral-200 dark:border-neutral-800 flex flex-col gap-2">
             <UButton
               v-if="!isSubscribed"
               color="primary"
