@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useAdminUser } from '../../composables/useAdminUser';
+
 interface StripePlan {
   id: string;
   name: string;
@@ -16,6 +18,8 @@ interface APISettings {
   };
 }
 
+const { user: adminUser } = useAdminUser();
+
 const plans = ref<StripePlan[]>([]);
 const apiSettings = ref<APISettings | null>(null);
 const loading = ref(true);
@@ -27,9 +31,13 @@ const fetchSettings = async () => {
   loading.value = true;
   error.value = null;
   successMessage.value = null;
-  
+
   try {
-    const response = await $fetch<{ plans: StripePlan[], apiSettings: APISettings }>('/api/admin/settings');
+    const response = await $fetch<{ plans: StripePlan[], apiSettings: APISettings }>('/api/admin/settings', {
+      headers: {
+        'Authorization': `Bearer ${await adminUser.value?.getIdToken()}`
+      }
+    });
     plans.value = response.plans;
     apiSettings.value = response.apiSettings;
   } catch (err) {
