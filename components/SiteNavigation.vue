@@ -279,6 +279,9 @@ const expandedMobileItem = ref<string | null>(null);
 const toggleMobileSubmenu = (label: string) => {
   expandedMobileItem.value = expandedMobileItem.value === label ? null : label;
 };
+
+// Buscador (#40): trigger del modal de búsqueda
+const isSearchOpen = ref(false);
 </script>
 
 <template>
@@ -378,6 +381,7 @@ const toggleMobileSubmenu = (label: string) => {
             icon="i-heroicons-magnifying-glass"
             :class="headerGhostClass"
             :aria-label="t('Search')"
+            @click="isSearchOpen = true"
           />
           <UButton
             color="neutral"
@@ -602,4 +606,5 @@ const toggleMobileSubmenu = (label: string) => {
       </div>
     </nav>
   </header>
+  <SiteSearchModal v-model:open="isSearchOpen" />
 </template>
