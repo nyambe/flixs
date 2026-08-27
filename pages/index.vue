@@ -139,27 +139,50 @@ useSeoMeta({
     <section class="py-16 bg-canvas dark:bg-black">
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold mb-8">{{ t('Las Joyas de MOABA') }}</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <NuxtLink 
-            v-for="movie in popularMovies" 
+        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-4 max-w-4xl">
+          <NuxtLink
+            v-for="movie in popularMovies"
             :key="movie.id"
             :to="localePath(`/movie/${movie.id}`)"
             class="relative group cursor-pointer"
           >
             <div :class="posterAspectRatio" class="w-full">
-              <img 
+              <img
                 :src="imagePath.poster(movie.poster_path)"
                 :alt="movie.title"
-                class="w-full h-full object-cover rounded-lg transition transform group-hover:scale-105"
+                class="w-full h-full object-cover rounded-lg shadow-md transition duration-300 group-hover:scale-105 group-hover:shadow-xl"
               >
             </div>
             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-lg text-white">
-              <div class="absolute bottom-0 p-4 w-full">
-                <h3 class="text-lg font-semibold">{{ movie.title }}</h3>
-                <div class="flex items-center mt-1">
+              <div class="absolute bottom-0 p-2 sm:p-3 w-full">
+                <h3 class="text-xs sm:text-sm font-semibold leading-tight">{{ movie.title }}</h3>
+                <div class="flex items-center mt-1 text-xs">
                   <span class="text-brand">★</span>
                   <span class="ml-1">{{ movie.vote_average.toFixed(1) }}</span>
                 </div>
+              </div>
+            </div>
+          </NuxtLink>
+
+          <!-- "Lámpara" (Rubén Monsuy Ndong Andeme, mismo director de Ureka
+               y MAMADÍ): todavía no tiene video listo, así que no es una
+               entrada real del catálogo (jsons/movies.json) — se muestra como
+               teaser a /proximamente hasta que Samuel suba el video y se le
+               pueda dar de alta como película. -->
+          <NuxtLink :to="localePath('/proximamente')" class="relative group cursor-pointer">
+            <div :class="posterAspectRatio" class="w-full">
+              <img
+                src="/images/movies/la-lampara-poster.jpg"
+                alt="Lámpara"
+                class="w-full h-full object-cover rounded-lg shadow-md transition duration-300 group-hover:scale-105 group-hover:shadow-xl"
+              >
+            </div>
+            <div class="absolute top-2 left-2 bg-brand text-brand-content text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded">
+              {{ t('Coming soon') }}
+            </div>
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-lg text-white">
+              <div class="absolute bottom-0 p-2 sm:p-3 w-full">
+                <h3 class="text-xs sm:text-sm font-semibold leading-tight">Lámpara</h3>
               </div>
             </div>
           </NuxtLink>
